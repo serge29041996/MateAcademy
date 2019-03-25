@@ -4,7 +4,6 @@ package com.homework1;
  * Solution of task 1.4
  */
 public class RecursionTasks {
-
   public static void main(String[] args) {
     System.out.println("5! = " + computeFactorial(5));
     System.out.println();

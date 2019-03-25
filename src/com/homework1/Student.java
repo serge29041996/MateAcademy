@@ -6,7 +6,6 @@ import java.time.LocalDate;
  * Class for saving information about student.
  */
 public class Student implements Cloneable {
-
   private String name;
   private String surname;
   private LocalDate birthday;
@@ -111,10 +110,10 @@ public class Student implements Cloneable {
   @Override
   public int hashCode() {
     int result = name.hashCode();
-    result += surname.hashCode();
-    result += birthday.hashCode();
-    result += course;
-    result += departmentForStudy.hashCode();
+    result = 31 * result + surname.hashCode();
+    result = 31 * result + birthday.hashCode();
+    result = 31 * result + course;
+    result = 31 * result + departmentForStudy.hashCode();
     return result;
   }
 

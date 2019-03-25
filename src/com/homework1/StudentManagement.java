@@ -6,7 +6,6 @@ import java.time.LocalDate;
  * Solution for task 1.7.
  */
 public class StudentManagement {
-
   /**
    * Showing using deep cloning.
    *

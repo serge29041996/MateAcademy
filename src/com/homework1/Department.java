@@ -38,19 +38,25 @@ public class Department implements Cloneable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     Department that = (Department) o;
 
-    if (id != that.id) return false;
-    return name != null ? name.equals(that.name) : that.name == null;
+    if (id != that.id) {
+      return false;
+    }
+    return name.equals(that.name);
   }
 
   @Override
   public int hashCode() {
-    int result = (int) id;
-    result += name != null ? name.hashCode() : 0;
+    int result = (int) (id ^ (id >>> 32));
+    result = 31 * result + name.hashCode();
     return result;
   }
 

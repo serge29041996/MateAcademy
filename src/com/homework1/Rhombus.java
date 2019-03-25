@@ -4,7 +4,6 @@ package com.homework1;
  * Solution for task 1.2
  */
 public class Rhombus {
-
   public static void main(String[] args) {
     // drawRhombusAsParallelogram(3);
     drawCanonicalRhombus(10);
