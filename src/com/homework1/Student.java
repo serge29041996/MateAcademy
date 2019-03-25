@@ -3,33 +3,27 @@ package com.homework1;
 import java.time.LocalDate;
 
 /**
- * Solution for task 1.7
+ * Class for saving information about student.
  */
 public class Student implements Cloneable {
+
   private String name;
   private String surname;
   private LocalDate birthday;
   private int course;
   private Department departmentForStudy;
 
-  public static void main(String[] args) throws CloneNotSupportedException {
-    System.out.println("Test of deep copy:");
-    Department departmentIt = new Department(1, "Department of IT");
-    Student raccoon = new Student("Serge", "Krasnikov", LocalDate.of(2000, 12, 1), 1, departmentIt);
-    Student secondRaccoon = (Student) raccoon.clone();
-    System.out.println("First student:");
-    System.out.println(raccoon);
-    System.out.println("Second student:");
-    System.out.println(secondRaccoon);
-    raccoon.departmentForStudy.setName("Department of ecology");
-    System.out.println("After change name of department: ");
-    System.out.println("First student:");
-    System.out.println(raccoon);
-    System.out.println("Second student:");
-    System.out.println(secondRaccoon);
-  }
-
-  public Student(String name, String surname, LocalDate birthday, int course, Department department) {
+  /**
+   * Constructor for all parameters.
+   *
+   * @param name name of student
+   * @param surname surname of student
+   * @param birthday birthday of student
+   * @param course current number course, where student is studying
+   * @param department department, which study student
+   */
+  public Student(String name, String surname, LocalDate birthday, int course,
+      Department department) {
     this.name = name;
     this.surname = surname;
     this.birthday = birthday;
@@ -79,26 +73,38 @@ public class Student implements Cloneable {
 
   @Override
   public String toString() {
-    return "Student{" +
-        "name='" + name + '\'' +
-        ", surname='" + surname + '\'' +
-        ", birthday=" + birthday +
-        ", course=" + course +
-        ", departmentForStudy=" + departmentForStudy +
-        '}';
+    return "Student{"
+        + "name='" + name + '\''
+        + ", surname='" + surname + '\''
+        + ", birthday=" + birthday
+        + ", course=" + course
+        + ", departmentForStudy=" + departmentForStudy
+        + '}';
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     Student student = (Student) o;
 
-    if (course != student.course) return false;
-    if (!name.equals(student.name)) return false;
-    if (!surname.equals(student.surname)) return false;
-    if (!birthday.equals(student.birthday)) return false;
+    if (course != student.course) {
+      return false;
+    }
+    if (!name.equals(student.name)) {
+      return false;
+    }
+    if (!surname.equals(student.surname)) {
+      return false;
+    }
+    if (!birthday.equals(student.birthday)) {
+      return false;
+    }
     return departmentForStudy.equals(student.departmentForStudy);
   }
 

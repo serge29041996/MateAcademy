@@ -4,9 +4,10 @@ package com.homework1;
  * Solution for task 1.2
  */
 public class Rhombus {
+
   public static void main(String[] args) {
-    drawRhombusAsParallelogram(3);
-    drawCanonicalRhombus(3);
+    // drawRhombusAsParallelogram(3);
+    drawCanonicalRhombus(10);
   }
 
   private static void drawRhombusAsParallelogram(int height) {
@@ -15,23 +16,33 @@ public class Rhombus {
     int endIndex = 2 * height - 2;
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < 2 * height - 1; j++) {
-        if (i == 0 || i == height - 1) {
-          if (j >= beginIndex && j <= endIndex) {
-            System.out.print("*  ");
-          } else {
-            System.out.print(" ");
-          }
-        } else if (j == beginIndex || j == endIndex) {
-          System.out.print("*  ");
-        } else if (j > beginIndex && j < endIndex) {
-          System.out.print("   ");
-        } else {
-          System.out.print(" ");
-        }
+        outputLinesOfRhombusAsParallelogram(i, j, beginIndex, endIndex, height);
       }
       beginIndex--;
       endIndex--;
       System.out.println();
+    }
+  }
+
+  private static void outputLinesOfRhombusAsParallelogram(int indexOuterCycle, int indexInnerCycle,
+      int beginIndex, int endIndex, int height) {
+    if (indexOuterCycle == 0 || indexOuterCycle == height - 1) {
+      outputTopAndBottomEdgesRhombusAsParallelogram(indexInnerCycle, beginIndex, endIndex);
+    } else if (indexInnerCycle == beginIndex || indexInnerCycle == endIndex) {
+      System.out.print("*  ");
+    } else if (indexInnerCycle > beginIndex && indexInnerCycle < endIndex) {
+      System.out.print("   ");
+    } else {
+      System.out.print(" ");
+    }
+  }
+
+  private static void outputTopAndBottomEdgesRhombusAsParallelogram(int indexInnerCycle,
+      int beginIndex, int endIndex) {
+    if (indexInnerCycle >= beginIndex && indexInnerCycle <= endIndex) {
+      System.out.print("*  ");
+    } else {
+      System.out.print(" ");
     }
   }
 
@@ -43,20 +54,35 @@ public class Rhombus {
     int currentMaxWidth = (height - 1);
     for (int i = 0; i <= heightRhombus; i++) {
       for (int j = 0; j <= widthRhombus; j++) {
-        if (j == currentMinWidth || j == currentMaxWidth) {
-          System.out.print("*");
-        } else {
-          System.out.print(" ");
-        }
+        outputLinesForCanonicalRhombus(j, currentMinWidth, currentMaxWidth);
       }
       System.out.println();
-      if (currentMaxWidth < widthRhombus && i < (height - 1)) {
-        currentMinWidth--;
-        currentMaxWidth++;
-      } else {
-        currentMinWidth++;
-        currentMaxWidth--;
-      }
+      int[] updatedMinAndMaxWidth = changeMinAndMaxWidth(i, height, widthRhombus, currentMinWidth,
+          currentMaxWidth);
+      currentMinWidth = updatedMinAndMaxWidth[0];
+      currentMaxWidth = updatedMinAndMaxWidth[1];
     }
+  }
+
+  private static void outputLinesForCanonicalRhombus(int indexInnerCycle, int currentMinWidth,
+      int currentMaxWidth) {
+    if (indexInnerCycle == currentMinWidth || indexInnerCycle == currentMaxWidth) {
+      System.out.print("*");
+    } else {
+      System.out.print(" ");
+    }
+  }
+
+  private static int[] changeMinAndMaxWidth(int indexCycle, int height, int widthRhombus,
+      int currentMinWidth, int currentMaxWidth) {
+    int[] minAndMaxWidth = new int[2];
+    if (currentMaxWidth < widthRhombus && indexCycle < (height - 1)) {
+      minAndMaxWidth[0] = --currentMinWidth;
+      minAndMaxWidth[1] = ++currentMaxWidth;
+    } else {
+      minAndMaxWidth[0] = ++currentMinWidth;
+      minAndMaxWidth[1] = --currentMaxWidth;
+    }
+    return minAndMaxWidth;
   }
 }
