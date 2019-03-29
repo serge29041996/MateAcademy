@@ -1,5 +1,7 @@
 package com.homework3;
 
+import java.util.Arrays;
+
 /**
  * Class for merge 2 arrays in one and generation array with need length.
  */
@@ -30,6 +32,16 @@ public class ArrayUtils {
     }
 
     return generatedArray;
+  }
+
+  public static void outputIntArray(int[] array) {
+    System.out.println(Arrays.toString(array));
+  }
+
+  public static void outputMergedArray(int[] mergedArray) {
+    outputIntArray(mergedArray);
+    System.out.println();
+    System.out.println();
   }
 
   /**
