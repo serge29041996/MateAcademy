@@ -1,7 +1,5 @@
 package com.homework3;
 
-import java.util.Arrays;
-
 /**
  * Example of using merge of sorting arrays.
  */
@@ -13,7 +11,7 @@ public class MergeArraysTask {
     int[] leftArray = ArrayUtils.generateSortedIntArray(10, isNeedArrayWithOddElement);
     ArrayUtils.outputIntArray(leftArray);
     int[] rightArray = ArrayUtils.generateSortedIntArray(10, !isNeedArrayWithOddElement);
-    System.out.println(Arrays.toString(rightArray));
+    ArrayUtils.outputIntArray(rightArray);
     ArrayUtils.outputIntArray(rightArray);
     System.out.println("Merged array:");
     int[] mergedArray = ArrayUtils.mergeTwoIntArrays(leftArray, rightArray);
