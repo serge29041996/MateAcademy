@@ -6,14 +6,12 @@ import java.util.NoSuchElementException;
  * Realization of the array list.
  */
 public class ArrayList<T> implements List<T> {
-  private static final int INITIAL_CAPACITY = 10;
   private int capacity;
   private T[] elements;
   private int size = 0;
 
   public ArrayList() {
-    this.capacity = INITIAL_CAPACITY;
-    this.elements = (T[])new Object[capacity];
+    this(10);
   }
 
   public ArrayList(int capacity) {
