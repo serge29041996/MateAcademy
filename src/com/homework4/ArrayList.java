@@ -6,13 +6,24 @@ import java.util.NoSuchElementException;
  * Realization of the array list.
  */
 public class ArrayList<T> implements List<T> {
-  private int capacity = 10;
-  private T[] elements = (T[])new Object[capacity];
+  private static final int INITIAL_CAPACITY = 10;
+  private int capacity;
+  private T[] elements;
   private int size = 0;
+
+  public ArrayList() {
+    this.capacity = INITIAL_CAPACITY;
+    this.elements = (T[])new Object[capacity];
+  }
+
+  public ArrayList(int capacity) {
+    this.capacity = capacity;
+    this.elements = (T[])new Object[capacity];
+  }
 
   @Override
   public void add(T value) {
-    ensureCapacity(1);
+    ensureCapacity(1, true);
     addElement(value, size);
   }
 
@@ -21,7 +32,7 @@ public class ArrayList<T> implements List<T> {
     if (index < 0 || index > size) {
       throw new IllegalArgumentException("Illegal index for adding: " + index);
     } else {
-      ensureCapacity(1);
+      ensureCapacity(1, true);
       if (index < size) {
         shiftRightElements(index);
       }
@@ -32,7 +43,7 @@ public class ArrayList<T> implements List<T> {
   @Override
   public void addAll(List<T> list) {
     if (list instanceof ArrayList) {
-      ensureCapacity(list.size());
+      ensureCapacity(list.size(), true);
       System.arraycopy((T[])((ArrayList) list).elements, 0, elements, size, list.size());
       size += list.size();
     } else if (list instanceof LinkedList) {
@@ -99,16 +110,24 @@ public class ArrayList<T> implements List<T> {
     size++;
   }
 
-  private void ensureCapacity(int numberAddedElement) {
-    while (size + numberAddedElement >= capacity) {
-      expandElements();
-    }
+  private void ensureCapacity(int numberAddedElement, boolean increase) {
+      changeElements(increase, size + numberAddedElement);
   }
 
-  private void expandElements() {
-    capacity *= 2;
+  private void changeElements(boolean increase, int needCapacity) {
+    int currentCapacity = capacity;
+    if (increase) {
+      while (needCapacity > currentCapacity) {
+        currentCapacity *= 2;
+      }
+    } else {
+      while (currentCapacity / 2 > size) {
+        currentCapacity /= 2;
+      }
+    }
+    capacity = currentCapacity;
     T[] newElements = (T[])new Object[capacity];
-    System.arraycopy(elements, 0, newElements, 0, size + 1);
+    System.arraycopy(elements, 0, newElements, 0, size);
     elements = newElements;
   }
 
@@ -123,7 +142,7 @@ public class ArrayList<T> implements List<T> {
   }
 
   private void shiftLeftElements(int index) {
-    System.arraycopy(elements, index + 1, elements, index, (size - index + 1));
+    System.arraycopy(elements, index + 1, elements, index, (size - index - 1));
   }
 
   private T removeElement(int index) {
@@ -134,6 +153,7 @@ public class ArrayList<T> implements List<T> {
       elements[index] = null;
     }
     size--;
+    ensureCapacity(0, false);
     return valueRemovingElement;
   }
 }

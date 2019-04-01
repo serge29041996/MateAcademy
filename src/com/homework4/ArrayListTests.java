@@ -38,6 +38,7 @@ public class ArrayListTests {
     testRemoveExistentElementArrayListByValue();
     testRemoveNonexistentElementArrayListByValue();
     testRemoveElementFromEmptyArrayListByValue();
+    testAddAndRemovingElementFromBigList();
   }
 
   private static void testToStringEmptyArrayList() {
@@ -73,7 +74,7 @@ public class ArrayListTests {
 
   private static void testAddThreeElementsToArrayList() {
     System.out.println("4. Test add three elements to array list:");
-    List<Integer> list = new ArrayList<>();
+    List<Integer> list = new ArrayList<>(3);
     System.out.println("Array list before adding elements:");
     outputArrayList(list);
     addElementsToArrayList(list, 3, 0);
@@ -85,7 +86,7 @@ public class ArrayListTests {
 
   private static void testAddElementToSecondPosition() {
     System.out.println("5. Test add element to second position in array list:");
-    List<Integer> list = new ArrayList<>();
+    List<Integer> list = new ArrayList<>(3);
     addElementsToArrayList(list, 3, 0);
     System.out.println("Array list before adding elements:");
     outputArrayList(list);
@@ -402,6 +403,18 @@ public class ArrayListTests {
       System.out.println(e.getMessage());
     }
     System.out.println();
+  }
+
+  private static void testAddAndRemovingElementFromBigList() {
+    System.out.println("27. Test adding 1000 elements and removing 900 elements:");
+    List<Integer> list = new ArrayList<>(1000);
+    addElementsToArrayList(list, 1000, 0);
+    System.out.println("Size of array list: " + list.size());
+    int currentListSize = list.size();
+    for (int i = 0; i < currentListSize - 100; i++) {
+      list.remove(0);
+    }
+    System.out.println("Size of array list after removing nine hundred elements: " + list.size());
   }
 
   private static void addElementsToArrayList(List<Integer> list, int numberElements,
