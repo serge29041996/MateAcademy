@@ -42,8 +42,8 @@ public class MyHashMap<K, V> {
    */
   public void put(K key, V value) {
     int[] hashAndIndex = computeHashAndIndex(key);
-    int indexForSaving = hashAndIndex[0];
-    int hash = hashAndIndex[1];
+    int hash = hashAndIndex[0];
+    int indexForSaving = hashAndIndex[1];
     Node<K, V> elementTable = table[indexForSaving];
     if (elementTable == null) {
       table[indexForSaving] = new Node<>(hash, key, value, null);
@@ -65,8 +65,8 @@ public class MyHashMap<K, V> {
    */
   public V remove(K key) {
     int[] hashAndIndex = computeHashAndIndex(key);
-    int indexForRemoving = hashAndIndex[0];
-    int hash = hashAndIndex[1];
+    int hash = hashAndIndex[0];
+    int indexForRemoving = hashAndIndex[1];
     Node<K, V> previousNode = null;
     for (Node<K, V> e = table[indexForRemoving]; e != null; e = e.next) {
       if (hash == e.hash && (key == e.key || checkEquals(key, e.key))) {
@@ -109,8 +109,8 @@ public class MyHashMap<K, V> {
    */
   public V get(K key) {
     int[] hashAndIndex = computeHashAndIndex(key);
-    int indexForGetting = hashAndIndex[0];
-    int hash = hashAndIndex[1];
+    int hash = hashAndIndex[0];
+    int indexForGetting = hashAndIndex[1];
     for (Node<K, V> node = table[indexForGetting]; node != null; node = node.next) {
       if (node.hash == hash && (node.key == key || checkEquals(key, node.key))) {
         return node.value;
@@ -142,11 +142,10 @@ public class MyHashMap<K, V> {
     int[] datas = new int[2];
     if (key == null) {
       datas[0] = 0;
-      datas[1] = 0;
     } else {
-      datas[0] = key.hashCode();
-      datas[1] = datas[0] % table.length;
+      datas[0] = Math.abs(key.hashCode());
     }
+    datas[1] = datas[0] % table.length;
     return datas;
   }
 
