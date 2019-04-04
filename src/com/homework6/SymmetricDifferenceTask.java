@@ -1,5 +1,6 @@
 package com.homework6;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,12 +17,19 @@ public class SymmetricDifferenceTask {
     addElementsToSet(set1, 1, 3);
     System.out.println("First set:");
     System.out.println(set1);
+    // Set<Integer> set2 = new HashSet<>();
     Set<Integer> set2 = new HashSet<>();
     addElementsToSet(set2, 0, 2);
     System.out.println("Second set:");
     System.out.println(set2);
     Set<Integer> symmetricDifference = symmetricDifference(set1, set2);
     System.out.println("Symmetric difference set:");
+    System.out.println(symmetricDifference);
+    Set<Integer> set = Collections.unmodifiableSet(set2);
+    System.out.println("Unmodifiable set from second set");
+    System.out.println(set);
+    symmetricDifference = symmetricDifference(set1, set);
+    System.out.println("Symmetric difference from first and unmodifiable set:");
     System.out.println(symmetricDifference);
   }
 
@@ -35,10 +43,11 @@ public class SymmetricDifferenceTask {
   private static <T> Set<T> symmetricDifference(Set<? extends T> set1, Set<? extends T> set2) {
     Set<T> symmetricDifference = new HashSet<>();
     Set<T> firstDifference = new HashSet<>(set1);
+    Set<T> secondDifference = new HashSet<>(set2);
     firstDifference.removeAll(set2);
-    set2.removeAll(set1);
+    secondDifference.removeAll(set1);
     symmetricDifference.addAll(firstDifference);
-    symmetricDifference.addAll(set2);
+    symmetricDifference.addAll(secondDifference);
     return symmetricDifference;
   }
 
