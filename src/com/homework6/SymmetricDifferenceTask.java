@@ -17,7 +17,6 @@ public class SymmetricDifferenceTask {
     addElementsToSet(set1, 1, 3);
     System.out.println("First set:");
     System.out.println(set1);
-    // Set<Integer> set2 = new HashSet<>();
     Set<Integer> set2 = new HashSet<>();
     addElementsToSet(set2, 0, 2);
     System.out.println("Second set:");
