@@ -68,7 +68,6 @@ public class Injector {
 
         findFactoryField.setAccessible(true);
         field.set(null, findFactoryField.get(null));
-        System.out.println(field.get(null));
       }
     }
   }

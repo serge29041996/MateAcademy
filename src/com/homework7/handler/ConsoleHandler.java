@@ -22,8 +22,8 @@ public class ConsoleHandler {
   public static void handle() {
     while (true) {
       Scanner scanner = new Scanner(System.in);
-      System.out.println("1 - если вносите клиента, 2 - если получаете клиента, "
-          + "3 - если вносите человека, 4 - если получаете человека, 5 - для выхода");
+      System.out.println("1 - если вносите клиента, 2 - если получаете всех клиентов, "
+          + "3 - если вносите человека, 4 - если получаете всех людей, 5 - для выхода");
       int consoleChoice = Integer.parseInt(scanner.nextLine());
       switch (consoleChoice) {
         case 1:

@@ -1,5 +1,6 @@
 package com.homework7.dao;
 
+import com.homework7.di.Component;
 import com.homework7.model.Human;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 /**
  * Realization for working with human using list.
  */
+@Component
 public class InMemoryHumanDao implements HumanDao {
   private static final List<Human> inMemoryStorage = new ArrayList<>();
 
@@ -16,7 +18,7 @@ public class InMemoryHumanDao implements HumanDao {
   }
 
   @Override
-  public Human get() {
-    return inMemoryStorage.get(0);
+  public List<Human> get() {
+    return inMemoryStorage;
   }
 }

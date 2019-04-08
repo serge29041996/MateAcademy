@@ -16,7 +16,7 @@ public class InMemoryClientDao implements ClientDao {
   }
 
   @Override
-  public Client get() {
-    return inMemoryStorage.get(0);
+  public List<Client> get() {
+    return inMemoryStorage;
   }
 }

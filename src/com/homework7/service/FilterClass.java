@@ -25,7 +25,7 @@ public class FilterClass {
     String findClass;
     for (String name : classesForSearch) {
       clearedName = name.replaceAll(sparePartName, "").toLowerCase();
-      if (clearedName.equals(property)) {
+      if (clearedName.contains(property)) {
         findClass = name;
         return findClass;
       }
