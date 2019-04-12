@@ -19,7 +19,7 @@ public class PseudoGeneratorTask {
   }
 
   private static IntStream pseudoRandomStream(int seed) {
-    return IntStream.iterate(seed, n -> mid(n * n)).limit(10);
+    return IntStream.iterate(seed, n -> mid(n * n));
   }
 
   private static int mid(int number) {
