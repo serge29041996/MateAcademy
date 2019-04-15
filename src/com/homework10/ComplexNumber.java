@@ -4,20 +4,20 @@ package com.homework10;
  * Class for saving information about complex number.
  */
 public final class ComplexNumber {
-  private final double re;
-  private final double im;
+  private final double real;
+  private final double imaginary;
 
-  public ComplexNumber(double re, double im) {
-    this.re = re;
-    this.im = im;
+  public ComplexNumber(double real, double imaginary) {
+    this.real = real;
+    this.imaginary = imaginary;
   }
 
-  public double getRe() {
-    return re;
+  public double getReal() {
+    return real;
   }
 
-  public double getIm() {
-    return im;
+  public double getImaginary() {
+    return imaginary;
   }
 
   @Override
@@ -34,22 +34,22 @@ public final class ComplexNumber {
       castingNumber = (ComplexNumber) o;
     }
 
-    return this.re == castingNumber.re && this.im == castingNumber.im;
+    return this.real == castingNumber.real && this.imaginary == castingNumber.imaginary;
   }
 
   @Override
   public int hashCode() {
     int result = 0;
-    result += Double.hashCode(this.re);
-    result += Double.hashCode(this.im);
+    result += Double.hashCode(this.real);
+    result += Double.hashCode(this.imaginary);
     return result;
   }
 
   @Override
   public String toString() {
     return "ComplexNumber{"
-        + "re=" + re
-        + ", im=" + im
+        + "re=" + real
+        + ", im=" + imaginary
         + '}';
   }
 }

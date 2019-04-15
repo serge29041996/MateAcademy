@@ -5,6 +5,10 @@ package com.homework10;
  * Task: https://stepik.org/lesson/12769/step/9?unit=3117
  */
 public class ComplexNumberTests {
+  /**
+   * Tests for equals and hashCode of complex number.
+   * @param args arguments for application
+   */
   public static void main(String[] args) {
     ComplexNumber c1 = new ComplexNumber(1, 1);
     System.out.println("First complex number:");
@@ -24,11 +28,5 @@ public class ComplexNumberTests {
     System.out.println("First and third complex numbers are equal? : " + c1.equals(c3));
     System.out.println("First and third complex numbers has equal hash code? : "
         + (c1.hashCode() == c3.hashCode()));
-
-    try {
-
-    } catch (Exception e) {
-
-    }
   }
 }
