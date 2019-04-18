@@ -2,6 +2,7 @@ package com.homework11;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
@@ -20,20 +21,27 @@ public class StreamApiTopWords {
   public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
     String text = scanner.nextLine();
+    List<String> frequentlyUsingWords = getFrequentlyWordsInText(text);
+    for (String s: frequentlyUsingWords) {
+      System.out.println(s);
+    }
+  }
+
+  private static String[] splitStringByPunctualityAndBlankSigns(String data) {
+    return data.split("[\\p{Punct}\\p{Blank}]+");
+  }
+
+  private static List<String> getFrequentlyWordsInText(String text) {
     String[] parsedData = splitStringByPunctualityAndBlankSigns(text);
     Map<String, Long> map = Arrays.stream(parsedData)
         .map(String::toLowerCase)
         .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-    map.entrySet()
+    return map.entrySet()
         .stream()
         .sorted(Comparator.comparing(Entry::getKey))
         .sorted((e1, e2) -> (int)(e2.getValue() - (long)e1.getValue()))
         .map(Entry::getKey)
         .limit(10)
-        .forEach(System.out::println);
-  }
-
-  private static String[] splitStringByPunctualityAndBlankSigns(String data) {
-    return data.split("[\\p{Punct}\\p{Blank}]+");
+        .collect(Collectors.toList());
   }
 }
