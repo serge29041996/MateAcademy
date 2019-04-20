@@ -68,7 +68,6 @@ public class LinkedList<T> implements List<T> {
       for (int i = 0; i < sizeAddedList; i++) {
         add(list.get(i));
       }
-      size += sizeAddedList;
     }
   }
 
@@ -137,31 +136,39 @@ public class LinkedList<T> implements List<T> {
   }
 
   private Node<T> getNode(int index, String operation) {
-    if (index < 0 || index > (size - 1)) {
-      throw new ArrayIndexOutOfBoundsException("Invalid index for " + operation
-          + " element: " + index);
+    if (size == 0) {
+      throw new ArrayIndexOutOfBoundsException("No elements in linked list.");
     } else {
-      if (size == 0) {
-        throw new ArrayIndexOutOfBoundsException("No elements in linked list.");
-      } else if (size == 1) {
-        return firstElement;
+      if (index < 0 || index > (size - 1)) {
+        throw new ArrayIndexOutOfBoundsException("Invalid index for " + operation
+            + " element: " + index);
       } else {
-        int currentIndex = 0;
-        Node<T> currentNode = firstElement;
-        while (currentIndex < index) {
-          currentNode = currentNode.nextNode;
-          currentIndex++;
+        if (size == 1) {
+          return firstElement;
+        } else {
+          int currentIndex = 0;
+          Node<T> currentNode = firstElement;
+          while (currentIndex < index) {
+            currentNode = currentNode.nextNode;
+            currentIndex++;
+          }
+          return currentNode;
         }
-        return currentNode;
       }
     }
   }
 
   private T removeElement(Node<T> nodeForRemoving, int index) {
     if (index == 0) {
-      firstElement = nodeForRemoving.nextNode;
-      nodeForRemoving.nextNode = null;
-      firstElement.previousNode = null;
+      if (size == 1) {
+        firstElement = null;
+        lastElement = null;
+      } else {
+        Node<T> newFirstElement = nodeForRemoving.nextNode;
+        newFirstElement.previousNode = null;
+        firstElement.nextNode = null;
+        firstElement = newFirstElement;
+      }
     } else if (index == (size - 1)) {
       lastElement = nodeForRemoving.previousNode;
       lastElement.nextNode = null;
