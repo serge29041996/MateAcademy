@@ -87,7 +87,7 @@ public class ArrayListTest {
   }
 
   @Test
-  public void addAllElementsFromNonEmptyArrayList() throws Exception {
+  public void addAllElementsFromNonEmptyArrayList() {
     List<String> secondStringListWithTwoElements = new ArrayList<>();
     secondStringListWithTwoElements.add("3");
     secondStringListWithTwoElements.add("4");
@@ -222,7 +222,7 @@ public class ArrayListTest {
     stringListWithTwoElements.remove(currentSizeFirstString + 2);
   }
 
-  @Test()
+  @Test
   public void removeElementByExistenceIndex() {
     int currentSizeFirstString = stringListWithTwoElements.size();
     String currentValueLastElement = stringListWithTwoElements.get(currentSizeFirstString - 1);

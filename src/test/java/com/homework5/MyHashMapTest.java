@@ -18,6 +18,16 @@ public class MyHashMapTest {
     hashMapWithOneElement.put(TEST_KEY, TEST_VALUE);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void createHashMapWithNegativeCapacity() {
+    MyHashMap<String, String> hashMap = new MyHashMap<>(-2, 0.9);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void createHashMapWithNegativeLoadFactor() {
+    MyHashMap<String, String> hashMap = new MyHashMap<>(10, -0.1);
+  }
+
   @Test
   public void putNewKeyValue(){
     MyHashMap<String, String> hashMap = new MyHashMap<>();

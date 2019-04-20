@@ -28,8 +28,8 @@ public class MyHashMap<K, V> {
     if (capacity < 2) {
       throw new IllegalArgumentException("Capacity cannot be less than 2");
     }
-    if (loadFactor < 0) {
-      throw new IllegalArgumentException("Load factor cannot be less than 0");
+    if (loadFactor < 0 || loadFactor > 1) {
+      throw new IllegalArgumentException("Load factor cannot be less than 0 or greater than 1");
     }
     this.loadFactor = loadFactor;
     this.table = (Node<K, V>[]) new Node[capacity];
