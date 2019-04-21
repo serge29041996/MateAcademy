@@ -48,7 +48,6 @@ public class ArrayList<T> implements List<T> {
       for (int i = 0; i < list.size(); i++) {
         add(list.get(i));
       }
-      size += list.size();
     }
   }
 
@@ -109,7 +108,7 @@ public class ArrayList<T> implements List<T> {
   }
 
   private void ensureCapacity(int numberAddedElement, boolean increase) {
-      changeElements(increase, size + numberAddedElement);
+    changeElements(increase, size + numberAddedElement);
   }
 
   private void changeElements(boolean increase, int needCapacity) {
@@ -134,7 +133,7 @@ public class ArrayList<T> implements List<T> {
   }
 
   private void checkIndex(int index, String operation) {
-    if (index < 0 || index > size || size == 0) {
+    if (index < 0 || index >= size || size == 0) {
       throw new ArrayIndexOutOfBoundsException("Invalid index for " + operation + ": " + index);
     }
   }
@@ -145,7 +144,7 @@ public class ArrayList<T> implements List<T> {
 
   private T removeElement(int index) {
     T valueRemovingElement = elements[index];
-    if (index < size) {
+    if (index < size - 1) {
       shiftLeftElements(index);
     } else {
       elements[index] = null;
