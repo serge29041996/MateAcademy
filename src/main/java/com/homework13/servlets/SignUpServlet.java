@@ -6,6 +6,7 @@ import com.homework13.model.User;
 import com.homework13.service.CheckData;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(value = "/sign_up")
 public class SignUpServlet extends HttpServlet {
-  protected void doPost(HttpServletRequest request,
+  @Override
+  public void doPost(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
     request.setCharacterEncoding("UTF-8");
@@ -40,21 +42,11 @@ public class SignUpServlet extends HttpServlet {
     }
   }
 
-  protected void doGet(HttpServletRequest request,
+  @Override
+  public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    response.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html");
-    PrintWriter printWriter = response.getWriter();
-    printWriter.println("<h3>Введите данные для регистрации:</h3>");
-    printWriter.println("<form method=\"post\"");
-    printWriter.println("<label for=\"login\">Логин:</label>");
-    printWriter.println("<input type=\"text\" name=\"login\" id=\"login\"/>");
-    printWriter.println("<br>");
-    printWriter.println("<label for=\"password\">Пароль:</label>");
-    printWriter.println("<input type=\"password\" name=\"password\" id=\"password\"/>");
-    printWriter.println("<br>");
-    printWriter.println("<button type=\"submit\">Зарегистрироваться</button>");
-    printWriter.println("</form>");
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_up.html");
+    requestDispatcher.forward(request, response);
   }
 }

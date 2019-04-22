@@ -11,11 +11,21 @@ public class CheckData {
    * @return empty string, if login and password have not empty, otherwise message about error.
    */
   public static String checkUserData(String login, String password) {
+    if (login == null) {
+      login = "";
+    } else {
+      login = login.trim();
+    }
+    if (password == null) {
+      password = "";
+    } else {
+      password = password.trim();
+    }
     StringBuilder stringBuilder = new StringBuilder();
-    if ("".equals(login.trim())) {
+    if ("".equals(login)) {
       stringBuilder.append("Вы не ввели логин.");
     }
-    if ("".equals(password.trim())) {
+    if ("".equals(password)) {
       stringBuilder.append("Вы не ввели пароль.");
     }
     return stringBuilder.toString();

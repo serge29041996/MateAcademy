@@ -11,24 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet for manipulation with actions.
  */
-@WebServlet(value = "/")
+@WebServlet(value = "/action")
 public class MainServlet extends HttpServlet {
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
-    resp.setContentType("text/html");
-    resp.setCharacterEncoding("UTF-8");
-    PrintWriter printWriter = resp.getWriter();
-    printWriter.println("<h3>Выберите одно из указанных действий</h3>");
-    printWriter.println("<form method=\"post\">");
-    printWriter.println("<button type=\"submit\" name=\"result\" value=\"sign_in\">Войти</button>");
-    printWriter.println("<button type=\"submit\" name=\"result\" value=\"sign_up\">Зарегистрироваться</button>");
-    printWriter.println("</form>");
-    printWriter.close();
-  }
-
-  @Override
-  protected void doPost(HttpServletRequest request,
+  public void doPost(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
     PrintWriter printWriter = response.getWriter();

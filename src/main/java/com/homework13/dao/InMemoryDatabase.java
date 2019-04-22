@@ -45,4 +45,12 @@ public class InMemoryDatabase {
         .filter(u -> u.getLogin().equals(login))
         .findFirst();
   }
+
+  public static int count() {
+    return DATABASE.size();
+  }
+
+  public static void deleteAll() {
+    DATABASE.clear();
+  }
 }

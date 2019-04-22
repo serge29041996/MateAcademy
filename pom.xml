@@ -20,6 +20,12 @@
       <artifactId>tomcat-embed-core</artifactId>
       <version>8.5.27</version>
     </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.10.19</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
