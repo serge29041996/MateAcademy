@@ -1,9 +1,9 @@
 package com.homework13.servlets;
 
-import com.homework13.dao.InMemoryDatabase;
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework13.service.CheckData;
+import com.homework14.dao.UserDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -31,7 +31,7 @@ public class SignInServlet extends HttpServlet {
     PrintWriter printWriter = response.getWriter();
     if (result.equals("")) {
       try {
-        User user = InMemoryDatabase.getUser(login);
+        User user = UserDao.getUser(login);
         if (user.getPassword().equals(password)) {
           printWriter.println("Привет " + login);
         } else {

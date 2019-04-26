@@ -20,9 +20,9 @@ public class MainServlet extends HttpServlet {
     PrintWriter printWriter = response.getWriter();
     String result = request.getParameter("result");
     if (result.equals("sign_in")) {
-      response.sendRedirect(request.getContextPath() + "/sign_in");
+      response.sendRedirect("/sign_in");
     } else if (result.equals("sign_up")) {
-      response.sendRedirect(request.getContextPath() + "/sign_up");
+      response.sendRedirect("/sign_up");
     } else {
       printWriter.println("Нет действия для Вашего запроса.");
     }

@@ -1,7 +1,7 @@
 package com.homework13.servlets;
 
-import com.homework13.dao.InMemoryDatabase;
 import com.homework13.model.User;
+import com.homework14.dao.UserDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -32,7 +32,7 @@ public class SignInServletTest {
     stringWriter = new StringWriter();
     printWriter = new PrintWriter(stringWriter);
     Mockito.when(response.getWriter()).thenReturn(printWriter);
-    InMemoryDatabase.deleteAll();
+    UserDao.deleteAll();
   }
 
   @Test
@@ -46,7 +46,7 @@ public class SignInServletTest {
 
   @Test
   public void doPostForExistUser() throws Exception {
-    InMemoryDatabase.saveUser(new User(TEST_VALUE, TEST_VALUE));
+    UserDao.saveUser(new User(TEST_VALUE, TEST_VALUE));
     new SignInServlet().doPost(request, response);
     printWriter.flush();
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
@@ -57,7 +57,7 @@ public class SignInServletTest {
   @Test
   public void doPostUserWithInvalidPassword() throws Exception {
     Mockito.when(request.getParameter("password")).thenReturn("pass");
-    InMemoryDatabase.saveUser(new User(TEST_VALUE, TEST_VALUE));
+    UserDao.saveUser(new User(TEST_VALUE, TEST_VALUE));
     new SignInServlet().doPost(request, response);
     printWriter.flush();
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
@@ -69,7 +69,7 @@ public class SignInServletTest {
   public void doPostUserWithInvalidData() throws Exception {
     Mockito.when(request.getParameter("login")).thenReturn("");
     Mockito.when(request.getParameter("password")).thenReturn("pass");
-    InMemoryDatabase.saveUser(new User(TEST_VALUE, TEST_VALUE));
+    UserDao.saveUser(new User(TEST_VALUE, TEST_VALUE));
     new SignInServlet().doPost(request, response);
     printWriter.flush();
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
