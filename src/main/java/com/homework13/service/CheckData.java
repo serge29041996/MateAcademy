@@ -1,5 +1,7 @@
 package com.homework13.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Class for checking data.
  */
@@ -29,5 +31,12 @@ public class CheckData {
       stringBuilder.append("Вы не ввели пароль.");
     }
     return stringBuilder.toString();
+  }
+
+  public static void checkOnNullAndSetValueForAttribute(HttpServletRequest request, String nameAttribute) {
+    Object resultMessage = request.getAttribute(nameAttribute);
+    if (resultMessage == null) {
+      request.setAttribute(nameAttribute,"");
+    }
   }
 }

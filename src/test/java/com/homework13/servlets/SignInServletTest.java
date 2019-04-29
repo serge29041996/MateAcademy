@@ -80,8 +80,8 @@ public class SignInServletTest {
   @Test
   public void doGetToSignInForm() throws Exception {
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
-    Mockito.when(request.getRequestDispatcher("/sign_in.html")).thenReturn(requestDispatcher);
+    Mockito.when(request.getRequestDispatcher("/sign_in.jsp")).thenReturn(requestDispatcher);
     new SignInServlet().doGet(request, response);
-    Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/sign_in.html");
+    Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/sign_in.jsp");
   }
 }

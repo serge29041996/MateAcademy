@@ -69,8 +69,8 @@ public class SignUpServletTest {
   @Test
   public void doGetToSignUpForm() throws Exception {
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
-    Mockito.when(request.getRequestDispatcher("/sign_up.html")).thenReturn(requestDispatcher);
+    Mockito.when(request.getRequestDispatcher("/sign_up.jsp")).thenReturn(requestDispatcher);
     new SignUpServlet().doGet(request, response);
-    Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/sign_up.html");
+    Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/sign_up.jsp");
   }
 }

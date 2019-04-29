@@ -5,7 +5,6 @@ import com.homework13.model.User;
 import com.homework13.service.CheckData;
 import com.homework14.dao.UserDao;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,28 +27,34 @@ public class SignInServlet extends HttpServlet {
     String login = request.getParameter("login");
     String password = request.getParameter("password");
     String result = CheckData.checkUserData(login, password);
-    PrintWriter printWriter = response.getWriter();
     if (result.equals("")) {
       try {
         User user = UserDao.getUser(login);
         if (user.getPassword().equals(password)) {
-          printWriter.println("Привет " + login);
+          request.setAttribute("result", "Привет " + login);
         } else {
-          printWriter.println("неверный логин/пасс");
+          request.setAttribute("result", "неверный логин/пасс");
         }
       } catch (NoSuchUserException e) {
-        printWriter.println("неверный логин/пасс");
+        request.setAttribute("result", "неверный логин/пасс");
       }
     } else {
-      printWriter.println(result);
+      request.setAttribute("result", result);
     }
+    request.setAttribute("login", login);
+    request.setAttribute("password", password);
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_in.jsp");
+    requestDispatcher.include(request, response);
   }
 
   @Override
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_in.html");
+    CheckData.checkOnNullAndSetValueForAttribute(request, "result");
+    CheckData.checkOnNullAndSetValueForAttribute(request, "login");
+    CheckData.checkOnNullAndSetValueForAttribute(request, "password");
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_in.jsp");
     requestDispatcher.forward(request, response);
   }
 }
