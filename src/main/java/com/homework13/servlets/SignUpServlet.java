@@ -1,9 +1,9 @@
 package com.homework13.servlets;
 
 import com.homework13.dao.DuplicateUserException;
-import com.homework13.dao.InMemoryDatabase;
 import com.homework13.model.User;
 import com.homework13.service.CheckData;
+import com.homework14.dao.UserDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -32,7 +32,7 @@ public class SignUpServlet extends HttpServlet {
     if (result.equals("")) {
       User newUser = new User(login, password);
       try {
-        InMemoryDatabase.saveUser(newUser);
+        UserDao.saveUser(newUser);
         printWriter.println("Вы успешно зарегистрировались. Теперь Вы можете авторизироваться.");
       } catch (DuplicateUserException e) {
         printWriter.println("Пользователь с логином " + login + " уже существует.");
