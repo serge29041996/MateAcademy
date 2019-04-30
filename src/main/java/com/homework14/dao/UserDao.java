@@ -16,12 +16,17 @@ import java.util.Optional;
  * Class for working with user from database.
  */
 public class UserDao {
-  public static void saveUser(User newUser) throws DuplicateUserException {
+  /**
+   * Save user to database.
+   * @param newUser information about user
+   * @throws DuplicateUserException when user with login of new user is exist
+   */
+  public void saveUser(User newUser) throws DuplicateUserException {
     if (findUserByLogin(newUser.getLogin()).isPresent()) {
       throw new DuplicateUserException();
     } else {
       String insertRequest = "INSERT INTO users(login, password) VALUES(?, ?);";
-      try(Connection connection = DbConnector.getConnection();
+      try (Connection connection = DbConnector.getConnection();
           PreparedStatement statement = connection.prepareStatement(insertRequest)) {
         statement.setString(1, newUser.getLogin());
         statement.setString(2, newUser.getPassword());
@@ -32,7 +37,13 @@ public class UserDao {
     }
   }
 
-  public static User getUser(String login) throws NoSuchUserException {
+  /**
+   * Get user by login.
+   * @param login login of need user
+   * @return find user
+   * @throws NoSuchUserException when user with login not found
+   */
+  public User getUser(String login) throws NoSuchUserException {
     Optional<User> findUser = findUserByLogin(login);
     if (!findUser.isPresent()) {
       throw new NoSuchUserException();
@@ -41,7 +52,13 @@ public class UserDao {
     }
   }
 
-  public static User getUser(long id) throws NoSuchUserException {
+  /**
+   * Get user by id.
+   * @param id id of need user
+   * @return find user
+   * @throws NoSuchUserException when user with id not found
+   */
+  public User getUser(long id) throws NoSuchUserException {
     Optional<User> findUser = findUserById(id);
     if (!findUser.isPresent()) {
       throw new NoSuchUserException();
@@ -50,7 +67,11 @@ public class UserDao {
     }
   }
 
-  public static int count() {
+  /**
+   * Get number of users in database.
+   * @return number of users
+   */
+  public int count() {
     String countRequest = "SELECT COUNT(*) FROM users;";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(countRequest)) {
@@ -63,17 +84,24 @@ public class UserDao {
     }
   }
 
-  public static void deleteAll() {
+  /**
+   * Clear database.
+   */
+  public void deleteAll() {
     try (Connection connection = DbConnector.getConnection();
         Statement statement = connection.createStatement()) {
-      String truncateRequest = "truncate users;";
+      String truncateRequest = "TRUNCATE users;";
       statement.execute(truncateRequest);
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
-  public static List<User> getAllUsers() {
+  /**
+   * Get all users from database.
+   * @return ArrayList of all users
+   */
+  public List<User> getAllUsers() {
     String getAllRequest = "SELECT * FROM users;";
     List<User> users = new ArrayList<>();
     try (Connection connection = DbConnector.getConnection();
@@ -83,7 +111,7 @@ public class UserDao {
         long id = resultSet.getLong("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
-        User newUser = new User(login, password);
+        User newUser = new User(id, login, password);
         newUser.setId(id);
         users.add(newUser);
       }
@@ -93,19 +121,28 @@ public class UserDao {
     return users;
   }
 
-  public static void deleteUser(long id) {
+  /**
+   * Delete user by id.
+   * @param id id of user for deleting
+   */
+  public void deleteUser(long id) {
     String deleteRequest = "DELETE FROM users WHERE id=?";
-    try(Connection connection = DbConnector.getConnection();
+    try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(deleteRequest)) {
+      statement.setLong(1, id);
       statement.execute();
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
-  public static void updateUser(User newUser) {
+  /**
+   * Update information about user.
+   * @param newUser exist user with new information
+   */
+  public void updateUser(User newUser) {
     String updateUser = "UPDATE users SET login=?, password=? WHERE id=?";
-    try(Connection connection = DbConnector.getConnection();
+    try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(updateUser)) {
       statement.setString(1,newUser.getLogin());
       statement.setString(2,newUser.getPassword());
@@ -116,12 +153,12 @@ public class UserDao {
     }
   }
 
-  private static Optional<User> findUserByLogin(String login) {
+  private Optional<User> findUserByLogin(String login) {
     String selectRequest = "SELECT * FROM users WHERE login=?;";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(selectRequest)) {
       statement.setString(1, login);
-      ResultSet resultSet = statement.executeQuery(selectRequest);
+      ResultSet resultSet = statement.executeQuery();
       return getUserFromResultSet(resultSet);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -129,8 +166,8 @@ public class UserDao {
     }
   }
 
-  private static Optional<User> findUserById(long needId) {
-    String selectRequest = "SELECT * FROM user where id=?;";
+  private Optional<User> findUserById(long needId) {
+    String selectRequest = "SELECT * FROM users where id=?;";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(selectRequest)) {
       statement.setLong(1, needId);
@@ -142,14 +179,13 @@ public class UserDao {
     }
   }
 
-  private static Optional<User> getUserFromResultSet(ResultSet resultSet) {
+  private Optional<User> getUserFromResultSet(ResultSet resultSet) {
     try {
       if (resultSet.next()) {
         long id = resultSet.getLong("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
-        User resultUser = new User(login, password);
-        resultUser.setId(id);
+        User resultUser = new User(id, login, password);
         return Optional.of(resultUser);
       } else {
         return Optional.empty();

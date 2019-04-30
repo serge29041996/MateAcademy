@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(value = "/sign_up")
 public class SignUpServlet extends HttpServlet {
+  private final UserDao userDao = new UserDao();
+
   @Override
   public void doPost(HttpServletRequest request,
       HttpServletResponse response)
@@ -30,8 +32,9 @@ public class SignUpServlet extends HttpServlet {
     if (result.equals("")) {
       User newUser = new User(login, password);
       try {
-        UserDao.saveUser(newUser);
-        request.setAttribute("result", "Вы успешно зарегистрировались. Теперь Вы можете авторизироваться.");
+        userDao.saveUser(newUser);
+        request.setAttribute("result", "Вы успешно зарегистрировались. "
+            + "Теперь Вы можете авторизироваться.");
       } catch (DuplicateUserException e) {
         request.setAttribute("result", "Пользователь с логином " + login + " уже существует.");
       }
@@ -48,9 +51,9 @@ public class SignUpServlet extends HttpServlet {
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    CheckData.checkOnNullAndSetValueForAttribute(request, "result");
-    CheckData.checkOnNullAndSetValueForAttribute(request, "login");
-    CheckData.checkOnNullAndSetValueForAttribute(request, "password");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "result");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "login");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "password");
     RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_up.jsp");
     requestDispatcher.forward(request, response);
   }

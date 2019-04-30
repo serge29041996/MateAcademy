@@ -24,12 +24,12 @@
         <input type="password" name="password" id="password" value="<c:out value="${password}" />"/>
         <br>
         <c:if test="${action == 'add'}">
-            <button type="submit">Создать</button>
+            <button type="submit" name="option" value="add">Создать</button>
         </c:if>
         <c:if test="${action == 'update'}">
-            <button type="submit">Обновить</button>
+            <button type="submit" name="option" value="update">Обновить</button>
         </c:if>
-        <button type="submit" name="result" value="return">Вернутся к списку</button>
+        <button type="submit" name="option" value="return">Вернутся к списку</button>
     </form>
     <h3>${result}</h3>
 </body>

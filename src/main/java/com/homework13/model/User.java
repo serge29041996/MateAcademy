@@ -13,6 +13,18 @@ public class User {
     this.password = password;
   }
 
+  /**
+   * Constructor for id, login, password.
+   * @param id value of id
+   * @param login value of login
+   * @param password value of password
+   */
+  public User(long id, String login, String password) {
+    this.id = id;
+    this.login = login;
+    this.password = password;
+  }
+
   public String getLogin() {
     return login;
   }

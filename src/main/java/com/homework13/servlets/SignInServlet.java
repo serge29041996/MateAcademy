@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(value = "/sign_in")
 public class SignInServlet extends HttpServlet {
+  private final UserDao userDao = new UserDao();
+
   @Override
   public void doPost(HttpServletRequest request,
       HttpServletResponse response)
@@ -29,7 +31,7 @@ public class SignInServlet extends HttpServlet {
     String result = CheckData.checkUserData(login, password);
     if (result.equals("")) {
       try {
-        User user = UserDao.getUser(login);
+        User user = userDao.getUser(login);
         if (user.getPassword().equals(password)) {
           request.setAttribute("result", "Привет " + login);
         } else {
@@ -51,9 +53,9 @@ public class SignInServlet extends HttpServlet {
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    CheckData.checkOnNullAndSetValueForAttribute(request, "result");
-    CheckData.checkOnNullAndSetValueForAttribute(request, "login");
-    CheckData.checkOnNullAndSetValueForAttribute(request, "password");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "result");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "login");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "password");
     RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_in.jsp");
     requestDispatcher.forward(request, response);
   }

@@ -33,10 +33,29 @@ public class CheckData {
     return stringBuilder.toString();
   }
 
-  public static void checkOnNullAndSetValueForAttribute(HttpServletRequest request, String nameAttribute) {
+  /**
+   * Check on null attribute and set default value.
+   * @param request request, where need attribute located
+   * @param nameAttribute name of need attribute
+   */
+  public static void checkOnNullAndSetDefaultValueForAttribute(HttpServletRequest request,
+      String nameAttribute) {
     Object resultMessage = request.getAttribute(nameAttribute);
     if (resultMessage == null) {
       request.setAttribute(nameAttribute,"");
+    }
+  }
+
+  /**
+   * Check on null attribute and set need value.
+   * @param request request, where need attribute located
+   * @param value value for need attribute
+   * @param nameAttribute name of need attribute
+   */
+  public static void checkOnNullAndSetValueForAttribute(HttpServletRequest request,
+      String nameAttribute, String value) {
+    if (request.getAttribute(nameAttribute) == null) {
+      request.setAttribute(nameAttribute, value);
     }
   }
 }

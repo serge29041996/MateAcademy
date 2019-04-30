@@ -16,39 +16,39 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet for admin action.
  */
 @WebServlet(value = "/admin_page")
-public class AdminServlet extends HttpServlet {
+public class AdminPageServlet extends HttpServlet {
+  private final UserDao userDao = new UserDao();
+
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    List<User> userList = UserDao.getAllUsers();
+    List<User> userList = userDao.getAllUsers();
     request.setAttribute("numberUsers", userList.size());
     request.setAttribute("users", userList);
-    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin.jsp");
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin_page.jsp");
     requestDispatcher.forward(request, response);
   }
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String result = request.getParameter("result");
     if (result.equals("addUser")) {
-      request.setAttribute("action", "add");
-      RequestDispatcher requestDispatcher = request.getRequestDispatcher("/user_action");
-      requestDispatcher.forward(request, response);
+      request.getSession().setAttribute("action", "add");
+      response.sendRedirect("/admin/user_action");
     } else if (result.contains("update")) {
       String idNeedUser = result.split("_")[1];
       try {
-        User needUser = UserDao.getUser(Long.parseLong(idNeedUser));
-        request.setAttribute("user", needUser);
-        request.setAttribute("action", "update");
+        User needUser = userDao.getUser(Long.parseLong(idNeedUser));
+        request.getSession().setAttribute("user", needUser);
+        request.getSession().setAttribute("action", "update");
       } catch (NoSuchUserException e) {
-        request.setAttribute("action", "add");
+        request.getSession().setAttribute("action", "add");
       }
-      RequestDispatcher requestDispatcher = request.getRequestDispatcher("/user_action");
-      requestDispatcher.forward(request, response);
+      response.sendRedirect("/admin/user_action");
     } else if (result.contains("delete")) {
       String idUserForDeleting = result.split("_")[1];
-      UserDao.deleteUser(Long.parseLong(idUserForDeleting));
+      userDao.deleteUser(Long.parseLong(idUserForDeleting));
       doGet(request, response);
     }
   }
