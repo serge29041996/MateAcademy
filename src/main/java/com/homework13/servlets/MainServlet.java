@@ -21,8 +21,6 @@ public class MainServlet extends HttpServlet {
       response.sendRedirect("/sign_in");
     } else if (result.equals("sign_up")) {
       response.sendRedirect("/sign_up");
-    } else if (result.equals("admin_page")) {
-      response.sendRedirect("/admin_page");
     }
   }
 }

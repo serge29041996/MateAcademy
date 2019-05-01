@@ -9,7 +9,6 @@
     <form method="post" action="action">
       <button type="submit" name="result" value="sign_in">Войти</button>
       <button type="submit" name="result" value="sign_up">Зарегистрироваться</button>
-      <button type="submit" name="result" value="admin_page">Панель адиминистратора</button>
       </form>
   </body>
 </html>

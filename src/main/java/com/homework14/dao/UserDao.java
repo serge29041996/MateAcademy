@@ -3,11 +3,11 @@ package com.homework14.dao;
 import com.homework13.dao.DuplicateUserException;
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
+import com.homework16.model.Role;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,11 +25,12 @@ public class UserDao {
     if (findUserByLogin(newUser.getLogin()).isPresent()) {
       throw new DuplicateUserException();
     } else {
-      String insertRequest = "INSERT INTO users(login, password) VALUES(?, ?);";
-      try (Connection connection = DbConnector.getConnection();
+      String insertRequest = "INSERT INTO users(login, password, role) VALUES(?, ?, ?);";
+      try(Connection connection = DbConnector.getConnection();
           PreparedStatement statement = connection.prepareStatement(insertRequest)) {
         statement.setString(1, newUser.getLogin());
         statement.setString(2, newUser.getPassword());
+        statement.setString(3, Role.USER.getValue());
         statement.execute();
       } catch (SQLException e) {
         e.printStackTrace();
@@ -88,10 +89,11 @@ public class UserDao {
    * Clear database.
    */
   public void deleteAll() {
+    String deleteRequest = "DELETE FROM users WHERE role=?";
     try (Connection connection = DbConnector.getConnection();
-        Statement statement = connection.createStatement()) {
-      String truncateRequest = "TRUNCATE users;";
-      statement.execute(truncateRequest);
+        PreparedStatement statement = connection.prepareStatement(deleteRequest)) {
+      statement.setString(1, Role.USER.getValue());
+      statement.execute();
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -111,8 +113,8 @@ public class UserDao {
         long id = resultSet.getLong("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
-        User newUser = new User(id, login, password);
-        newUser.setId(id);
+        Role role = Role.fromString(resultSet.getString("role"));
+        User newUser = new User(id, login, password, role);
         users.add(newUser);
       }
     } catch (SQLException e) {
@@ -185,7 +187,8 @@ public class UserDao {
         long id = resultSet.getLong("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
-        User resultUser = new User(id, login, password);
+        Role role = Role.fromString(resultSet.getString("role"));
+        User resultUser = new User(id, login, password, role);
         return Optional.of(resultUser);
       } else {
         return Optional.empty();
