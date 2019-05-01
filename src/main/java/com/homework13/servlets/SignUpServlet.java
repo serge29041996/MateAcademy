@@ -5,7 +5,6 @@ import com.homework13.model.User;
 import com.homework13.service.CheckData;
 import com.homework14.dao.UserDao;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(value = "/sign_up")
 public class SignUpServlet extends HttpServlet {
+  private final UserDao userDao = new UserDao();
+
   @Override
   public void doPost(HttpServletRequest request,
       HttpServletResponse response)
@@ -28,25 +29,32 @@ public class SignUpServlet extends HttpServlet {
     String login = request.getParameter("login");
     String password = request.getParameter("password");
     String result = CheckData.checkUserData(login, password);
-    PrintWriter printWriter = response.getWriter();
     if (result.equals("")) {
       User newUser = new User(login, password);
       try {
-        UserDao.saveUser(newUser);
-        printWriter.println("Вы успешно зарегистрировались. Теперь Вы можете авторизироваться.");
+        userDao.saveUser(newUser);
+        request.setAttribute("result", "Вы успешно зарегистрировались. "
+            + "Теперь Вы можете авторизироваться.");
       } catch (DuplicateUserException e) {
-        printWriter.println("Пользователь с логином " + login + " уже существует.");
+        request.setAttribute("result", "Пользователь с логином " + login + " уже существует.");
       }
     } else {
-      printWriter.println(result);
+      request.setAttribute("result", result);
     }
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_up.jsp");
+    request.setAttribute("login", login);
+    request.setAttribute("password", password);
+    requestDispatcher.include(request, response);
   }
 
   @Override
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_up.html");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "result");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "login");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "password");
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_up.jsp");
     requestDispatcher.forward(request, response);
   }
 }

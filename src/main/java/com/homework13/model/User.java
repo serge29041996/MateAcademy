@@ -4,10 +4,23 @@ package com.homework13.model;
  * Class for saving information about user.
  */
 public class User {
+  private long id;
   private String login;
   private String password;
 
   public User(String login, String password) {
+    this.login = login;
+    this.password = password;
+  }
+
+  /**
+   * Constructor for id, login, password.
+   * @param id value of id
+   * @param login value of login
+   * @param password value of password
+   */
+  public User(long id, String login, String password) {
+    this.id = id;
     this.login = login;
     this.password = password;
   }
@@ -26,6 +39,14 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
   }
 
   @Override

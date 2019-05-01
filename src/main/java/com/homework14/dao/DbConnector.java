@@ -12,6 +12,10 @@ public class DbConnector {
   private static final String LOGIN = "Serge@localhost";
   private static final String PASSWORD = "root";
 
+  /**
+   * Get connection for working with database.
+   * @return connection to database
+   */
   public static Connection getConnection() {
     Connection connection = null;
     int numberFailedAttempts = 0;
