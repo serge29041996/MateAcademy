@@ -35,7 +35,7 @@ public class AdminPageServlet extends HttpServlet {
     String result = request.getParameter("result");
     if (result.equals("addUser")) {
       request.getSession().setAttribute("action", "add");
-      response.sendRedirect("/admin/user_action");
+      response.sendRedirect("/admin_page/user_action");
     } else if (result.contains("update")) {
       String idNeedUser = result.split("_")[1];
       try {
@@ -45,7 +45,7 @@ public class AdminPageServlet extends HttpServlet {
       } catch (NoSuchUserException e) {
         request.getSession().setAttribute("action", "add");
       }
-      response.sendRedirect("/admin/user_action");
+      response.sendRedirect("/admin_page/user_action");
     } else if (result.contains("delete")) {
       String idUserForDeleting = result.split("_")[1];
       userDao.deleteUser(Long.parseLong(idUserForDeleting));

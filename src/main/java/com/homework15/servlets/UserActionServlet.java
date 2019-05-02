@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Class for handle add and update operation for user.
  */
-@WebServlet(value = "/user_action")
+@WebServlet(value = "/admin_page/user_action")
 public class UserActionServlet extends HttpServlet {
   private final UserDao userDao = new UserDao();
 

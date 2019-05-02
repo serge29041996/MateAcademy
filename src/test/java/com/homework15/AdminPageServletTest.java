@@ -75,7 +75,7 @@ public class AdminPageServletTest {
     Mockito.verify(session, Mockito.times(1))
         .setAttribute("action", "add");
     Mockito.verify(response, Mockito.times(1))
-        .sendRedirect("/user_action");
+        .sendRedirect("/admin_page/user_action");
   }
 
   @Test
@@ -93,7 +93,7 @@ public class AdminPageServletTest {
     Mockito.verify(session, Mockito.times(1))
         .setAttribute("user", gettingUser);
     Mockito.verify(response, Mockito.times(1))
-        .sendRedirect("/user_action");
+        .sendRedirect("/admin_page/user_action");
   }
 
   @Test
@@ -106,7 +106,7 @@ public class AdminPageServletTest {
     Mockito.verify(session, Mockito.times(1))
         .setAttribute("action", "add");
     Mockito.verify(response, Mockito.times(1))
-        .sendRedirect("/user_action");
+        .sendRedirect("/admin_page/user_action");
   }
 
   @Test

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Filter for prevent go to admin page and do admin action.
  */
-@WebFilter("/admin/*")
+@WebFilter("/admin_page/*")
 public class AdminFilter implements Filter {
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
