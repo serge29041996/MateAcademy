@@ -10,10 +10,13 @@ public class User {
   private String login;
   private String password;
   private Role role;
+  private String mail;
 
-  public User(String login, String password) {
+  public User(String login, String password, String mail) {
     this.login = login;
     this.password = password;
+    this.mail = mail;
+    this.role = Role.USER;
   }
 
   public User(long id, String login, String password) {
@@ -27,6 +30,14 @@ public class User {
     this.login = login;
     this.password = password;
     this.role = role;
+  }
+
+  public User(long id, String login, String password, Role role, String mail) {
+    this.id = id;
+    this.login = login;
+    this.password = password;
+    this.role = role;
+    this.mail = mail;
   }
 
   public String getLogin() {
@@ -61,6 +72,14 @@ public class User {
     this.role = role;
   }
 
+  public String getMail() {
+    return mail;
+  }
+
+  public void setMail(String mail) {
+    this.mail = mail;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -78,7 +97,10 @@ public class User {
     if (!password.equals(user.password)) {
       return false;
     }
-    return role == user.role;
+    if (role != user.role) {
+      return false;
+    }
+    return mail.equals(user.mail);
   }
 
   @Override
@@ -86,15 +108,17 @@ public class User {
     int result = login.hashCode();
     result = 31 * result + password.hashCode();
     result = 31 * result + role.hashCode();
+    result = 31 * result + mail.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
-    return "User{" +
-        "login='" + login + '\'' +
-        ", password='" + password + '\'' +
-        ", role=" + role +
-        '}';
+    return "User{"
+        + "id=" + id
+        + ", login='" + login + '\''
+        + ", password='" + password + '\''
+        + ", role=" + role
+        + ", mail='" + mail + '\'' + '}';
   }
 }

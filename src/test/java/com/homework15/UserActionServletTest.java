@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -21,7 +22,7 @@ import org.mockito.Mockito;
  */
 public class UserActionServletTest {
   private static final String TEST_VALUE = "1";
-  private static final User TEST_USER = new User(TEST_VALUE, TEST_VALUE);
+  private static final User TEST_USER = new User(TEST_VALUE, TEST_VALUE, TEST_VALUE);
   private final UserDao userDao = new UserDao();
   private HttpServletRequest request;
   private HttpServletResponse response;
@@ -32,6 +33,10 @@ public class UserActionServletTest {
     response = Mockito.mock(HttpServletResponse.class);
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(request.getRequestDispatcher("/user_form.jsp")).thenReturn(requestDispatcher);
+  }
+
+  @After
+  public void clear() {
     userDao.deleteAll();
   }
 
@@ -91,6 +96,7 @@ public class UserActionServletTest {
     Mockito.when(request.getParameter("option")).thenReturn("add");
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
     Mockito.when(request.getParameter("password")).thenReturn(TEST_VALUE);
+    Mockito.when(request.getParameter("mail")).thenReturn("test@gmail.com");
     Mockito.when(request.getSession()).thenReturn(session);
     new UserActionServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1))
@@ -106,6 +112,7 @@ public class UserActionServletTest {
     Mockito.when(request.getParameter("option")).thenReturn("add");
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
     Mockito.when(request.getParameter("password")).thenReturn(TEST_VALUE);
+    Mockito.when(request.getParameter("mail")).thenReturn("test@gmail.com");
     Mockito.when(request.getSession()).thenReturn(session);
     new UserActionServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1))
@@ -121,6 +128,7 @@ public class UserActionServletTest {
     Mockito.when(request.getParameter("option")).thenReturn("add");
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
     Mockito.when(request.getParameter("password")).thenReturn(null);
+    Mockito.when(request.getParameter("mail")).thenReturn("test@gmail.com");
     Mockito.when(request.getSession()).thenReturn(session);
     new UserActionServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1))
@@ -139,8 +147,10 @@ public class UserActionServletTest {
     Mockito.when(session.getAttribute("id")).thenReturn(gettingUser.getId());
     Mockito.when(session.getAttribute("old_login")).thenReturn(gettingUser.getLogin());
     Mockito.when(session.getAttribute("old_password")).thenReturn(gettingUser.getPassword());
+    Mockito.when(session.getAttribute("old_mail")).thenReturn(gettingUser.getMail());
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
     Mockito.when(request.getParameter("password")).thenReturn(TEST_VALUE);
+    Mockito.when(request.getParameter("mail")).thenReturn(TEST_VALUE);
     Mockito.when(request.getSession()).thenReturn(session);
     new UserActionServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1))
@@ -161,6 +171,7 @@ public class UserActionServletTest {
     Mockito.when(session.getAttribute("old_password")).thenReturn(gettingUser.getPassword());
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
     Mockito.when(request.getParameter("password")).thenReturn(null);
+    Mockito.when(request.getParameter("mail")).thenReturn("test@gmail.com");
     Mockito.when(request.getSession()).thenReturn(session);
     new UserActionServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1))
@@ -179,12 +190,14 @@ public class UserActionServletTest {
     Mockito.when(session.getAttribute("id")).thenReturn(gettingUser.getId());
     Mockito.when(session.getAttribute("old_login")).thenReturn(gettingUser.getLogin());
     Mockito.when(session.getAttribute("old_password")).thenReturn(gettingUser.getPassword());
+    Mockito.when(session.getAttribute("old_mail")).thenReturn(gettingUser.getMail());
     Mockito.when(request.getSession()).thenReturn(session);
     Mockito.when(request.getParameter("login")).thenReturn("2");
     Mockito.when(request.getParameter("password")).thenReturn("2");
+    Mockito.when(request.getParameter("mail")).thenReturn("test@gmail.com");
     new UserActionServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1))
-        .setAttribute("result", "Данные про пользователе обновлены.");
+        .setAttribute("result", "Данные про пользователя обновлены.");
     Mockito.verify(request, Mockito.times(1))
         .getRequestDispatcher("/user_form.jsp");
   }

@@ -2,6 +2,7 @@ package com.homework13.servlets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -17,6 +18,9 @@ public class MainServletTest {
   public void init() {
     request = Mockito.mock(HttpServletRequest.class);
     response = Mockito.mock(HttpServletResponse.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession()).thenReturn(session);
+    Mockito.when(session.getId()).thenReturn("test");
   }
 
   @Test

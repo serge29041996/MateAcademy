@@ -1,5 +1,7 @@
 package com.homework13.service;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -29,6 +31,28 @@ public class CheckData {
     }
     if ("".equals(password)) {
       stringBuilder.append("Вы не ввели пароль.");
+    }
+    return stringBuilder.toString();
+  }
+
+  /**
+   * Check login, password and mail.
+   * @param login login
+   * @param password password
+   * @param mail mail
+   * @return  empty string, if login,password and mail are valid; otherwise message about error.
+   */
+  public static String checkUserData(String login, String password, String mail) {
+    StringBuilder stringBuilder = new StringBuilder(checkUserData(login, password));
+    if (mail == null || "".equals(mail.trim())) {
+      stringBuilder.append("Вы не ввели электронную почту.");
+    } else {
+      try {
+        InternetAddress internetAddress = new InternetAddress(mail);
+        internetAddress.validate();
+      } catch (AddressException e) {
+        stringBuilder.append("Введёна неправильная электронная почта.");
+      }
     }
     return stringBuilder.toString();
   }

@@ -10,7 +10,7 @@ import org.junit.Test;
  */
 public class InMemoryDatabaseTest {
   private static final String TEST_VALUE = "test";
-  private static final User TEST_USER = new User(TEST_VALUE, TEST_VALUE);
+  private static final User TEST_USER = new User(TEST_VALUE, TEST_VALUE, TEST_VALUE);
 
   @After
   public void clearDB() {
