@@ -17,6 +17,12 @@ public enum Role {
     return value;
   }
 
+  /**
+   * Get role from string value.
+   * @param value string presentation of role
+   * @return role as enum
+   * @throws IllegalArgumentException when no role for string presentation.
+   */
   public static Role fromString(String value) {
     for (Role r : Role.values()) {
       if (r.value.equals(value)) {

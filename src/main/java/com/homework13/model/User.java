@@ -10,23 +10,75 @@ public class User {
   private String login;
   private String password;
   private Role role;
+  private String mail;
 
-  public User(String login, String password) {
+  /**
+   * Constructor for login, password and mail.
+   * @param login login of user
+   * @param password password user
+   * @param mail mail of user
+   */
+  public User(String login, String password, String mail) {
     this.login = login;
     this.password = password;
+    this.mail = mail;
+    this.role = Role.USER;
   }
 
+  /**
+   * Constructor for login, password, mail and role.
+   * @param login login of user
+   * @param password password user
+   * @param mail mail of user
+   * @param role role of user
+   */
+  public User(String login, String password, String mail, String role) {
+    this.login = login;
+    this.password = password;
+    this.mail = mail;
+    this.role = Role.fromString(role);
+  }
+
+  /**
+   * Constructor for id user, login and password.
+   * @param id id of user
+   * @param login login of user
+   * @param password password user
+   */
   public User(long id, String login, String password) {
     this.id = id;
     this.login = login;
     this.password = password;
   }
 
+  /**
+   * Constructor for id user, login, password and role.
+   * @param id id of user
+   * @param login login of user
+   * @param password password user
+   * @param role role of user
+   */
   public User(long id, String login, String password, Role role) {
     this.id = id;
     this.login = login;
     this.password = password;
     this.role = role;
+  }
+
+  /**
+   * Constructor for all parameters.
+   * @param id id of user
+   * @param login login of user
+   * @param password password user
+   * @param role role of user
+   * @param mail mail of user
+   */
+  public User(long id, String login, String password, Role role, String mail) {
+    this.id = id;
+    this.login = login;
+    this.password = password;
+    this.role = role;
+    this.mail = mail;
   }
 
   public String getLogin() {
@@ -61,6 +113,14 @@ public class User {
     this.role = role;
   }
 
+  public String getMail() {
+    return mail;
+  }
+
+  public void setMail(String mail) {
+    this.mail = mail;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -78,7 +138,10 @@ public class User {
     if (!password.equals(user.password)) {
       return false;
     }
-    return role == user.role;
+    if (role != user.role) {
+      return false;
+    }
+    return mail.equals(user.mail);
   }
 
   @Override
@@ -86,15 +149,17 @@ public class User {
     int result = login.hashCode();
     result = 31 * result + password.hashCode();
     result = 31 * result + role.hashCode();
+    result = 31 * result + mail.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
-    return "User{" +
-        "login='" + login + '\'' +
-        ", password='" + password + '\'' +
-        ", role=" + role +
-        '}';
+    return "User{"
+        + "id=" + id
+        + ", login='" + login + '\''
+        + ", password='" + password + '\''
+        + ", role=" + role
+        + ", mail='" + mail + '\'' + '}';
   }
 }

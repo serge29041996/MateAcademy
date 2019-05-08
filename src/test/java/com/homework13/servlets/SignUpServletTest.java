@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -26,7 +28,15 @@ public class SignUpServletTest {
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
     Mockito.when(request.getParameter("password")).thenReturn(TEST_VALUE);
+    Mockito.when(request.getParameter("mail")).thenReturn("test@gmail.com");
     Mockito.when(request.getRequestDispatcher("/sign_up.jsp")).thenReturn(requestDispatcher);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession()).thenReturn(session);
+    Mockito.when(session.getId()).thenReturn("test");
+  }
+
+  @After
+  public void clear() {
     userDao.deleteAll();
   }
 
@@ -42,7 +52,7 @@ public class SignUpServletTest {
 
   @Test
   public void doPostForExistUser() throws Exception {
-    userDao.saveUser(new User(TEST_VALUE, TEST_VALUE));
+    userDao.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
     new SignUpServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
@@ -55,7 +65,7 @@ public class SignUpServletTest {
   public void doPostUserWithInvalidData() throws Exception {
     Mockito.when(request.getParameter("login")).thenReturn("");
     Mockito.when(request.getParameter("password")).thenReturn("pass");
-    userDao.saveUser(new User(TEST_VALUE, TEST_VALUE));
+    userDao.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
     new SignUpServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");

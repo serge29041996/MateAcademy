@@ -2,6 +2,7 @@ package com.homework13.servlets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -17,6 +18,9 @@ public class MainServletTest {
   public void init() {
     request = Mockito.mock(HttpServletRequest.class);
     response = Mockito.mock(HttpServletResponse.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession()).thenReturn(session);
+    Mockito.when(session.getId()).thenReturn("test");
   }
 
   @Test
@@ -33,13 +37,5 @@ public class MainServletTest {
     new MainServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("result");
     Mockito.verify(response, Mockito.times(1)).sendRedirect("/sign_up");
-  }
-
-  @Test
-  public void doPostToAdminPage() throws Exception {
-    Mockito.when(request.getParameter("result")).thenReturn("admin_page");
-    new MainServlet().doPost(request, response);
-    Mockito.verify(request, Mockito.times(1)).getParameter("result");
-    Mockito.verify(response, Mockito.times(1)).sendRedirect("/admin_page");
   }
 }

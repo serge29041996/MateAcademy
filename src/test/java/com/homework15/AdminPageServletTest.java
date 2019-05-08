@@ -5,6 +5,7 @@ import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework14.dao.UserDao;
 import com.homework15.servlets.AdminPageServlet;
+import com.homework16.model.Role;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +26,7 @@ import org.mockito.Mockito;
  */
 public class AdminPageServletTest {
   private static final String TEST_VALUE = "1";
-  private static final User TEST_USER = new User(TEST_VALUE, TEST_VALUE);
+  private static final User TEST_USER = new User(1, TEST_VALUE, TEST_VALUE, Role.USER, TEST_VALUE);
   private final UserDao userDao = new UserDao();
   private HttpServletRequest request;
   private HttpServletResponse response;
@@ -35,26 +37,37 @@ public class AdminPageServletTest {
     response = Mockito.mock(HttpServletResponse.class);
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(request.getRequestDispatcher("/admin_page.jsp")).thenReturn(requestDispatcher);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getSession()).thenReturn(session);
+    Mockito.when(session.getId()).thenReturn("test");
+  }
+
+  @After
+  public void clear() {
     userDao.deleteAll();
   }
 
   @Test
-  public void testDoGetWithNoUser() throws ServletException, IOException {
+  public void testDoGetWithNoUser() throws ServletException, IOException, NoSuchUserException {
+    List<User> users = new ArrayList<>();
+    users.add(userDao.getUser("Сергей"));
     new AdminPageServlet().doGet(request, response);
     Mockito.verify(request, Mockito.times(1))
-        .setAttribute("numberUsers", 0);
+        .setAttribute("numberUsers", 1);
     Mockito.verify(request, Mockito.times(1))
-        .setAttribute("users", new ArrayList<>());
+        .setAttribute("users", users);
     Mockito.verify(request, Mockito.times(1))
         .getRequestDispatcher("/admin_page.jsp");
   }
 
   @Test
-  public void testDoGetWithTwoUsers() throws ServletException, IOException, DuplicateUserException {
+  public void testDoGetWithTwoUsers()
+      throws ServletException, IOException, DuplicateUserException, NoSuchUserException {
     List<User> userList = new ArrayList<>();
+    userList.add(userDao.getUser("Сергей"));
     userDao.saveUser(TEST_USER);
     userList.add(TEST_USER);
-    User newUser2 = new User("2", "2");
+    User newUser2 = new User(1,"2", "2", Role.USER, "2");
     userDao.saveUser(newUser2);
     userList.add(newUser2);
     new AdminPageServlet().doGet(request, response);
