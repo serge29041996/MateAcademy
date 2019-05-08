@@ -138,6 +138,44 @@ public class GoodDao {
     return goods;
   }
 
+  /**
+   * Delete good with specific id.
+   * @param id id of good for deleting
+   */
+  public void deleteGood(long id) {
+    LOGGER.debug("Delete good with id " + id);
+    String deleteRequest = "DELETE FROM goods WHEN ID=?";
+    try (Connection connection = DbConnector.getConnection();
+        PreparedStatement statement = connection.prepareStatement(deleteRequest)) {
+      statement.setLong(1, id);
+      statement.execute();
+      LOGGER.debug("Successful delete good with id " + id);
+    } catch (SQLException e) {
+      LOGGER.error("Cannot execute delete sql request ", e);
+    }
+  }
+
+  /**
+   * Update information about good.
+   * @param newGood new good
+   * @throws DuplicateGoodException if good with same name already exist
+   */
+  public void updateGood(Good newGood) throws DuplicateGoodException {
+    LOGGER.debug("Update good with id " + newGood.getId());
+    Optional<Good> findGoodWithSameName = findGoodByName(newGood.getName());
+    if (findGoodWithSameName.isPresent()) {
+      Good findGoodWithSameNameValue = findGoodWithSameName.get();
+      if (findGoodWithSameNameValue.getId() == newGood.getId()) {
+        updateInformationAboutGood(newGood);
+      } else {
+        LOGGER.debug("Good with name " + newGood.getName() + " already exist in database.");
+        throw new DuplicateGoodException();
+      }
+    } else {
+      updateInformationAboutGood(newGood);
+    }
+  }
+
   private Optional<Good> findGoodByName(String name) {
     String selectRequest = "SELECT * FROM goods WHERE name=?;";
     try (Connection connection = DbConnector.getConnection();
@@ -180,6 +218,24 @@ public class GoodDao {
     } catch (SQLException e) {
       LOGGER.error("Cannot read information about good ", e);
       return Optional.empty();
+    }
+  }
+
+  private void updateInformationAboutGood(Good newGood) {
+    LOGGER.debug("Good with name " + newGood.getName() + " have not existed. Can update "
+        + "information");
+    String updateRequest = "UPDATE goods SET name=?, description=?, price=? WHERE id=?";
+    try (Connection connection = DbConnector.getConnection();
+        PreparedStatement statement = connection.prepareStatement(updateRequest)) {
+      statement.setString(1, newGood.getName());
+      statement.setString(2, newGood.getDescription());
+      statement.setDouble(3, newGood.getPrice());
+      statement.setLong(4, newGood.getId());
+      statement.execute();
+      LOGGER.debug("Successful update good with id " + newGood.getId());
+    } catch (SQLException e) {
+      LOGGER.error("Unable update information about good with name " + newGood.getName(), e);
+      e.printStackTrace();
     }
   }
 }

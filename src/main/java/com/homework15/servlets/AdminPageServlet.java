@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 /**
  * Servlet for admin action.
  */
-@WebServlet(value = "/admin_page")
+@WebServlet(value = "/admin_page/users")
 public class AdminPageServlet extends HttpServlet {
   private final UserDao userDao = new UserDao();
   private static final Logger LOGGER = Logger.getLogger(AdminPageServlet.class);
@@ -27,8 +27,8 @@ public class AdminPageServlet extends HttpServlet {
     List<User> userList = userDao.getAllUsers();
     request.setAttribute("numberUsers", userList.size());
     request.setAttribute("users", userList);
-    LOGGER.debug("User with id " + request.getSession().getId() + " come to admin page");
-    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin_page.jsp");
+    LOGGER.debug("User with id " + request.getSession().getId() + " come to admin users page");
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin_users_page.jsp");
     requestDispatcher.forward(request, response);
   }
 
@@ -50,7 +50,7 @@ public class AdminPageServlet extends HttpServlet {
         request.getSession().setAttribute("action", "update");
       } catch (NoSuchUserException e) {
         LOGGER.debug("User with id " + request.getSession().getId()
-            + " go to add form, because user with id " + idNeedUser + " was not find");
+            + " go to add user form, because user with id " + idNeedUser + " was not find");
         request.getSession().setAttribute("action", "add");
       }
       response.sendRedirect("/admin_page/user_action");

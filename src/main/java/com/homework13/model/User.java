@@ -11,6 +11,7 @@ public class User {
   private String password;
   private Role role;
   private String mail;
+  private String salt;
 
   /**
    * Constructor for login, password and mail.
@@ -40,33 +41,7 @@ public class User {
   }
 
   /**
-   * Constructor for id user, login and password.
-   * @param id id of user
-   * @param login login of user
-   * @param password password user
-   */
-  public User(long id, String login, String password) {
-    this.id = id;
-    this.login = login;
-    this.password = password;
-  }
-
-  /**
-   * Constructor for id user, login, password and role.
-   * @param id id of user
-   * @param login login of user
-   * @param password password user
-   * @param role role of user
-   */
-  public User(long id, String login, String password, Role role) {
-    this.id = id;
-    this.login = login;
-    this.password = password;
-    this.role = role;
-  }
-
-  /**
-   * Constructor for all parameters.
+   * Constructor for id, login, password, role and mail parameters.
    * @param id id of user
    * @param login login of user
    * @param password password user
@@ -79,6 +54,23 @@ public class User {
     this.password = password;
     this.role = role;
     this.mail = mail;
+  }
+
+  /**
+   * Constructor for id, login, password, role and mail parameters.
+   * @param id id of user
+   * @param login login of user
+   * @param password password user
+   * @param role role of user
+   * @param mail mail of user
+   */
+  public User(long id, String login, String password, Role role, String mail, String salt) {
+    this.id = id;
+    this.login = login;
+    this.password = password;
+    this.role = role;
+    this.mail = mail;
+    this.salt = salt;
   }
 
   public String getLogin() {
@@ -121,6 +113,14 @@ public class User {
     this.mail = mail;
   }
 
+  public String getSalt() {
+    return salt;
+  }
+
+  public void setSalt(String salt) {
+    this.salt = salt;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -141,7 +141,10 @@ public class User {
     if (role != user.role) {
       return false;
     }
-    return mail.equals(user.mail);
+    if (!mail.equals(user.mail)) {
+      return false;
+    }
+    return salt != null ? salt.equals(user.salt) : user.salt == null;
   }
 
   @Override
@@ -150,16 +153,18 @@ public class User {
     result = 31 * result + password.hashCode();
     result = 31 * result + role.hashCode();
     result = 31 * result + mail.hashCode();
+    result = 31 * result + (salt != null ? salt.hashCode() : 0);
     return result;
   }
 
   @Override
   public String toString() {
     return "User{"
-        + "id=" + id
-        + ", login='" + login + '\''
+        + "login='" + login + '\''
         + ", password='" + password + '\''
         + ", role=" + role
-        + ", mail='" + mail + '\'' + '}';
+        + ", mail='" + mail + '\''
+        + ", salt='" + salt + '\''
+        + '}';
   }
 }

@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 @WebServlet(value = "/admin_page/user_action")
 public class UserActionServlet extends HttpServlet {
   private final UserDao userDao = new UserDao();
-  private static final Logger LOGGER = Logger.getLogger(AdminPageServlet.class);
+  private static final Logger LOGGER = Logger.getLogger(UserActionServlet.class);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -64,12 +64,14 @@ public class UserActionServlet extends HttpServlet {
     String role = request.getParameter("role");
     String action = request.getParameter("option");
     if (action.equals("return")) {
-      LOGGER.debug("User with id " + request.getSession().getId() + " return to admin page");
-      response.sendRedirect("/admin_page");
+      LOGGER.debug("User with id " + request.getSession().getId() + " return to admin users page");
+      response.sendRedirect("/admin_page/users");
     } else {
       actionWithFormData(action, login, password, mail, role, request);
       request.setAttribute("login", login);
       request.setAttribute("password", password);
+      request.setAttribute("mail", mail);
+      request.setAttribute("role", role);
       RequestDispatcher requestDispatcher = request.getRequestDispatcher("/user_form.jsp");
       requestDispatcher.forward(request, response);
     }

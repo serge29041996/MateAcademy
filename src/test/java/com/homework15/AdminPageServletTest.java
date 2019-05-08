@@ -6,6 +6,7 @@ import com.homework13.model.User;
 import com.homework14.dao.UserDao;
 import com.homework15.servlets.AdminPageServlet;
 import com.homework16.model.Role;
+import com.homework18.utils.HashUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class AdminPageServletTest {
     request = Mockito.mock(HttpServletRequest.class);
     response = Mockito.mock(HttpServletResponse.class);
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
-    Mockito.when(request.getRequestDispatcher("/admin_page.jsp")).thenReturn(requestDispatcher);
+    Mockito.when(request.getRequestDispatcher("/admin_users_page.jsp")).thenReturn(requestDispatcher);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
     Mockito.when(session.getId()).thenReturn("test");
@@ -57,7 +58,7 @@ public class AdminPageServletTest {
     Mockito.verify(request, Mockito.times(1))
         .setAttribute("users", users);
     Mockito.verify(request, Mockito.times(1))
-        .getRequestDispatcher("/admin_page.jsp");
+        .getRequestDispatcher("/admin_users_page.jsp");
   }
 
   @Test
@@ -65,10 +66,17 @@ public class AdminPageServletTest {
       throws ServletException, IOException, DuplicateUserException, NoSuchUserException {
     List<User> userList = new ArrayList<>();
     userList.add(userDao.getUser("Сергей"));
-    userDao.saveUser(TEST_USER);
-    userList.add(TEST_USER);
+    User newUser1 = new User(0, TEST_VALUE, TEST_VALUE, Role.USER, TEST_VALUE);
+    userDao.saveUser(newUser1);
+    User gettingNewUser1 = userDao.getUser(TEST_VALUE);
+    newUser1.setPassword(HashUtils.getSha512SecurePassword(TEST_VALUE, gettingNewUser1.getSalt()));
+    newUser1.setSalt(gettingNewUser1.getSalt());
+    userList.add(newUser1);
     User newUser2 = new User(1,"2", "2", Role.USER, "2");
     userDao.saveUser(newUser2);
+    User gettingNewUser2 = userDao.getUser("2");
+    newUser2.setPassword(HashUtils.getSha512SecurePassword("2", gettingNewUser2.getSalt()));
+    newUser2.setSalt(gettingNewUser2.getSalt());
     userList.add(newUser2);
     new AdminPageServlet().doGet(request, response);
     Mockito.verify(request, Mockito.times(1))
@@ -76,7 +84,7 @@ public class AdminPageServletTest {
     Mockito.verify(request, Mockito.times(1))
         .setAttribute("users", userList);
     Mockito.verify(request, Mockito.times(1))
-        .getRequestDispatcher("/admin_page.jsp");
+        .getRequestDispatcher("/admin_users_page.jsp");
   }
 
   @Test

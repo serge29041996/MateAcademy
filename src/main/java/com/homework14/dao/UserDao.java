@@ -4,6 +4,7 @@ import com.homework13.dao.DuplicateUserException;
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework16.model.Role;
+import com.homework18.utils.HashUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,13 +34,16 @@ public class UserDao {
       LOGGER.debug("Exist user with mail " + newUser.getMail());
       throw new DuplicateUserException("Exist mail");
     } else {
-      String insertRequest = "INSERT INTO users(login, password, role, mail) VALUES(?, ?, ?, ?);";
+      String insertRequest = "INSERT INTO users(login, password, role, mail, salt) "
+          + "VALUES(?, ?, ?, ?, ?);";
       try (Connection connection = DbConnector.getConnection();
           PreparedStatement statement = connection.prepareStatement(insertRequest)) {
+        String salt = HashUtils.generateSalt();
         statement.setString(1, newUser.getLogin());
-        statement.setString(2, newUser.getPassword());
-        statement.setString(3, Role.USER.getValue());
+        statement.setString(2, HashUtils.getSha512SecurePassword(newUser.getPassword(), salt));
+        statement.setString(3, newUser.getRole().getValue());
         statement.setString(4, newUser.getMail());
+        statement.setString(5, salt);
         statement.execute();
         LOGGER.debug("Successful save information about user with login " + newUser.getLogin());
       } catch (SQLException e) {
@@ -137,7 +141,8 @@ public class UserDao {
         String password = resultSet.getString("password");
         Role role = Role.fromString(resultSet.getString("role"));
         String mail = resultSet.getString("mail");
-        User newUser = new User(id, login, password, role, mail);
+        String salt = resultSet.getString("salt");
+        User newUser = new User(id, login, password, role, mail, salt);
         users.add(newUser);
       }
       LOGGER.debug("Successfully get list with all users");
@@ -225,7 +230,8 @@ public class UserDao {
         String password = resultSet.getString("password");
         Role role = Role.fromString(resultSet.getString("role"));
         String mail = resultSet.getString("mail");
-        User resultUser = new User(id, login, password, role, mail);
+        String salt = resultSet.getString("salt");
+        User resultUser = new User(id, login, password, role, mail, salt);
         return Optional.of(resultUser);
       } else {
         return Optional.empty();
