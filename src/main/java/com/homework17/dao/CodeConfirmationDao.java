@@ -101,7 +101,7 @@ public class CodeConfirmationDao {
   }
 
   /**
-   * Delete all codes from database
+   * Delete all codes from database.
    */
   public void deleteAll() {
     LOGGER.debug("Delete all codes");
@@ -152,7 +152,7 @@ public class CodeConfirmationDao {
     LOGGER.debug("Code with user id " + newCode.getIdGood() + " and good id"
         + newCode.getIdGood() + " have not existed. Can update information");
     String updateUser = "UPDATE codes SET code=? WHERE user_id=? AND good_id=?";
-    try(Connection connection = DbConnector.getConnection();
+    try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(updateUser)) {
       statement.setString(1,newCode.getCode());
       statement.setLong(2,newCode.getIdUser());
@@ -164,4 +164,3 @@ public class CodeConfirmationDao {
     }
   }
 }
-

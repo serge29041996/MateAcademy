@@ -38,12 +38,4 @@ public class MainServletTest {
     Mockito.verify(request, Mockito.times(1)).getParameter("result");
     Mockito.verify(response, Mockito.times(1)).sendRedirect("/sign_up");
   }
-
-  @Test
-  public void doPostToAdminPage() throws Exception {
-    Mockito.when(request.getParameter("result")).thenReturn("admin_page");
-    new MainServlet().doPost(request, response);
-    Mockito.verify(request, Mockito.times(1)).getParameter("result");
-    Mockito.verify(response, Mockito.times(1)).sendRedirect("/admin_page");
-  }
 }

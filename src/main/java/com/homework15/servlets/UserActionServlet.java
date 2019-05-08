@@ -35,18 +35,17 @@ public class UserActionServlet extends HttpServlet {
       CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "login");
       CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "password");
       CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "mail");
+      CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "role");
     } else {
       User userForUpdate = (User) request.getSession().getAttribute("user");
       LOGGER.debug("User with id " + request.getSession().getId() + " come for update information "
           + "about user with id " + userForUpdate.getId());
-      request.getSession().setAttribute("old_login", userForUpdate.getLogin());
-      request.getSession().setAttribute("old_password", userForUpdate.getPassword());
-      request.getSession().setAttribute("old_mail", userForUpdate.getMail());
-      request.getSession().setAttribute("old_role", userForUpdate.getRole());
       CheckData.checkOnNullAndSetValueForAttribute(request, "login", userForUpdate.getLogin());
       CheckData.checkOnNullAndSetValueForAttribute(request,
           "password", userForUpdate.getPassword());
       CheckData.checkOnNullAndSetValueForAttribute(request, "mail", userForUpdate.getMail());
+      CheckData.checkOnNullAndSetValueForAttribute(request, "role",
+          userForUpdate.getRole().getValue());
       request.getSession().setAttribute("id", userForUpdate.getId());
     }
     RequestDispatcher requestDispatcher = request.getRequestDispatcher("/user_form.jsp");
@@ -62,12 +61,13 @@ public class UserActionServlet extends HttpServlet {
     String login = request.getParameter("login");
     String password = request.getParameter("password");
     String mail = request.getParameter("mail");
+    String role = request.getParameter("role");
     String action = request.getParameter("option");
     if (action.equals("return")) {
       LOGGER.debug("User with id " + request.getSession().getId() + " return to admin page");
       response.sendRedirect("/admin_page");
     } else {
-      actionWithFormData(action, login, password, mail, request);
+      actionWithFormData(action, login, password, mail, role, request);
       request.setAttribute("login", login);
       request.setAttribute("password", password);
       RequestDispatcher requestDispatcher = request.getRequestDispatcher("/user_form.jsp");
@@ -76,19 +76,19 @@ public class UserActionServlet extends HttpServlet {
   }
 
   private void actionWithFormData(String action, String login, String password,
-      String mail, HttpServletRequest request) {
+      String mail, String role, HttpServletRequest request) {
     if (action.equals("add")) {
-      actionForAddUser(login, password, mail, request);
+      actionForAddUser(login, password, mail, role, request);
     } else {
-      actionForUpdateUser(login, password, mail, request);
+      actionForUpdateUser(login, password, mail, role, request);
     }
   }
 
   private void actionForAddUser(String login, String password, String mail,
-      HttpServletRequest request) {
-    String result = CheckData.checkUserData(login, password, mail);
+      String role, HttpServletRequest request) {
+    String result = CheckData.checkUserData(login, password, mail, role);
     if (result.equals("")) {
-      User newUser = new User(login, password, mail);
+      User newUser = new User(login, password, mail, role);
       try {
         userDao.saveUser(newUser);
         LOGGER.debug("User with id " + request.getSession().getId()
@@ -116,19 +116,17 @@ public class UserActionServlet extends HttpServlet {
     }
   }
 
-  private void actionForUpdateUser(String login, String password, String mail,
+  private void actionForUpdateUser(String login, String password, String mail, String role,
       HttpServletRequest request) {
-    User oldDataUser = new User((String) request.getSession().getAttribute("old_login"),
-        (String) request.getSession().getAttribute("old_password"),
-        (String) request.getSession().getAttribute("old_mail"));
+    User oldDataUser = (User) request.getSession().getAttribute("user");
     User newDataUser = new User((Long) request.getSession().getAttribute("id"), login, password,
-        Role.USER, mail);
+        Role.fromString(role), mail);
     if (oldDataUser.equals(newDataUser)) {
       LOGGER.debug("User with id " + request.getSession().getId()
           + " update information about user with login " + login + " without change");
       request.setAttribute("result", "Данные про пользователя обновлены.");
     } else {
-      String result = CheckData.checkUserData(login, password, mail);
+      String result = CheckData.checkUserData(login, password, mail, role);
       if (result.equals("")) {
         try {
           userDao.updateUser(newDataUser);

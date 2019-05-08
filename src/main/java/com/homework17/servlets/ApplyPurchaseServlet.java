@@ -86,7 +86,7 @@ public class ApplyPurchaseServlet extends HttpServlet {
     if (sendCode.isPresent()) {
       LOGGER.debug("User with id " + request.getSession().getId() + " get code confirmation"
           + " for purchase.");
-      request.setAttribute(field, "Сообщение с кодом подтверждения отправлен");
+      request.setAttribute(field, "Сообщение с кодом подтверждения отправлено");
     } else {
       LOGGER.debug("User with id " + request.getSession().getId() + " do not get code confirmation"
           + " for purchase.");

@@ -12,6 +12,12 @@ public class User {
   private Role role;
   private String mail;
 
+  /**
+   * Constructor for login, password and mail.
+   * @param login login of user
+   * @param password password user
+   * @param mail mail of user
+   */
   public User(String login, String password, String mail) {
     this.login = login;
     this.password = password;
@@ -19,12 +25,39 @@ public class User {
     this.role = Role.USER;
   }
 
+  /**
+   * Constructor for login, password, mail and role.
+   * @param login login of user
+   * @param password password user
+   * @param mail mail of user
+   * @param role role of user
+   */
+  public User(String login, String password, String mail, String role) {
+    this.login = login;
+    this.password = password;
+    this.mail = mail;
+    this.role = Role.fromString(role);
+  }
+
+  /**
+   * Constructor for id user, login and password.
+   * @param id id of user
+   * @param login login of user
+   * @param password password user
+   */
   public User(long id, String login, String password) {
     this.id = id;
     this.login = login;
     this.password = password;
   }
 
+  /**
+   * Constructor for id user, login, password and role.
+   * @param id id of user
+   * @param login login of user
+   * @param password password user
+   * @param role role of user
+   */
   public User(long id, String login, String password, Role role) {
     this.id = id;
     this.login = login;
@@ -32,6 +65,14 @@ public class User {
     this.role = role;
   }
 
+  /**
+   * Constructor for all parameters.
+   * @param id id of user
+   * @param login login of user
+   * @param password password user
+   * @param role role of user
+   * @param mail mail of user
+   */
   public User(long id, String login, String password, Role role, String mail) {
     this.id = id;
     this.login = login;

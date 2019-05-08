@@ -15,21 +15,11 @@ public class CheckData {
    * @return empty string, if login and password have not empty, otherwise message about error.
    */
   public static String checkUserData(String login, String password) {
-    if (login == null) {
-      login = "";
-    } else {
-      login = login.trim();
-    }
-    if (password == null) {
-      password = "";
-    } else {
-      password = password.trim();
-    }
     StringBuilder stringBuilder = new StringBuilder();
-    if ("".equals(login)) {
+    if (login == null || "".equals(login.trim())) {
       stringBuilder.append("Вы не ввели логин.");
     }
-    if ("".equals(password)) {
+    if (password == null || "".equals(password.trim())) {
       stringBuilder.append("Вы не ввели пароль.");
     }
     return stringBuilder.toString();
@@ -53,6 +43,22 @@ public class CheckData {
       } catch (AddressException e) {
         stringBuilder.append("Введёна неправильная электронная почта.");
       }
+    }
+    return stringBuilder.toString();
+  }
+
+  /**
+   * Check login, password and mail.
+   * @param login login
+   * @param password password
+   * @param mail mail
+   * @param role role of user
+   * @return  empty string, if login,password and mail are valid; otherwise message about error.
+   */
+  public static String checkUserData(String login, String password, String mail, String role) {
+    StringBuilder stringBuilder = new StringBuilder(checkUserData(login, password, mail));
+    if (role == null || "".equals(role.trim())) {
+      stringBuilder.append("Вы не выбрали роль.");
     }
     return stringBuilder.toString();
   }

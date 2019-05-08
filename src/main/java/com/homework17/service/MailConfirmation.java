@@ -50,7 +50,7 @@ public class MailConfirmation {
           InternetAddress.parse(mail)
       );
       message.setSubject("Код для подтверждения покупки");
-      String generatedCode = "";
+      String generatedCode;
       if (code.equals("")) {
         generatedCode = RandomCodeGenerator.generateFourSignCode();
       } else {

@@ -239,13 +239,14 @@ public class UserDao {
   private void updateInformationAboutUser(User newUser) {
     LOGGER.debug("User with login " + newUser.getLogin() + " have not existed. Can update "
         + "information");
-    String updateUser = "UPDATE users SET login=?, password=?, mail=? WHERE id=?";
+    String updateUser = "UPDATE users SET login=?, password=?, mail=?, role=? WHERE id=?";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(updateUser)) {
       statement.setString(1,newUser.getLogin());
       statement.setString(2,newUser.getPassword());
       statement.setString(3,newUser.getMail());
-      statement.setLong(4,newUser.getId());
+      statement.setString(4,newUser.getRole().getValue());
+      statement.setLong(5,newUser.getId());
       statement.execute();
       LOGGER.debug("Successful update user with id " + newUser.getId());
     } catch (SQLException e) {

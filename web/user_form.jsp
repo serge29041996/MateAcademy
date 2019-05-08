@@ -26,6 +26,11 @@
     <label for="mail">Электронная почта:</label>
     <input type="email" name="mail" id="mail" value="<c:out value="${mail}" />"/>
     <br>
+    <label for="role">Роль</label>
+    <select id="role" name="role" size="2">
+        <option value="user" <c:if test="${role=='user' || role==''}">selected</c:if> >Пользователь</option>
+        <option value="admin" <c:if test="${role=='admin'}">selected</c:if>>Администратор</option>
+    </select>
     <c:if test="${action == 'add'}">
         <button type="submit" name="option" value="add">Создать</button>
     </c:if>

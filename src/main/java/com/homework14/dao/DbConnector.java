@@ -9,7 +9,8 @@ import org.apache.log4j.Logger;
  * Class for connection with database.
  */
 public class DbConnector {
-  private static final String URL_TO_DATABASE = "jdbc:mysql://localhost:3306/website?serverTimezone=UTC";
+  private static final String URL_TO_DATABASE = "jdbc:mysql://localhost:3306/website" 
+      + "?serverTimezone=UTC";
   private static final String LOGIN = "Serge@localhost";
   private static final String PASSWORD = "root";
   private static final Logger LOGGER = Logger.getLogger(DbConnector.class);

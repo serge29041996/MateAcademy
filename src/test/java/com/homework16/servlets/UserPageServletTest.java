@@ -23,13 +23,12 @@ public class UserPageServletTest {
   private final GoodDao goodDao = new GoodDao();
   private HttpServletRequest request;
   private HttpServletResponse response;
-  private HttpSession session;
 
   @Before
   public void init() {
     request = Mockito.mock(HttpServletRequest.class);
     response = Mockito.mock(HttpServletResponse.class);
-    session = Mockito.mock(HttpSession.class);
+    HttpSession session = Mockito.mock(HttpSession.class);
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(request.getSession()).thenReturn(session);
     Mockito.when(request.getRequestDispatcher("/user_page.jsp")).thenReturn(requestDispatcher);

@@ -48,19 +48,23 @@ public class AdminPageServletTest {
   }
 
   @Test
-  public void testDoGetWithNoUser() throws ServletException, IOException {
+  public void testDoGetWithNoUser() throws ServletException, IOException, NoSuchUserException {
+    List<User> users = new ArrayList<>();
+    users.add(userDao.getUser("Сергей"));
     new AdminPageServlet().doGet(request, response);
     Mockito.verify(request, Mockito.times(1))
-        .setAttribute("numberUsers", 0);
+        .setAttribute("numberUsers", 1);
     Mockito.verify(request, Mockito.times(1))
-        .setAttribute("users", new ArrayList<>());
+        .setAttribute("users", users);
     Mockito.verify(request, Mockito.times(1))
         .getRequestDispatcher("/admin_page.jsp");
   }
 
   @Test
-  public void testDoGetWithTwoUsers() throws ServletException, IOException, DuplicateUserException {
+  public void testDoGetWithTwoUsers()
+      throws ServletException, IOException, DuplicateUserException, NoSuchUserException {
     List<User> userList = new ArrayList<>();
+    userList.add(userDao.getUser("Сергей"));
     userDao.saveUser(TEST_USER);
     userList.add(TEST_USER);
     User newUser2 = new User(1,"2", "2", Role.USER, "2");

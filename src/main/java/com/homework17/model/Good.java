@@ -9,12 +9,25 @@ public class Good {
   private String description;
   private double price;
 
+  /**
+   * Constructor with name, description and price of good.
+   * @param name name of good
+   * @param description description about good
+   * @param price price of good
+   */
   public Good(String name, String description, double price) {
     this.name = name;
     this.description = description;
     this.price = price;
   }
 
+  /**
+   * Constructor with all parameters.
+   * @param id id of good
+   * @param name name of good
+   * @param description description about good
+   * @param price price of good
+   */
   public Good(long id, String name, String description, double price) {
     this.id = id;
     this.name = name;

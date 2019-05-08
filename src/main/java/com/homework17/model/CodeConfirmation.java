@@ -9,12 +9,25 @@ public class CodeConfirmation {
   private long idGood;
   private String code;
 
+  /**
+   * Constructor with id user, id good and code for confirmation purchase.
+   * @param idUser id of user, which want to buy a good
+   * @param idGood id of good, which user want to buy
+   * @param code code for confirmation purchase
+   */
   public CodeConfirmation(long idUser, long idGood, String code) {
     this.idUser = idUser;
     this.idGood = idGood;
     this.code = code;
   }
 
+  /**
+   * Constructor for all parameters.
+   * @param id id of code confirmation
+   * @param idUser id of user, which want to buy a good
+   * @param idGood id of good, which user want to buy
+   * @param code code for confirmation purchase
+   */
   public CodeConfirmation(long id, long idUser, long idGood, String code) {
     this.id = id;
     this.idUser = idUser;
