@@ -3,6 +3,7 @@ package com.homework17.service;
 import com.homework17.util.RandomCodeGenerator;
 import java.util.Optional;
 import java.util.Properties;
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -35,7 +36,7 @@ public class MailConfirmation {
     prop.put("mail.smtp.starttls.enable", "true");
 
     Session session = Session.getInstance(prop,
-        new javax.mail.Authenticator() {
+        new Authenticator() {
           protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(USERNAME, PASSWORD);
           }
