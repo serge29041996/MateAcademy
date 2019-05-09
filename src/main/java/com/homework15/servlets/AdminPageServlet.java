@@ -3,6 +3,7 @@ package com.homework15.servlets;
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework14.dao.UserDao;
+import com.homework16.model.Role;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -59,6 +60,18 @@ public class AdminPageServlet extends HttpServlet {
       userDao.deleteUser(Long.parseLong(idUserForDeleting));
       LOGGER.debug("User with id " + request.getSession().getId()
           + " delete user with id " + idUserForDeleting);
+      doGet(request, response);
+    } else if (result.contains("lowerRole")) {
+      String idNeedUser = result.split("_")[1];
+      LOGGER.debug("User with id " + request.getSession().getId()
+          + " want to lower role user with id " + idNeedUser);
+      userDao.updateUserRole(Long.parseLong(idNeedUser), Role.USER.getValue());
+      doGet(request, response);
+    } else if (result.contains("raiseRole")) {
+      String idNeedUser = result.split("_")[1];
+      LOGGER.debug("User with id " + request.getSession().getId()
+          + " want to raise role user with id " + idNeedUser);
+      userDao.updateUserRole(Long.parseLong(idNeedUser), Role.ADMIN.getValue());
       doGet(request, response);
     }
   }

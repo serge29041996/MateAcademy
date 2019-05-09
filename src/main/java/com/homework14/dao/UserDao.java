@@ -183,6 +183,25 @@ public class UserDao {
     }
   }
 
+  /**
+   * Update role of user.
+   * @param id id user for updating
+   * @param newRole new role for user
+   */
+  public void updateUserRole(long id, String newRole) {
+    LOGGER.debug("Update role to " + newRole + " of user with id " + id);
+    String updateRoleRequest = "UPDATE users SET role=? WHERE id=?";
+    try (Connection connection = DbConnector.getConnection();
+        PreparedStatement statement = connection.prepareStatement(updateRoleRequest)) {
+      statement.setString(1, newRole);
+      statement.setLong(2, id);
+      statement.execute();
+      LOGGER.debug("Successful update role of user with id " + id);
+    } catch (SQLException e) {
+      LOGGER.debug("Cannot execute update role request for user with id " + id , e);
+    }
+  }
+
   private Optional<User> findUserByLogin(String login) {
     String selectRequest = "SELECT * FROM users WHERE login=?;";
     try (Connection connection = DbConnector.getConnection();

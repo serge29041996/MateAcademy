@@ -29,6 +29,12 @@
                     <td>${user.mail}</td>
                     <td><button type="submit" name="result" value="update_${user.id}">Обновить</button></td>
                     <td><button type="submit" name="result" value="delete_${user.id}">Удалить</button></td>
+                    <c:if test="${user.role.value == 'admin'}">
+                        <td><button type="submit" name="result" value="lowerRole_${user.id}">Понизить до роли пользователя</button></td>
+                    </c:if>
+                    <c:if test="${user.role.value == 'user'}">
+                        <td><button type="submit" name="result" value="raiseRole_${user.id}">Повысить до роли администратора</button></td>
+                    </c:if>
                 </tr>
             </c:forEach>
         </table>
