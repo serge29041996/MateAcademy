@@ -7,7 +7,7 @@
 </head>
 <body>
 <h3>Введите код для подтверждения покупки:</h3>
-<form method="post" action="user_page/apply_purchase">
+<form method="post" action="/user_page/apply_purchase">
     <label for="code">Код</label>
     <input type="password" name="code" id="code" value="<c:out value="${code}"/>"/>
     <br>

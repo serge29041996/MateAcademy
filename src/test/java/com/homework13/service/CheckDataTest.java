@@ -31,4 +31,22 @@ public class CheckDataTest {
     String result = CheckData.checkUserData(TEST_VALUE, TEST_VALUE);
     Assert.assertEquals("", result);
   }
+
+  @Test
+  public void checkUserWithWrongMail() {
+    String result = CheckData.checkUserData(TEST_VALUE, TEST_VALUE, TEST_VALUE);
+    Assert.assertEquals("Введёна неправильная электронная почта.", result);
+  }
+
+  @Test
+  public void checkGoodWithInvalidPrice() {
+    String result = CheckData.checkGoodData(TEST_VALUE, TEST_VALUE, "9,99");
+    Assert.assertEquals("Цена не является числом.", result);
+  }
+
+  @Test
+  public void checkGoodWithValidData() {
+    String result = CheckData.checkGoodData(TEST_VALUE, TEST_VALUE, "9.99");
+    Assert.assertEquals("", result);
+  }
 }

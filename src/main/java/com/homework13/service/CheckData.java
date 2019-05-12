@@ -16,12 +16,8 @@ public class CheckData {
    */
   public static String checkUserData(String login, String password) {
     StringBuilder stringBuilder = new StringBuilder();
-    if (login == null || "".equals(login.trim())) {
-      stringBuilder.append("Вы не ввели логин.");
-    }
-    if (password == null || "".equals(password.trim())) {
-      stringBuilder.append("Вы не ввели пароль.");
-    }
+    checkString(login, "логин", stringBuilder);
+    checkString(password, "пароль", stringBuilder);
     return stringBuilder.toString();
   }
 
@@ -34,9 +30,7 @@ public class CheckData {
    */
   public static String checkUserData(String login, String password, String mail) {
     StringBuilder stringBuilder = new StringBuilder(checkUserData(login, password));
-    if (mail == null || "".equals(mail.trim())) {
-      stringBuilder.append("Вы не ввели электронную почту.");
-    } else {
+    if (checkString(mail, "электронную почту", stringBuilder)) {
       try {
         InternetAddress internetAddress = new InternetAddress(mail);
         internetAddress.validate();
@@ -57,9 +51,7 @@ public class CheckData {
    */
   public static String checkUserData(String login, String password, String mail, String role) {
     StringBuilder stringBuilder = new StringBuilder(checkUserData(login, password, mail));
-    if (role == null || "".equals(role.trim())) {
-      stringBuilder.append("Вы не выбрали роль.");
-    }
+    checkString(role, "роль", stringBuilder);
     return stringBuilder.toString();
   }
 
@@ -86,6 +78,39 @@ public class CheckData {
       String nameAttribute, String value) {
     if (request.getAttribute(nameAttribute) == null) {
       request.setAttribute(nameAttribute, value);
+    }
+  }
+
+  /**
+   * Check data about good.
+   * @param name name of good
+   * @param description description of good
+   * @param price price of good
+   * @return empty string if entered valid information, otherwise error message
+   */
+  public static String checkGoodData(String name, String description, String price) {
+    StringBuilder stringBuilder = new StringBuilder();
+    checkString(name, "название", stringBuilder);
+    checkString(description, "описание", stringBuilder);
+    if (checkString(price, "цену", stringBuilder)) {
+      try {
+        Double.parseDouble(price);
+      } catch (NumberFormatException e) {
+        stringBuilder.append("Цена не является числом.");
+      }
+    }
+    return stringBuilder.toString();
+  }
+
+  private static boolean checkString(String valueField, String nameField,
+      StringBuilder stringBuilder) {
+    if (valueField == null || "".equals(valueField.trim())) {
+      stringBuilder.append("Вы не ввели ");
+      stringBuilder.append(nameField);
+      stringBuilder.append(".");
+      return false;
+    } else {
+      return true;
     }
   }
 }

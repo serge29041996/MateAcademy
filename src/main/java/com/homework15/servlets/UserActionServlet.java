@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 @WebServlet(value = "/admin_page/user_action")
 public class UserActionServlet extends HttpServlet {
   private final UserDao userDao = new UserDao();
-  private static final Logger LOGGER = Logger.getLogger(AdminPageServlet.class);
+  private static final Logger LOGGER = Logger.getLogger(UserActionServlet.class);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -41,8 +41,7 @@ public class UserActionServlet extends HttpServlet {
       LOGGER.debug("User with id " + request.getSession().getId() + " come for update information "
           + "about user with id " + userForUpdate.getId());
       CheckData.checkOnNullAndSetValueForAttribute(request, "login", userForUpdate.getLogin());
-      CheckData.checkOnNullAndSetValueForAttribute(request,
-          "password", userForUpdate.getPassword());
+      CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "password");
       CheckData.checkOnNullAndSetValueForAttribute(request, "mail", userForUpdate.getMail());
       CheckData.checkOnNullAndSetValueForAttribute(request, "role",
           userForUpdate.getRole().getValue());
@@ -64,12 +63,14 @@ public class UserActionServlet extends HttpServlet {
     String role = request.getParameter("role");
     String action = request.getParameter("option");
     if (action.equals("return")) {
-      LOGGER.debug("User with id " + request.getSession().getId() + " return to admin page");
-      response.sendRedirect("/admin_page");
+      LOGGER.debug("User with id " + request.getSession().getId() + " return to admin users page");
+      response.sendRedirect("/admin_page/users");
     } else {
       actionWithFormData(action, login, password, mail, role, request);
       request.setAttribute("login", login);
       request.setAttribute("password", password);
+      request.setAttribute("mail", mail);
+      request.setAttribute("role", role);
       RequestDispatcher requestDispatcher = request.getRequestDispatcher("/user_form.jsp");
       requestDispatcher.forward(request, response);
     }
@@ -120,7 +121,7 @@ public class UserActionServlet extends HttpServlet {
       HttpServletRequest request) {
     User oldDataUser = (User) request.getSession().getAttribute("user");
     User newDataUser = new User((Long) request.getSession().getAttribute("id"), login, password,
-        Role.fromString(role), mail);
+        Role.fromString(role), mail, oldDataUser.getSalt());
     if (oldDataUser.equals(newDataUser)) {
       LOGGER.debug("User with id " + request.getSession().getId()
           + " update information about user with login " + login + " without change");

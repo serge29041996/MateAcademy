@@ -71,6 +71,7 @@ public class SignUpServlet extends HttpServlet {
     CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "result");
     CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "login");
     CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "password");
+    CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "mail");
     LOGGER.debug("User with id " + request.getSession().getId() + " come to sign up form");
     RequestDispatcher requestDispatcher = request.getRequestDispatcher("/sign_up.jsp");
     requestDispatcher.forward(request, response);

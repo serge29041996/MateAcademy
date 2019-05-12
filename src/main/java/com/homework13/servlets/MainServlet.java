@@ -19,13 +19,13 @@ public class MainServlet extends HttpServlet {
   public void doPost(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    LOGGER.debug("User with id " + request.getSession().getId() + "come to website.");
+    LOGGER.debug("User with id " + request.getSession().getId() + " come to website.");
     String result = request.getParameter("result");
     if (result.equals("sign_in")) {
-      LOGGER.debug("User with id " + request.getSession().getId() + "come to sign in.");
+      LOGGER.debug("User with id " + request.getSession().getId() + " come to sign in.");
       response.sendRedirect("/sign_in");
     } else if (result.equals("sign_up")) {
-      LOGGER.debug("User with id " + request.getSession().getId() + "come to sign up.");
+      LOGGER.debug("User with id " + request.getSession().getId() + " come to sign up.");
       response.sendRedirect("/sign_up");
     }
   }

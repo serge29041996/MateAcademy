@@ -5,6 +5,7 @@ import com.homework13.model.User;
 import com.homework13.service.CheckData;
 import com.homework14.dao.UserDao;
 import com.homework16.model.Role;
+import com.homework18.utils.HashUtils;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,7 +38,8 @@ public class SignInServlet extends HttpServlet {
     if (result.equals("")) {
       try {
         User user = userDao.getUser(login);
-        if (user.getPassword().equals(password)) {
+        if (user.getPassword().equals(HashUtils
+            .getSha512SecurePassword(password, user.getSalt()))) {
           request.getSession().setAttribute("auth_user", user);
           request.getSession().setAttribute("auth_login", login);
           if (user.getRole() == Role.USER) {
@@ -47,7 +49,7 @@ public class SignInServlet extends HttpServlet {
           } else if (user.getRole() == Role.ADMIN) {
             LOGGER.debug("User with id " + request.getSession().getId() + "come to site as admin");
             request.getSession().setAttribute("role", Role.ADMIN.getValue());
-            response.sendRedirect("/admin_page");
+            response.sendRedirect("/admin_page/users");
           }
         } else {
           LOGGER.debug("User with id " + request.getSession().getId() + " enter wrong password");

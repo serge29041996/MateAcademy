@@ -3,6 +3,7 @@ package com.homework15.servlets;
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework14.dao.UserDao;
+import com.homework16.model.Role;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -16,7 +17,7 @@ import org.apache.log4j.Logger;
 /**
  * Servlet for admin action.
  */
-@WebServlet(value = "/admin_page")
+@WebServlet(value = "/admin_page/users")
 public class AdminPageServlet extends HttpServlet {
   private final UserDao userDao = new UserDao();
   private static final Logger LOGGER = Logger.getLogger(AdminPageServlet.class);
@@ -27,8 +28,8 @@ public class AdminPageServlet extends HttpServlet {
     List<User> userList = userDao.getAllUsers();
     request.setAttribute("numberUsers", userList.size());
     request.setAttribute("users", userList);
-    LOGGER.debug("User with id " + request.getSession().getId() + " come to admin page");
-    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin_page.jsp");
+    LOGGER.debug("User with id " + request.getSession().getId() + " come to admin users page");
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin_users_page.jsp");
     requestDispatcher.forward(request, response);
   }
 
@@ -50,7 +51,7 @@ public class AdminPageServlet extends HttpServlet {
         request.getSession().setAttribute("action", "update");
       } catch (NoSuchUserException e) {
         LOGGER.debug("User with id " + request.getSession().getId()
-            + " go to add form, because user with id " + idNeedUser + " was not find");
+            + " go to add user form, because user with id " + idNeedUser + " was not find");
         request.getSession().setAttribute("action", "add");
       }
       response.sendRedirect("/admin_page/user_action");
@@ -59,6 +60,18 @@ public class AdminPageServlet extends HttpServlet {
       userDao.deleteUser(Long.parseLong(idUserForDeleting));
       LOGGER.debug("User with id " + request.getSession().getId()
           + " delete user with id " + idUserForDeleting);
+      doGet(request, response);
+    } else if (result.contains("lowerRole")) {
+      String idNeedUser = result.split("_")[1];
+      LOGGER.debug("User with id " + request.getSession().getId()
+          + " want to lower role user with id " + idNeedUser);
+      userDao.updateUserRole(Long.parseLong(idNeedUser), Role.USER.getValue());
+      doGet(request, response);
+    } else if (result.contains("raiseRole")) {
+      String idNeedUser = result.split("_")[1];
+      LOGGER.debug("User with id " + request.getSession().getId()
+          + " want to raise role user with id " + idNeedUser);
+      userDao.updateUserRole(Long.parseLong(idNeedUser), Role.ADMIN.getValue());
       doGet(request, response);
     }
   }

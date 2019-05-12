@@ -72,7 +72,7 @@ public class SignInServletTest {
     new SignInServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
-    Mockito.verify(response, Mockito.times(1)).sendRedirect("/admin_page");
+    Mockito.verify(response, Mockito.times(1)).sendRedirect("/admin_page/users");
     Mockito.verify(session, Mockito.times(1)).setAttribute("auth_login", "Сергей");
     Mockito.verify(session, Mockito.times(1)).setAttribute("role", Role.ADMIN.getValue());
   }

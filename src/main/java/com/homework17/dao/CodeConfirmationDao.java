@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
  * Class for working with code in database.
  */
 public class CodeConfirmationDao {
-  private static final Logger LOGGER = Logger.getLogger(GoodDao.class);
+  private static final Logger LOGGER = Logger.getLogger(CodeConfirmationDao.class);
 
   /**
    * Save information about code.
@@ -22,7 +22,7 @@ public class CodeConfirmationDao {
   public void saveCode(CodeConfirmation newCode) {
     LOGGER.debug("Try save code for user with id " + newCode.getIdUser() + " and good with id "
         + newCode.getIdGood());
-    String insertRequest = "INSERT INTO codes(id_user, id_good, code) VALUES(?, ?, ?);";
+    String insertRequest = "INSERT INTO codes(user_id, good_id, code) VALUES(?, ?, ?);";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(insertRequest)) {
       statement.setLong(1, newCode.getIdUser());
@@ -111,12 +111,12 @@ public class CodeConfirmationDao {
       statement.execute();
       LOGGER.debug("Successfully delete all codes");
     } catch (SQLException e) {
-      LOGGER.error("Cannot execute delete all goods sql request ", e);
+      LOGGER.error("Cannot execute delete all codes sql request ", e);
     }
   }
 
   private Optional<CodeConfirmation> findCodeByUserIdAndGoodId(long userId, long goodId) {
-    String selectRequest = "SELECT * FROM goods where id_user=? AND id_good=?;";
+    String selectRequest = "SELECT * FROM codes WHERE user_id=? AND good_id=?;";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(selectRequest)) {
       statement.setLong(1, userId);
@@ -125,7 +125,7 @@ public class CodeConfirmationDao {
       return getCodeFromResultSet(resultSet);
     } catch (SQLException e) {
       LOGGER.error("Cannot execute sql select for finding code with user id " + userId
-          + " and good id" + goodId, e);
+          + " and good id " + goodId, e);
       return Optional.empty();
     }
   }
@@ -134,8 +134,8 @@ public class CodeConfirmationDao {
     try {
       if (resultSet.next()) {
         long id = resultSet.getLong("id");
-        long idUser = resultSet.getLong("id_user");
-        long idGood = resultSet.getLong("id_good");
+        long idUser = resultSet.getLong("user_id");
+        long idGood = resultSet.getLong("good_id");
         String code = resultSet.getString("code");
         CodeConfirmation resultCode = new CodeConfirmation(id, idUser, idGood, code);
         return Optional.of(resultCode);

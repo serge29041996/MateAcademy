@@ -29,7 +29,7 @@ public class ApplyPurchaseServlet extends HttpServlet {
     LOGGER.debug("User with id " + request.getSession().getId()
         + " come to buy good with id " + idBuyingGood);
     User user = (User) request.getSession().getAttribute("auth_user");
-    Optional<CodeConfirmation> findCode = codeDao.getCode(idBuyingGood, user.getId());
+    Optional<CodeConfirmation> findCode = codeDao.getCode(user.getId(), idBuyingGood);
     String codeConfirmation;
     if (findCode.isPresent()) {
       CodeConfirmation code = findCode.get();
@@ -60,10 +60,10 @@ public class ApplyPurchaseServlet extends HttpServlet {
   }
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String code = request.getParameter("code");
-    long idGood = Long.parseLong((String)request.getSession().getAttribute("id_good"));
+    long idGood = (Long) request.getSession().getAttribute("id_good");
     User currentUser = (User) request.getSession().getAttribute("auth_user");
     Optional<CodeConfirmation> findCode = codeDao.getCode(currentUser.getId(), idGood);
     if (findCode.isPresent()) {

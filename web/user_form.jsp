@@ -16,7 +16,7 @@
 <c:if test="${action == 'update'}">
     <h3>Обновите информацию про пользователя</h3>
 </c:if>
-<form method="post" action="user_action">
+<form method="post" action="/admin_page/user_action">
     <label for="login">Логин:</label>
     <input type="text" name="login" id="login" value="<c:out value="${login}" />"/>
     <br>
@@ -37,7 +37,7 @@
     <c:if test="${action == 'update'}">
         <button type="submit" name="option" value="update">Обновить</button>
     </c:if>
-    <button type="submit" name="option" value="return">Вернутся к списку</button>
+    <button type="submit" name="option" value="return">Вернутся к списку пользователей</button>
 </form>
 <h3>${result}</h3>
 </body>

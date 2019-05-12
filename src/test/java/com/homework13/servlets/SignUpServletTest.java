@@ -81,4 +81,19 @@ public class SignUpServletTest {
     new SignUpServlet().doGet(request, response);
     Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/sign_up.jsp");
   }
+
+  @Test
+  public void doPostUserWithExistenceMail() throws Exception {
+    String testMail = "test@test.com";
+    Mockito.when(request.getParameter("login")).thenReturn("test");
+    Mockito.when(request.getParameter("password")).thenReturn("pass");
+    Mockito.when(request.getParameter("mail")).thenReturn(testMail);
+    userDao.saveUser(new User(TEST_VALUE, TEST_VALUE, testMail));
+    new SignUpServlet().doPost(request, response);
+    Mockito.verify(request, Mockito.times(1)).getParameter("login");
+    Mockito.verify(request, Mockito.times(1)).getParameter("password");
+    Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/sign_up.jsp");
+    Mockito.verify(request, Mockito.times(1))
+        .setAttribute("result", "Пользователь с электронной почтой " + testMail + " уже существует.");
+  }
 }
