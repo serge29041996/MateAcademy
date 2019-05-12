@@ -5,7 +5,7 @@
     <title>Goods</title>
 </head>
 <body>
-<c:if test="numberGoods > 0">
+<c:if test="${numberGoods > 0}">
     <table>
         <td>
         <th>Name</th>
@@ -13,7 +13,7 @@
         <th>Price</th>
         <th></th>
         </td>
-        <c:forEach var="good" items="goods">
+        <c:forEach var="good" items="${goods}">
             <td>
             <th>${good.name}</th>
             <th>${good.description}</th>
@@ -22,6 +22,9 @@
             </td>
         </c:forEach>
     </table>
+</c:if>
+<c:if test="${numberGoods == 0}">
+    <h3>В данный момент в магазине нет товаров. Приходите позже</h3>
 </c:if>
 </body>
 </html>

@@ -5,11 +5,14 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import org.apache.log4j.Logger;
 
 /**
  * Utils for encryption and generating salt.
  */
 public class HashUtils {
+  private static final Logger LOGGER = Logger.getLogger(HashUtils.class);
+
   private HashUtils() {}
 
   /**
@@ -30,7 +33,7 @@ public class HashUtils {
       }
       generatedPassword = sb.toString();
     } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+      LOGGER.error("Cannot encrypt password", e);
     }
     return generatedPassword;
   }

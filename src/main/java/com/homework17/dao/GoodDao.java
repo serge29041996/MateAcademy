@@ -37,7 +37,8 @@ public class GoodDao {
         statement.execute();
         LOGGER.debug("Successful save information about login with name " + newGood.getName());
       } catch (SQLException e) {
-        LOGGER.error("Cannot execute insert sql request about good with name " + newGood.getName(), e);
+        LOGGER.error("Cannot execute insert sql request about good with name "
+            + newGood.getName(), e);
       }
     }
   }
@@ -144,7 +145,7 @@ public class GoodDao {
    */
   public void deleteGood(long id) {
     LOGGER.debug("Delete good with id " + id);
-    String deleteRequest = "DELETE FROM goods WHEN ID=?";
+    String deleteRequest = "DELETE FROM goods WHERE ID=?";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(deleteRequest)) {
       statement.setLong(1, id);

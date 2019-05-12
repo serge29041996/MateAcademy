@@ -17,7 +17,6 @@
         <table>
             <tr>
                 <th>Логин</th>
-                <th>Пароль</th>
                 <th>Электронная почта</th>
                 <th></th>
                 <th></th>
@@ -25,7 +24,6 @@
             <c:forEach var="user" items="${users}">
                 <tr>
                     <td>${user.login}</td>
-                    <td>${user.password}</td>
                     <td>${user.mail}</td>
                     <td><button type="submit" name="result" value="update_${user.id}">Обновить</button></td>
                     <td><button type="submit" name="result" value="delete_${user.id}">Удалить</button></td>

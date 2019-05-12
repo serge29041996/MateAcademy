@@ -8,7 +8,7 @@
 <a href="/admin_page/users">Работа с пользователями</a>
 <a href="/admin_page/goods">Работа с товарами</a>
 <form action="/admin_page/goods" method="post">
-    <button type="submit" name="result" value="addUser">Добавить товар</button>
+    <button type="submit" name="result" value="addGood">Добавить товар</button>
     <c:if test="${numberGoods == 0}">
         <h3>Нет товаров на сайте</h3>
     </c:if>

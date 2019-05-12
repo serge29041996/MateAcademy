@@ -198,7 +198,7 @@ public class UserDao {
       statement.execute();
       LOGGER.debug("Successful update role of user with id " + id);
     } catch (SQLException e) {
-      LOGGER.debug("Cannot execute update role request for user with id " + id , e);
+      LOGGER.debug("Cannot execute update role request for user with id " + id, e);
     }
   }
 
@@ -268,7 +268,8 @@ public class UserDao {
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(updateUser)) {
       statement.setString(1,newUser.getLogin());
-      statement.setString(2,newUser.getPassword());
+      statement.setString(2,HashUtils.getSha512SecurePassword(newUser.getPassword(),
+          newUser.getSalt()));
       statement.setString(3,newUser.getMail());
       statement.setString(4,newUser.getRole().getValue());
       statement.setLong(5,newUser.getId());

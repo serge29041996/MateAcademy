@@ -22,7 +22,7 @@ public class MailConfirmation {
   private static String PASSWORD = "8765t4321";
 
   /**
-   * Generate or set code and send to mail.
+   * Send code to mail.
    * @param mail mail of destination
    * @param code code for confirmation of purchase
    * @return code for confirmation

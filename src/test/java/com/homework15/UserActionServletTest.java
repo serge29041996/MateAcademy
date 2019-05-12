@@ -23,7 +23,7 @@ import org.mockito.Mockito;
  */
 public class UserActionServletTest {
   private static final String TEST_VALUE = "1";
-  private static final User TEST_USER = new User(TEST_VALUE, TEST_VALUE, TEST_VALUE, "user");
+  private static User testUser;
   private final UserDao userDao = new UserDao();
   private HttpServletRequest request;
   private HttpServletResponse response;
@@ -34,6 +34,7 @@ public class UserActionServletTest {
     response = Mockito.mock(HttpServletResponse.class);
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(request.getRequestDispatcher("/user_form.jsp")).thenReturn(requestDispatcher);
+    testUser = new User(TEST_VALUE, TEST_VALUE, "test@test.com", "user");
   }
 
   @After
@@ -94,7 +95,7 @@ public class UserActionServletTest {
     Mockito.when(request.getSession()).thenReturn(session);
     new UserActionServlet().doPost(request, response);
     Mockito.verify(response, Mockito.times(1))
-        .sendRedirect("/admin_page");
+        .sendRedirect("/admin_page/users");
   }
 
   @Test
@@ -115,7 +116,7 @@ public class UserActionServletTest {
 
   @Test
   public void testDoPostForAddExistUser() throws ServletException, IOException, DuplicateUserException {
-    userDao.saveUser(TEST_USER);
+    userDao.saveUser(testUser);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("add");
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
@@ -150,7 +151,7 @@ public class UserActionServletTest {
   @Test
   public void testDoPostForUpdateUserWithoutChange() throws ServletException, IOException,
       DuplicateUserException, NoSuchUserException {
-    userDao.saveUser(TEST_USER);
+    userDao.saveUser(testUser);
     User gettingUser = userDao.getUser(TEST_VALUE);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("update");
@@ -158,7 +159,7 @@ public class UserActionServletTest {
     Mockito.when(session.getAttribute("user")).thenReturn(gettingUser);
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
     Mockito.when(request.getParameter("password")).thenReturn(TEST_VALUE);
-    Mockito.when(request.getParameter("mail")).thenReturn(TEST_VALUE);
+    Mockito.when(request.getParameter("mail")).thenReturn("test@test.com");
     Mockito.when(request.getParameter("role")).thenReturn("user");
     Mockito.when(request.getSession()).thenReturn(session);
     new UserActionServlet().doPost(request, response);
@@ -171,7 +172,7 @@ public class UserActionServletTest {
   @Test
   public void testDoPostForUpdateUserWithoutPassword() throws ServletException, IOException,
       DuplicateUserException, NoSuchUserException {
-    userDao.saveUser(TEST_USER);
+    userDao.saveUser(testUser);
     User gettingUser = userDao.getUser(TEST_VALUE);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("update");
@@ -192,7 +193,7 @@ public class UserActionServletTest {
   @Test
   public void testDoPostForUpdateUserWithNewValues() throws ServletException, IOException,
       DuplicateUserException, NoSuchUserException {
-    userDao.saveUser(TEST_USER);
+    userDao.saveUser(testUser);
     User gettingUser = userDao.getUser(TEST_VALUE);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("update");
@@ -206,6 +207,54 @@ public class UserActionServletTest {
     new UserActionServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1))
         .setAttribute("result", "Данные про пользователя обновлены.");
+    Mockito.verify(request, Mockito.times(1))
+        .getRequestDispatcher("/user_form.jsp");
+  }
+
+  @Test
+  public void testDoPostForUpdateUserWithExistLogin() throws ServletException, IOException,
+      DuplicateUserException, NoSuchUserException {
+    String testValue = "test";
+    userDao.saveUser(testUser);
+    User gettingUser = userDao.getUser(testUser.getLogin());
+    User newUser = new User(testValue, testValue, "test@gmail.com", "user");
+    userDao.saveUser(newUser);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getParameter("option")).thenReturn("update");
+    Mockito.when(session.getAttribute("id")).thenReturn(gettingUser.getId());
+    Mockito.when(session.getAttribute("user")).thenReturn(gettingUser);
+    Mockito.when(request.getSession()).thenReturn(session);
+    Mockito.when(request.getParameter("login")).thenReturn("test");
+    Mockito.when(request.getParameter("password")).thenReturn("2");
+    Mockito.when(request.getParameter("mail")).thenReturn("test@test.com");
+    Mockito.when(request.getParameter("role")).thenReturn("user");
+    new UserActionServlet().doPost(request, response);
+    Mockito.verify(request, Mockito.times(1))
+        .setAttribute("result", "Пользователь с логином " + testValue + " уже существует");
+    Mockito.verify(request, Mockito.times(1))
+        .getRequestDispatcher("/user_form.jsp");
+  }
+
+  @Test
+  public void testDoPostForUpdateUserWithExistMail() throws ServletException, IOException,
+      DuplicateUserException, NoSuchUserException {
+    String testMail = "test@gmail.com";
+    userDao.saveUser(testUser);
+    User gettingUser = userDao.getUser(testUser.getLogin());
+    User newUser = new User("test", "test", testMail, "user");
+    userDao.saveUser(newUser);
+    HttpSession session = Mockito.mock(HttpSession.class);
+    Mockito.when(request.getParameter("option")).thenReturn("update");
+    Mockito.when(session.getAttribute("id")).thenReturn(gettingUser.getId());
+    Mockito.when(session.getAttribute("user")).thenReturn(gettingUser);
+    Mockito.when(request.getSession()).thenReturn(session);
+    Mockito.when(request.getParameter("login")).thenReturn("2");
+    Mockito.when(request.getParameter("password")).thenReturn("2");
+    Mockito.when(request.getParameter("mail")).thenReturn(testMail);
+    Mockito.when(request.getParameter("role")).thenReturn("user");
+    new UserActionServlet().doPost(request, response);
+    Mockito.verify(request, Mockito.times(1))
+        .setAttribute("result", "Пользователь с электронной почтой " + testMail + " уже существует");
     Mockito.verify(request, Mockito.times(1))
         .getRequestDispatcher("/user_form.jsp");
   }

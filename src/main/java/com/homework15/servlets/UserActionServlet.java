@@ -41,8 +41,7 @@ public class UserActionServlet extends HttpServlet {
       LOGGER.debug("User with id " + request.getSession().getId() + " come for update information "
           + "about user with id " + userForUpdate.getId());
       CheckData.checkOnNullAndSetValueForAttribute(request, "login", userForUpdate.getLogin());
-      CheckData.checkOnNullAndSetValueForAttribute(request,
-          "password", userForUpdate.getPassword());
+      CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "password");
       CheckData.checkOnNullAndSetValueForAttribute(request, "mail", userForUpdate.getMail());
       CheckData.checkOnNullAndSetValueForAttribute(request, "role",
           userForUpdate.getRole().getValue());
@@ -122,7 +121,7 @@ public class UserActionServlet extends HttpServlet {
       HttpServletRequest request) {
     User oldDataUser = (User) request.getSession().getAttribute("user");
     User newDataUser = new User((Long) request.getSession().getAttribute("id"), login, password,
-        Role.fromString(role), mail);
+        Role.fromString(role), mail, oldDataUser.getSalt());
     if (oldDataUser.equals(newDataUser)) {
       LOGGER.debug("User with id " + request.getSession().getId()
           + " update information about user with login " + login + " without change");

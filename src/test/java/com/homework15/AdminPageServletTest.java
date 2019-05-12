@@ -27,7 +27,7 @@ import org.mockito.Mockito;
  */
 public class AdminPageServletTest {
   private static final String TEST_VALUE = "1";
-  private static final User TEST_USER = new User(1, TEST_VALUE, TEST_VALUE, Role.USER, TEST_VALUE);
+  private static User testUser;
   private final UserDao userDao = new UserDao();
   private HttpServletRequest request;
   private HttpServletResponse response;
@@ -41,6 +41,7 @@ public class AdminPageServletTest {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
     Mockito.when(session.getId()).thenReturn("test");
+    testUser = new User(1, TEST_VALUE, TEST_VALUE, Role.USER, TEST_VALUE);
   }
 
   @After
@@ -104,7 +105,7 @@ public class AdminPageServletTest {
       throws ServletException, IOException, DuplicateUserException, NoSuchUserException {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
-    userDao.saveUser(TEST_USER);
+    userDao.saveUser(testUser);
     User gettingUser = userDao.getUser(TEST_VALUE);
     long id = gettingUser.getId();
     Mockito.when(request.getParameter("result")).thenReturn("update_" + id);
@@ -135,12 +136,45 @@ public class AdminPageServletTest {
       throws ServletException, IOException, DuplicateUserException, NoSuchUserException {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
-    userDao.saveUser(TEST_USER);
+    userDao.saveUser(testUser);
     int numberUsers = userDao.count();
     User gettingUser = userDao.getUser(TEST_VALUE);
     long id = gettingUser.getId();
     Mockito.when(request.getParameter("result")).thenReturn("delete_" + id);
     new AdminPageServlet().doPost(request, response);
     Assert.assertEquals(numberUsers - 1, userDao.count());
+  }
+
+  @Test
+  public void testLowerRoleForUser()
+      throws DuplicateUserException, NoSuchUserException, ServletException, IOException {
+    testUser.setRole(Role.ADMIN);
+    userDao.saveUser(testUser);
+    User gettingTestUser = userDao.getUser(testUser.getLogin());
+    testUser.setPassword(HashUtils.getSha512SecurePassword(testUser.getPassword(), gettingTestUser.getSalt()));
+    testUser.setSalt(gettingTestUser.getSalt());
+    long id = gettingTestUser.getId();
+    Mockito.when(request.getParameter("result")).thenReturn("lowerRole" + id);
+    new AdminPageServlet().doPost(request, response);
+    User gettingTestUserAfterUpdateRole = userDao.getUser(id);
+    testUser.setRole(Role.USER);
+    Assert.assertEquals(Role.USER, gettingTestUserAfterUpdateRole.getRole());
+    Assert.assertEquals(testUser, gettingTestUserAfterUpdateRole);
+  }
+
+  @Test
+  public void testRaiseRoleUser()
+      throws DuplicateUserException, NoSuchUserException, ServletException, IOException {
+    userDao.saveUser(testUser);
+    User gettingTestUser = userDao.getUser(testUser.getLogin());
+    testUser.setPassword(HashUtils.getSha512SecurePassword(testUser.getPassword(), gettingTestUser.getSalt()));
+    testUser.setSalt(gettingTestUser.getSalt());
+    long id = gettingTestUser.getId();
+    Mockito.when(request.getParameter("result")).thenReturn("raiseRole" + id);
+    new AdminPageServlet().doPost(request, response);
+    User gettingTestUserAfterUpdateRole = userDao.getUser(id);
+    testUser.setRole(Role.ADMIN);
+    Assert.assertEquals(Role.ADMIN, gettingTestUserAfterUpdateRole.getRole());
+    Assert.assertEquals(testUser, gettingTestUserAfterUpdateRole);
   }
 }
