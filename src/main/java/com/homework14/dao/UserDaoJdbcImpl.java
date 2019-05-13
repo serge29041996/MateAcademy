@@ -5,6 +5,7 @@ import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework16.model.Role;
 import com.homework18.utils.HashUtils;
+import com.homework19.dao.UserDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,8 +18,8 @@ import org.apache.log4j.Logger;
 /**
  * Class for working with user from database.
  */
-public class UserDao {
-  private static final Logger LOGGER = Logger.getLogger(UserDao.class);
+public class UserDaoJdbcImpl implements UserDao {
+  private static final Logger LOGGER = Logger.getLogger(UserDaoJdbcImpl.class);
 
   /**
    * Save user to database.
@@ -41,7 +42,7 @@ public class UserDao {
         String salt = HashUtils.generateSalt();
         statement.setString(1, newUser.getLogin());
         statement.setString(2, HashUtils.getSha512SecurePassword(newUser.getPassword(), salt));
-        statement.setString(3, newUser.getRole().getValue());
+        statement.setString(3, newUser.getRole());
         statement.setString(4, newUser.getMail());
         statement.setString(5, salt);
         statement.execute();
@@ -63,10 +64,10 @@ public class UserDao {
     Optional<User> findUser = findUserByLogin(login);
     LOGGER.debug("Get user with login " + login);
     if (!findUser.isPresent()) {
-      LOGGER.debug("Successful find user with login " + login);
+      LOGGER.debug("User with login " + login + " has not existed");
       throw new NoSuchUserException();
     } else {
-      LOGGER.debug("User with login " + login + " has not existed");
+      LOGGER.debug("Successful find user with login " + login);
       return findUser.get();
     }
   }
@@ -81,10 +82,10 @@ public class UserDao {
     Optional<User> findUser = findUserById(id);
     LOGGER.debug("Get user with id " + id);
     if (!findUser.isPresent()) {
-      LOGGER.debug("Successful find user with id " + id);
+      LOGGER.debug("User with id " + id + " has not existed");
       throw new NoSuchUserException();
     } else {
-      LOGGER.debug("User with id " + id + " has not existed");
+      LOGGER.debug("Successful find user with id " + id);
       return findUser.get();
     }
   }
@@ -93,7 +94,7 @@ public class UserDao {
    * Get number of users in database.
    * @return number of users
    */
-  public int count() {
+  public long count() {
     LOGGER.debug("Get number of users in website");
     String countRequest = "SELECT COUNT(*) FROM users;";
     try (Connection connection = DbConnector.getConnection();
@@ -139,7 +140,7 @@ public class UserDao {
         long id = resultSet.getLong("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
-        Role role = Role.fromString(resultSet.getString("role"));
+        String role = resultSet.getString("role");
         String mail = resultSet.getString("mail");
         String salt = resultSet.getString("salt");
         User newUser = new User(id, login, password, role, mail, salt);
@@ -247,7 +248,7 @@ public class UserDao {
         long id = resultSet.getLong("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
-        Role role = Role.fromString(resultSet.getString("role"));
+        String role = resultSet.getString("role");
         String mail = resultSet.getString("mail");
         String salt = resultSet.getString("salt");
         User resultUser = new User(id, login, password, role, mail, salt);
@@ -271,7 +272,7 @@ public class UserDao {
       statement.setString(2,HashUtils.getSha512SecurePassword(newUser.getPassword(),
           newUser.getSalt()));
       statement.setString(3,newUser.getMail());
-      statement.setString(4,newUser.getRole().getValue());
+      statement.setString(4,newUser.getRole());
       statement.setLong(5,newUser.getId());
       statement.execute();
       LOGGER.debug("Successful update user with id " + newUser.getId());

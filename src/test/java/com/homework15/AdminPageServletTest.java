@@ -3,7 +3,7 @@ package com.homework15;
 import com.homework13.dao.DuplicateUserException;
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
-import com.homework14.dao.UserDao;
+import com.homework14.dao.UserDaoJdbcImpl;
 import com.homework15.servlets.AdminPageServlet;
 import com.homework16.model.Role;
 import com.homework18.utils.HashUtils;
@@ -28,7 +28,7 @@ import org.mockito.Mockito;
 public class AdminPageServletTest {
   private static final String TEST_VALUE = "1";
   private static User testUser;
-  private final UserDao userDao = new UserDao();
+  private final UserDaoJdbcImpl userDao = new UserDaoJdbcImpl();
   private HttpServletRequest request;
   private HttpServletResponse response;
 
@@ -41,7 +41,7 @@ public class AdminPageServletTest {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
     Mockito.when(session.getId()).thenReturn("test");
-    testUser = new User(1, TEST_VALUE, TEST_VALUE, Role.USER, TEST_VALUE);
+    testUser = new User(1, TEST_VALUE, TEST_VALUE, Role.USER.getValue(), TEST_VALUE);
   }
 
   @After
@@ -67,13 +67,13 @@ public class AdminPageServletTest {
       throws ServletException, IOException, DuplicateUserException, NoSuchUserException {
     List<User> userList = new ArrayList<>();
     userList.add(userDao.getUser("Сергей"));
-    User newUser1 = new User(0, TEST_VALUE, TEST_VALUE, Role.USER, TEST_VALUE);
+    User newUser1 = new User(0, TEST_VALUE, TEST_VALUE, Role.USER.getValue(), TEST_VALUE);
     userDao.saveUser(newUser1);
     User gettingNewUser1 = userDao.getUser(TEST_VALUE);
     newUser1.setPassword(HashUtils.getSha512SecurePassword(TEST_VALUE, gettingNewUser1.getSalt()));
     newUser1.setSalt(gettingNewUser1.getSalt());
     userList.add(newUser1);
-    User newUser2 = new User(1,"2", "2", Role.USER, "2");
+    User newUser2 = new User(1,"2", "2", Role.USER.getValue(), "2");
     userDao.saveUser(newUser2);
     User gettingNewUser2 = userDao.getUser("2");
     newUser2.setPassword(HashUtils.getSha512SecurePassword("2", gettingNewUser2.getSalt()));
@@ -137,7 +137,7 @@ public class AdminPageServletTest {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
     userDao.saveUser(testUser);
-    int numberUsers = userDao.count();
+    long numberUsers = userDao.count();
     User gettingUser = userDao.getUser(TEST_VALUE);
     long id = gettingUser.getId();
     Mockito.when(request.getParameter("result")).thenReturn("delete_" + id);
@@ -148,7 +148,7 @@ public class AdminPageServletTest {
   @Test
   public void testLowerRoleForUser()
       throws DuplicateUserException, NoSuchUserException, ServletException, IOException {
-    testUser.setRole(Role.ADMIN);
+    testUser.setRole(Role.ADMIN.getValue());
     userDao.saveUser(testUser);
     User gettingTestUser = userDao.getUser(testUser.getLogin());
     testUser.setPassword(HashUtils.getSha512SecurePassword(testUser.getPassword(), gettingTestUser.getSalt()));
@@ -157,8 +157,8 @@ public class AdminPageServletTest {
     Mockito.when(request.getParameter("result")).thenReturn("lowerRole" + id);
     new AdminPageServlet().doPost(request, response);
     User gettingTestUserAfterUpdateRole = userDao.getUser(id);
-    testUser.setRole(Role.USER);
-    Assert.assertEquals(Role.USER, gettingTestUserAfterUpdateRole.getRole());
+    testUser.setRole(Role.USER.getValue());
+    Assert.assertEquals(Role.USER.getValue(), gettingTestUserAfterUpdateRole.getRole());
     Assert.assertEquals(testUser, gettingTestUserAfterUpdateRole);
   }
 
@@ -173,8 +173,8 @@ public class AdminPageServletTest {
     Mockito.when(request.getParameter("result")).thenReturn("raiseRole" + id);
     new AdminPageServlet().doPost(request, response);
     User gettingTestUserAfterUpdateRole = userDao.getUser(id);
-    testUser.setRole(Role.ADMIN);
-    Assert.assertEquals(Role.ADMIN, gettingTestUserAfterUpdateRole.getRole());
+    testUser.setRole(Role.ADMIN.getValue());
+    Assert.assertEquals(Role.ADMIN.getValue(), gettingTestUserAfterUpdateRole.getRole());
     Assert.assertEquals(testUser, gettingTestUserAfterUpdateRole);
   }
 }

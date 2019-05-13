@@ -3,9 +3,10 @@ package com.homework13.servlets;
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework13.service.CheckData;
-import com.homework14.dao.UserDao;
 import com.homework16.model.Role;
 import com.homework18.utils.HashUtils;
+import com.homework19.dao.UserDao;
+import com.homework19.dao.UserDaoHibernateImpl;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,16 +21,13 @@ import org.apache.log4j.Logger;
  */
 @WebServlet(value = "/sign_in")
 public class SignInServlet extends HttpServlet {
-  private final UserDao userDao = new UserDao();
+  private final UserDao userDao = new UserDaoHibernateImpl();
   private static final Logger LOGGER = Logger.getLogger(SignInServlet.class);
 
   @Override
   public void doPost(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html");
-    response.setCharacterEncoding("UTF-8");
     String login = request.getParameter("login");
     String password = request.getParameter("password");
     LOGGER.debug("User with id " + request.getSession().getId() + " enter login " + login
@@ -42,11 +40,11 @@ public class SignInServlet extends HttpServlet {
             .getSha512SecurePassword(password, user.getSalt()))) {
           request.getSession().setAttribute("auth_user", user);
           request.getSession().setAttribute("auth_login", login);
-          if (user.getRole() == Role.USER) {
+          if (user.getRole().equals(Role.USER.getValue())) {
             LOGGER.debug("User with id " + request.getSession().getId() + "come to site as user");
             request.getSession().setAttribute("role", Role.USER.getValue());
             response.sendRedirect("/user_page");
-          } else if (user.getRole() == Role.ADMIN) {
+          } else if (user.getRole().equals(Role.ADMIN.getValue())) {
             LOGGER.debug("User with id " + request.getSession().getId() + "come to site as admin");
             request.getSession().setAttribute("role", Role.ADMIN.getValue());
             response.sendRedirect("/admin_page/users");

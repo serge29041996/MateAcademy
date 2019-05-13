@@ -1,7 +1,7 @@
 package com.homework13.servlets;
 
 import com.homework13.model.User;
-import com.homework14.dao.UserDao;
+import com.homework14.dao.UserDaoJdbcImpl;
 import com.homework16.model.Role;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -18,7 +18,7 @@ import org.mockito.Mockito;
  */
 public class SignInServletTest {
   private static final String TEST_VALUE = "test";
-  private final UserDao userDao = new UserDao();
+  private final UserDaoJdbcImpl userDao = new UserDaoJdbcImpl();
   private HttpServletRequest request;
   private HttpServletResponse response;
 

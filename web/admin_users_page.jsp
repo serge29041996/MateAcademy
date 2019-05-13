@@ -18,6 +18,7 @@
             <tr>
                 <th>Логин</th>
                 <th>Электронная почта</th>
+                <th>Роль</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -25,12 +26,13 @@
                 <tr>
                     <td>${user.login}</td>
                     <td>${user.mail}</td>
+                    <td>${user.role}</td>
                     <td><button type="submit" name="result" value="update_${user.id}">Обновить</button></td>
                     <td><button type="submit" name="result" value="delete_${user.id}">Удалить</button></td>
-                    <c:if test="${user.role.value == 'admin'}">
+                    <c:if test="${user.role == 'admin'}">
                         <td><button type="submit" name="result" value="lowerRole_${user.id}">Понизить до роли пользователя</button></td>
                     </c:if>
-                    <c:if test="${user.role.value == 'user'}">
+                    <c:if test="${user.role == 'user'}">
                         <td><button type="submit" name="result" value="raiseRole_${user.id}">Повысить до роли администратора</button></td>
                     </c:if>
                 </tr>

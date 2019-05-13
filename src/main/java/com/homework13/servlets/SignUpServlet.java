@@ -3,7 +3,8 @@ package com.homework13.servlets;
 import com.homework13.dao.DuplicateUserException;
 import com.homework13.model.User;
 import com.homework13.service.CheckData;
-import com.homework14.dao.UserDao;
+import com.homework19.dao.UserDao;
+import com.homework19.dao.UserDaoHibernateImpl;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,16 +19,13 @@ import org.apache.log4j.Logger;
  */
 @WebServlet(value = "/sign_up")
 public class SignUpServlet extends HttpServlet {
-  private final UserDao userDao = new UserDao();
+  private final UserDao userDao = new UserDaoHibernateImpl();
   private static final Logger LOGGER = Logger.getLogger(SignUpServlet.class);
 
   @Override
   public void doPost(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html");
-    response.setCharacterEncoding("UTF-8");
     String login = request.getParameter("login");
     String password = request.getParameter("password");
     String mail = request.getParameter("mail");

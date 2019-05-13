@@ -1,7 +1,7 @@
 package com.homework17.servlets;
 
 import com.homework13.model.User;
-import com.homework14.dao.UserDao;
+import com.homework14.dao.UserDaoJdbcImpl;
 import com.homework16.model.Role;
 import com.homework17.dao.CodeConfirmationDao;
 import com.homework17.dao.GoodDao;
@@ -26,7 +26,7 @@ public class ApplyPurchaseServletTest {
   private HttpSession session;
   private static final String TEST_VALUE = "test";
   private User testUser;
-  private final UserDao USER_DAO = new UserDao();
+  private final UserDaoJdbcImpl USER_DAO = new UserDaoJdbcImpl();
   private Good testGood = new Good(TEST_VALUE, TEST_VALUE, 10.0);
   private final GoodDao GOOD_DAO = new GoodDao();
   private final CodeConfirmationDao CODE_DAO = new CodeConfirmationDao();

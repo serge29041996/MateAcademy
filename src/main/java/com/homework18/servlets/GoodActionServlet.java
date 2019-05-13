@@ -24,9 +24,6 @@ public class GoodActionServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html");
-    response.setCharacterEncoding("UTF-8");
     CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "result");
     String action = (String) request.getSession().getAttribute("action");
     if (action.equals("add")) {
@@ -52,9 +49,6 @@ public class GoodActionServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html");
-    response.setCharacterEncoding("UTF-8");
     String name = request.getParameter("name");
     String description = request.getParameter("description");
     String price = request.getParameter("price");

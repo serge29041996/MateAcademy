@@ -3,9 +3,10 @@ package com.homework14;
 import com.homework13.dao.DuplicateUserException;
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
-import com.homework14.dao.UserDao;
 import com.homework16.model.Role;
 import com.homework18.utils.HashUtils;
+import com.homework19.dao.UserDao;
+import com.homework19.dao.UserDaoHibernateImpl;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
@@ -19,11 +20,11 @@ import org.junit.Test;
 public class UserDaoTest {
   private static final String TEST_VALUE = "test";
   private static User testUser;
-  private final UserDao USER_DAO = new UserDao();
+  private final UserDao USER_DAO = new UserDaoHibernateImpl();
 
   @Before
   public void init() {
-    testUser = new User(0, TEST_VALUE, TEST_VALUE, Role.USER, TEST_VALUE);
+    testUser = new User(0, TEST_VALUE, TEST_VALUE, Role.USER.getValue(), TEST_VALUE);
   }
 
   @After
@@ -43,7 +44,7 @@ public class UserDaoTest {
 
   @Test
   public void testSaveNewUserWithUTFCharset() throws DuplicateUserException, NoSuchUserException {
-    User user = new User(0, "Сергей1", "123", Role.USER, TEST_VALUE);
+    User user = new User(0, "Сергей1", "123", Role.USER.getValue(), TEST_VALUE);
     USER_DAO.saveUser(user);
     User gettingUser = USER_DAO.getUser("Сергей1");
     user.setPassword(HashUtils.getSha512SecurePassword(user.getPassword(), gettingUser.getSalt()));
@@ -104,7 +105,7 @@ public class UserDaoTest {
     testUser.setPassword(HashUtils.getSha512SecurePassword(testUser.getPassword(), gettingTestUser.getSalt()));
     testUser.setSalt(gettingTestUser.getSalt());
     users.add(testUser);
-    User newUser = new User(1,"1", "1", Role.USER, "test@gmail.com");
+    User newUser = new User(1,"1", "1", Role.USER.getValue(), "test@gmail.com");
     USER_DAO.saveUser(newUser);
     User gettingNewUser = USER_DAO.getUser(newUser.getLogin());
     newUser.setPassword(HashUtils.getSha512SecurePassword(newUser.getPassword(), gettingNewUser.getSalt()));
@@ -117,7 +118,7 @@ public class UserDaoTest {
   @Test
   public void testDeleteExistUser() throws DuplicateUserException, NoSuchUserException {
     USER_DAO.saveUser(testUser);
-    int numberUsers = USER_DAO.count();
+    long numberUsers = USER_DAO.count();
     User gettingUser = USER_DAO.getUser(TEST_VALUE);
     USER_DAO.deleteUser(gettingUser.getId());
     Assert.assertEquals(numberUsers - 1, USER_DAO.count());
@@ -126,13 +127,13 @@ public class UserDaoTest {
   @Test
   public void testUpdateExistUser() throws DuplicateUserException, NoSuchUserException {
     String testLogin = "1";
-    User userForUpdate = new User(0, testLogin, "1", Role.USER, TEST_VALUE);
+    User userForUpdate = new User(0, testLogin, "1", Role.USER.getValue(), TEST_VALUE);
     USER_DAO.saveUser(userForUpdate);
     User gettingUser = USER_DAO.getUser(testLogin);
     userForUpdate.setId(gettingUser.getId());
     userForUpdate.setPassword(TEST_VALUE);
     userForUpdate.setSalt(gettingUser.getSalt());
-    int numberUsers = USER_DAO.count();
+    long numberUsers = USER_DAO.count();
     USER_DAO.updateUser(userForUpdate);
     User gettingUserAfterUpdate = USER_DAO.getUser(testLogin);
     Assert.assertEquals(numberUsers, USER_DAO.count());
@@ -142,9 +143,9 @@ public class UserDaoTest {
   @Test(expected = DuplicateUserException.class)
   public void testUpdateExistUserWithExistLogin() throws DuplicateUserException, NoSuchUserException {
     String testLogin = "1";
-    User userForUpdate = new User(0, testLogin, "1", Role.USER, TEST_VALUE);
+    User userForUpdate = new User(0, testLogin, "1", Role.USER.getValue(), TEST_VALUE);
     USER_DAO.saveUser(userForUpdate);
-    User secondUser = new User(1, "2", "2", Role.USER, "test@gmail.com");
+    User secondUser = new User(1, "2", "2", Role.USER.getValue(), "test@gmail.com");
     USER_DAO.saveUser(secondUser);
     User gettingUser = USER_DAO.getUser(testLogin);
     userForUpdate.setId(gettingUser.getId());
@@ -154,13 +155,13 @@ public class UserDaoTest {
 
   @Test
   public void testUpdateUserRole() throws DuplicateUserException, NoSuchUserException {
-    User userForUpdate = new User(0, TEST_VALUE, "1", Role.USER, TEST_VALUE);
+    User userForUpdate = new User(0, TEST_VALUE, "1", Role.ADMIN.getValue(), TEST_VALUE);
     USER_DAO.saveUser(userForUpdate);
     User gettingUserForUpdate = USER_DAO.getUser(TEST_VALUE);
     userForUpdate.setPassword(HashUtils.getSha512SecurePassword(userForUpdate.getPassword(), gettingUserForUpdate.getSalt()));
     userForUpdate.setSalt(gettingUserForUpdate.getSalt());
-    USER_DAO.updateUserRole(gettingUserForUpdate.getId(), Role.ADMIN.getValue());
-    userForUpdate.setRole(Role.ADMIN);
+    USER_DAO.updateUserRole(gettingUserForUpdate.getId(), Role.USER.getValue());
+    userForUpdate.setRole(Role.USER.getValue());
     User gettingUserAfterUpdateRole = USER_DAO.getUser(TEST_VALUE);
     Assert.assertEquals(userForUpdate, gettingUserAfterUpdateRole);
   }

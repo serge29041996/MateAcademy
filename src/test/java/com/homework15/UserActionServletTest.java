@@ -3,7 +3,7 @@ package com.homework15;
 import com.homework13.dao.DuplicateUserException;
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
-import com.homework14.dao.UserDao;
+import com.homework14.dao.UserDaoJdbcImpl;
 import com.homework15.servlets.UserActionServlet;
 import com.homework16.model.Role;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import org.mockito.Mockito;
 public class UserActionServletTest {
   private static final String TEST_VALUE = "1";
   private static User testUser;
-  private final UserDao userDao = new UserDao();
+  private final UserDaoJdbcImpl userDao = new UserDaoJdbcImpl();
   private HttpServletRequest request;
   private HttpServletResponse response;
 
@@ -62,7 +62,7 @@ public class UserActionServletTest {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(session.getAttribute("action")).thenReturn("update");
     Mockito.when(request.getSession()).thenReturn(session);
-    User newUser = new User(1, TEST_VALUE, TEST_VALUE, Role.USER, TEST_VALUE);
+    User newUser = new User(1, TEST_VALUE, TEST_VALUE, Role.USER.getValue(), TEST_VALUE);
     Mockito.when(session.getAttribute("user")).thenReturn(newUser);
     Mockito.when(request.getAttribute("login")).thenReturn(null);
     Mockito.when(request.getAttribute("password")).thenReturn(null);
@@ -81,7 +81,7 @@ public class UserActionServletTest {
     Mockito.verify(request,
         Mockito.times(1)).setAttribute("mail", newUser.getMail());
     Mockito.verify(request,
-        Mockito.times(1)).setAttribute("role", newUser.getRole().getValue());
+        Mockito.times(1)).setAttribute("role", newUser.getRole());
     Mockito.verify(request, Mockito.times(1))
         .getRequestDispatcher("/user_form.jsp");
   }

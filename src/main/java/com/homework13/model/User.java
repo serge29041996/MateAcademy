@@ -1,17 +1,34 @@
 package com.homework13.model;
 
 import com.homework16.model.Role;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Class for saving information about user.
  */
+@Entity
+@Table(name = "users")
 public class User {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
+  @Column(name = "login")
   private String login;
+  @Column(name = "password")
   private String password;
-  private Role role;
+  @Column(name = "role")
+  private String role;
+  @Column(name = "mail")
   private String mail;
+  @Column(name = "salt")
   private String salt;
+
+  protected User() {}
 
   /**
    * Constructor for login, password and mail.
@@ -23,7 +40,7 @@ public class User {
     this.login = login;
     this.password = password;
     this.mail = mail;
-    this.role = Role.USER;
+    this.role = Role.USER.getValue();
   }
 
   /**
@@ -37,7 +54,22 @@ public class User {
     this.login = login;
     this.password = password;
     this.mail = mail;
-    this.role = Role.fromString(role);
+    this.role = role;
+  }
+
+  /**
+   * Constructor for login, password, mail, role and salt.
+   * @param login login of user
+   * @param password password user
+   * @param mail mail of user
+   * @param role role of user
+   */
+  public User(String login, String password, String role, String mail, String salt) {
+    this.login = login;
+    this.password = password;
+    this.role = role;
+    this.mail = mail;
+    this.salt = salt;
   }
 
   /**
@@ -48,7 +80,7 @@ public class User {
    * @param role role of user
    * @param mail mail of user
    */
-  public User(long id, String login, String password, Role role, String mail) {
+  public User(long id, String login, String password, String role, String mail) {
     this.id = id;
     this.login = login;
     this.password = password;
@@ -64,7 +96,7 @@ public class User {
    * @param role role of user
    * @param mail mail of user
    */
-  public User(long id, String login, String password, Role role, String mail, String salt) {
+  public User(long id, String login, String password, String role, String mail, String salt) {
     this.id = id;
     this.login = login;
     this.password = password;
@@ -97,11 +129,11 @@ public class User {
     this.id = id;
   }
 
-  public Role getRole() {
+  public String getRole() {
     return role;
   }
 
-  public void setRole(Role role) {
+  public void setRole(String role) {
     this.role = role;
   }
 
@@ -138,7 +170,7 @@ public class User {
     if (!password.equals(user.password)) {
       return false;
     }
-    if (role != user.role) {
+    if (!role.equals(user.role)) {
       return false;
     }
     if (!mail.equals(user.mail)) {
