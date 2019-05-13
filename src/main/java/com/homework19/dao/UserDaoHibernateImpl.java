@@ -24,7 +24,9 @@ public class UserDaoHibernateImpl implements UserDao {
   @Override
   public void saveUser(User newUser) throws DuplicateUserException {
     LOGGER.debug("Try save user with login " + newUser.getLogin());
-    Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+    Session session = HibernateSessionFactoryUtil
+        .getSessionFactory()
+        .openSession();
     Query queryFindByLogin = session.createQuery("from User where login = :login");
     queryFindByLogin.setParameter("login", newUser.getLogin());
     List<User> findUserWithSameLogin = queryFindByLogin.list();
@@ -55,7 +57,9 @@ public class UserDaoHibernateImpl implements UserDao {
   @Override
   public User getUser(long id) throws NoSuchUserException {
     LOGGER.debug("Get user with id " + id);
-    User findUserById = HibernateSessionFactoryUtil.getSessionFactory().openSession()
+    User findUserById = HibernateSessionFactoryUtil
+        .getSessionFactory()
+        .openSession()
         .get(User.class, id);
     if (findUserById == null) {
       LOGGER.debug("User with id " + id + " has not existed");
@@ -68,7 +72,9 @@ public class UserDaoHibernateImpl implements UserDao {
 
   @Override
   public User getUser(String login) throws NoSuchUserException {
-    Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+    Session session = HibernateSessionFactoryUtil
+        .getSessionFactory()
+        .openSession();
     Query queryFindByLogin = session.createQuery("from User where login = :login");
     queryFindByLogin.setParameter("login", login);
     List<User> findUserByLogin = queryFindByLogin.list();
@@ -85,7 +91,9 @@ public class UserDaoHibernateImpl implements UserDao {
   @Override
   public long count() {
     LOGGER.debug("Get number of users in website");
-    Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+    Session session = HibernateSessionFactoryUtil
+        .getSessionFactory()
+        .openSession();
     CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
     CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
     Root<User> root = criteriaQuery.from(User.class);
@@ -103,7 +111,9 @@ public class UserDaoHibernateImpl implements UserDao {
   @Override
   public void deleteAll() {
     LOGGER.debug("Delete all users with role user");
-    Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+    Session session = HibernateSessionFactoryUtil
+        .getSessionFactory()
+        .openSession();
     Transaction transaction = session.beginTransaction();
     Query query = session.createQuery("delete from User where role = :role");
     query.setParameter("role", "user");
@@ -115,8 +125,11 @@ public class UserDaoHibernateImpl implements UserDao {
   @Override
   public List<User> getAllUsers() {
     LOGGER.debug("Get list of all users");
-    List<User> users = (List<User>) HibernateSessionFactoryUtil.getSessionFactory().openSession()
-        .createQuery("from User").list();
+    List<User> users = (List<User>) HibernateSessionFactoryUtil
+        .getSessionFactory()
+        .openSession()
+        .createQuery("from User")
+        .list();
     LOGGER.debug("Successfully get list with all users");
     if (users == null) {
       users = new ArrayList<>();
@@ -127,7 +140,9 @@ public class UserDaoHibernateImpl implements UserDao {
   @Override
   public void deleteUser(long id) {
     LOGGER.debug("Delete user with id " + id);
-    Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+    Session session = HibernateSessionFactoryUtil
+        .getSessionFactory()
+        .openSession();
     Transaction transaction = session.beginTransaction();
     Query query = session.createQuery("delete from User where id = :id");
     query.setParameter("id", id);
@@ -140,7 +155,9 @@ public class UserDaoHibernateImpl implements UserDao {
   @Override
   public void updateUser(User newUser) throws DuplicateUserException {
     LOGGER.debug("Update user with id " + newUser.getId());
-    Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+    Session session = HibernateSessionFactoryUtil
+        .getSessionFactory()
+        .openSession();
     Query queryFindByLogin = session.createQuery("from User where login = :login");
     queryFindByLogin.setParameter("login", newUser.getLogin());
     List<User> findUserWithSameLogin = queryFindByLogin.list();
@@ -150,7 +167,9 @@ public class UserDaoHibernateImpl implements UserDao {
     session.close();
     if (checkOpportunityUpdateUser("login", findUserWithSameLogin, newUser)
         && checkOpportunityUpdateUser("mail", findUserWithSameMail, newUser)) {
-      session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+      session = HibernateSessionFactoryUtil
+          .getSessionFactory()
+          .openSession();
       Transaction transaction = session.beginTransaction();
       newUser.setPassword(HashUtils.getSha512SecurePassword(newUser.getPassword(), newUser.getSalt()));
       session.update(newUser);
@@ -163,7 +182,9 @@ public class UserDaoHibernateImpl implements UserDao {
   @Override
   public void updateUserRole(long id, String role) {
     LOGGER.debug("Update role to " + role + " of user with id " + id);
-    Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+    Session session = HibernateSessionFactoryUtil
+        .getSessionFactory()
+        .openSession();
     Query query = session.createQuery("update User set role = :role where id = :id");
     query.setParameter("role", role);
     query.setParameter("id", id);

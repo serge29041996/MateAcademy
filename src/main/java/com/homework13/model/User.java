@@ -12,20 +12,20 @@ import javax.persistence.Table;
  * Class for saving information about user.
  */
 @Entity
-@Table(name = "users")
+@Table(name = "USERS")
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
-  @Column(name = "login")
+  @Column(name = "LOGIN")
   private String login;
-  @Column(name = "password")
+  @Column(name = "PASSWORD")
   private String password;
-  @Column(name = "role")
+  @Column(name = "ROLE")
   private String role;
-  @Column(name = "mail")
+  @Column(name = "MAIL")
   private String mail;
-  @Column(name = "salt")
+  @Column(name = "SALT")
   private String salt;
 
   protected User() {}
