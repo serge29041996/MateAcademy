@@ -1,6 +1,7 @@
 package com.homework19.utils;
 
 import com.homework13.model.User;
+import com.homework17.model.Good;
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -21,6 +22,7 @@ public class HibernateSessionFactoryUtil {
       try {
         Configuration configuration = new Configuration().configure();
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Good.class);
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
             .applySettings(configuration.getProperties());
         sessionFactory = configuration.buildSessionFactory(builder.build());

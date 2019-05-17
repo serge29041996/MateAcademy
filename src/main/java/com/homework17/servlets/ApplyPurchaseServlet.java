@@ -1,9 +1,10 @@
 package com.homework17.servlets;
 
 import com.homework13.model.User;
-import com.homework17.dao.CodeConfirmationDao;
 import com.homework17.model.CodeConfirmation;
 import com.homework17.service.MailConfirmation;
+import com.homework19.dao.CodeConfirmationDao;
+import com.homework19.dao.CodeConfirmationDaoHibernateImpl;
 import java.io.IOException;
 import java.util.Optional;
 import javax.servlet.ServletException;
@@ -20,7 +21,7 @@ import org.apache.log4j.Logger;
 public class ApplyPurchaseServlet extends HttpServlet {
   private static final Logger LOGGER = Logger.getLogger(ApplyPurchaseServlet.class);
   private final MailConfirmation mailConfirmation = new MailConfirmation();
-  private final CodeConfirmationDao codeDao = new CodeConfirmationDao();
+  private final CodeConfirmationDao codeDao = new CodeConfirmationDaoHibernateImpl();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)

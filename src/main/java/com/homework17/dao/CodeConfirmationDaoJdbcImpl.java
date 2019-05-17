@@ -2,6 +2,7 @@ package com.homework17.dao;
 
 import com.homework14.dao.DbConnector;
 import com.homework17.model.CodeConfirmation;
+import com.homework19.dao.CodeConfirmationDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,15 +11,16 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 /**
- * Class for working with code in database.
+ * Realization dao for working with code in database using JDBC.
  */
-public class CodeConfirmationDao {
-  private static final Logger LOGGER = Logger.getLogger(CodeConfirmationDao.class);
+public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
+  private static final Logger LOGGER = Logger.getLogger(CodeConfirmationDaoJdbcImpl.class);
 
   /**
    * Save information about code.
    * @param newCode new code
    */
+  @Override
   public void saveCode(CodeConfirmation newCode) {
     LOGGER.debug("Try save code for user with id " + newCode.getIdUser() + " and good with id "
         + newCode.getIdGood());
@@ -43,13 +45,14 @@ public class CodeConfirmationDao {
    * @param idGood id need good
    * @return find code
    */
+  @Override
   public Optional<CodeConfirmation> getCode(long idUser, long idGood) {
     Optional<CodeConfirmation> findCode = findCodeByUserIdAndGoodId(idUser, idGood);
     LOGGER.debug("Get code with user id " + idUser + " and good id " + idGood);
     if (!findCode.isPresent()) {
-      LOGGER.debug("Successful find code with user id " + idUser + " and good id " + idGood);
-    } else {
       LOGGER.debug("Code with user id " + idUser + " and good id " + idGood + " has not existed");
+    } else {
+      LOGGER.debug("Successful find code with user id " + idUser + " and good id " + idGood);
     }
     return findCode;
   }
@@ -58,6 +61,7 @@ public class CodeConfirmationDao {
    * Update information about code.
    * @param updatedCode new information of code
    */
+  @Override
   public void updateCode(CodeConfirmation updatedCode) {
     LOGGER.debug("Update code with user id " + updatedCode.getIdUser()
         + " and good id " + updatedCode.getIdGood());
@@ -68,6 +72,7 @@ public class CodeConfirmationDao {
    * Delete code by id.
    * @param id id code for deleting
    */
+  @Override
   public void deleteCode(long id) {
     LOGGER.debug("Delete code with id " + id);
     String deleteRequest = "DELETE FROM codes WHERE id=?";
@@ -85,7 +90,8 @@ public class CodeConfirmationDao {
    * Get number of codes.
    * @return number of codes
    */
-  public int count() {
+  @Override
+  public long count() {
     LOGGER.debug("Get number of codes in website");
     String countRequest = "SELECT COUNT(*) FROM codes;";
     try (Connection connection = DbConnector.getConnection();
@@ -93,7 +99,7 @@ public class CodeConfirmationDao {
       ResultSet resultSet = statement.executeQuery();
       resultSet.next();
       LOGGER.debug("Successfully get number of codes in website");
-      return resultSet.getInt(1);
+      return resultSet.getLong(1);
     } catch (SQLException e) {
       LOGGER.error("Cannot execute select sql request ", e);
       return -1;
@@ -103,6 +109,7 @@ public class CodeConfirmationDao {
   /**
    * Delete all codes from database.
    */
+  @Override
   public void deleteAll() {
     LOGGER.debug("Delete all codes");
     String deleteRequest = "TRUNCATE codes";

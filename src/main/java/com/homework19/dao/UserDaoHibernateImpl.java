@@ -16,7 +16,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 /**
- * Realization dao for working with users using hibernate.
+ * Realization dao for working with users in database using Hibernate.
  */
 public class UserDaoHibernateImpl implements UserDao {
   private static final Logger LOGGER = Logger.getLogger(UserDaoHibernateImpl.class);
@@ -171,7 +171,8 @@ public class UserDaoHibernateImpl implements UserDao {
           .getSessionFactory()
           .openSession();
       Transaction transaction = session.beginTransaction();
-      newUser.setPassword(HashUtils.getSha512SecurePassword(newUser.getPassword(), newUser.getSalt()));
+      newUser.setPassword(HashUtils.getSha512SecurePassword(newUser.getPassword(),
+          newUser.getSalt()));
       session.update(newUser);
       transaction.commit();
       session.close();

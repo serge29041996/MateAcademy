@@ -6,7 +6,7 @@ import com.homework13.model.User;
 import java.util.List;
 
 /**
- * Interface for working with database.
+ * Interface for working with users in database.
  */
 public interface UserDao {
   void saveUser(User newUser) throws DuplicateUserException;

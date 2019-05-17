@@ -2,6 +2,7 @@ package com.homework17.dao;
 
 import com.homework14.dao.DbConnector;
 import com.homework17.model.Good;
+import com.homework19.dao.GoodDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,16 +13,17 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 /**
- * Class for working with goods in database.
+ * Realization dao for working with goods in database.
  */
-public class GoodDao {
-  private static final Logger LOGGER = Logger.getLogger(GoodDao.class);
+public class GoodDaoJdbcImpl implements GoodDao {
+  private static final Logger LOGGER = Logger.getLogger(GoodDaoJdbcImpl.class);
 
   /**
    * Save information about good.
    * @param newGood new good
    * @throws DuplicateGoodException when find exist good
    */
+  @Override
   public void saveGood(Good newGood) throws DuplicateGoodException {
     LOGGER.debug("Try save good with name " + newGood.getName());
     if (findGoodByName(newGood.getName()).isPresent()) {
@@ -49,14 +51,15 @@ public class GoodDao {
    * @return find good
    * @throws NoSuchGoodException when good has not found
    */
+  @Override
   public Good getGood(long id) throws NoSuchGoodException {
     Optional<Good> findGood = findGoodById(id);
     LOGGER.debug("Get good with id " + id);
     if (!findGood.isPresent()) {
-      LOGGER.debug("Successful find good with id " + id);
+      LOGGER.debug("Good with id " + id + " has not existed");
       throw new NoSuchGoodException();
     } else {
-      LOGGER.debug("Good with id " + id + " has not existed");
+      LOGGER.debug("Successful find good with id " + id);
       return findGood.get();
     }
   }
@@ -67,14 +70,15 @@ public class GoodDao {
    * @return find good
    * @throws NoSuchGoodException when good has not found
    */
+  @Override
   public Good getGood(String name) throws NoSuchGoodException {
     Optional<Good> findGood = findGoodByName(name);
     LOGGER.debug("Get good with name " + name);
     if (!findGood.isPresent()) {
-      LOGGER.debug("Successful find good with name " + name);
+      LOGGER.debug("Good with name " + name + " has not existed");
       throw new NoSuchGoodException();
     } else {
-      LOGGER.debug("Good with name " + name + " has not existed");
+      LOGGER.debug("Successful find good with name " + name);
       return findGood.get();
     }
   }
@@ -83,7 +87,8 @@ public class GoodDao {
    * Get count of good.
    * @return number of goods
    */
-  public int count() {
+  @Override
+  public long count() {
     LOGGER.debug("Get number of goods in website");
     String countRequest = "SELECT COUNT(*) FROM goods;";
     try (Connection connection = DbConnector.getConnection();
@@ -91,7 +96,7 @@ public class GoodDao {
       ResultSet resultSet = statement.executeQuery();
       resultSet.next();
       LOGGER.debug("Successfully get number of goods in website");
-      return resultSet.getInt(1);
+      return resultSet.getLong(1);
     } catch (SQLException e) {
       LOGGER.error("Cannot execute select sql request ", e);
       return -1;
@@ -101,6 +106,7 @@ public class GoodDao {
   /**
    * Delete all goods from database.
    */
+  @Override
   public void deleteAll() {
     LOGGER.debug("Delete all goods");
     String deleteRequest = "TRUNCATE goods";
@@ -117,6 +123,7 @@ public class GoodDao {
    * Get all goods from database.
    * @return all goods
    */
+  @Override
   public List<Good> getAllGoods() {
     LOGGER.debug("Get list of all goods");
     String getAllRequest = "SELECT * FROM goods;";
@@ -143,6 +150,7 @@ public class GoodDao {
    * Delete good with specific id.
    * @param id id of good for deleting
    */
+  @Override
   public void deleteGood(long id) {
     LOGGER.debug("Delete good with id " + id);
     String deleteRequest = "DELETE FROM goods WHERE ID=?";
@@ -161,6 +169,7 @@ public class GoodDao {
    * @param newGood new good
    * @throws DuplicateGoodException if good with same name already exist
    */
+  @Override
   public void updateGood(Good newGood) throws DuplicateGoodException {
     LOGGER.debug("Update good with id " + newGood.getId());
     Optional<Good> findGoodWithSameName = findGoodByName(newGood.getName());

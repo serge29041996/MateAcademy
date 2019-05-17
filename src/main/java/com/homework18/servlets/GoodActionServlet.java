@@ -2,8 +2,9 @@ package com.homework18.servlets;
 
 import com.homework13.service.CheckData;
 import com.homework17.dao.DuplicateGoodException;
-import com.homework17.dao.GoodDao;
 import com.homework17.model.Good;
+import com.homework19.dao.GoodDao;
+import com.homework19.dao.GoodDaoHibernateImpl;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,7 +19,7 @@ import org.apache.log4j.Logger;
  */
 @WebServlet("/admin_page/good_action")
 public class GoodActionServlet extends HttpServlet {
-  private final GoodDao goodDao = new GoodDao();
+  private final GoodDao goodDao = new GoodDaoHibernateImpl();
   private static final Logger LOGGER = Logger.getLogger(GoodActionServlet.class);
 
   @Override

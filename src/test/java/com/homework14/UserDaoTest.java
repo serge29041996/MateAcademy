@@ -19,8 +19,8 @@ import org.junit.Test;
  */
 public class UserDaoTest {
   private static final String TEST_VALUE = "test";
-  private static User testUser;
-  private final UserDao USER_DAO = new UserDaoHibernateImpl();
+  private User testUser;
+  private static final UserDao USER_DAO = new UserDaoHibernateImpl();
 
   @Before
   public void init() {

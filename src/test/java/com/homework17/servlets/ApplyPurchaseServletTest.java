@@ -3,11 +3,13 @@ package com.homework17.servlets;
 import com.homework13.model.User;
 import com.homework14.dao.UserDaoJdbcImpl;
 import com.homework16.model.Role;
-import com.homework17.dao.CodeConfirmationDao;
-import com.homework17.dao.GoodDao;
 import com.homework17.model.CodeConfirmation;
 import com.homework17.model.Good;
 import com.homework17.util.RandomCodeGenerator;
+import com.homework19.dao.CodeConfirmationDao;
+import com.homework19.dao.CodeConfirmationDaoHibernateImpl;
+import com.homework19.dao.GoodDao;
+import com.homework19.dao.GoodDaoHibernateImpl;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,8 +30,8 @@ public class ApplyPurchaseServletTest {
   private User testUser;
   private final UserDaoJdbcImpl USER_DAO = new UserDaoJdbcImpl();
   private Good testGood = new Good(TEST_VALUE, TEST_VALUE, 10.0);
-  private final GoodDao GOOD_DAO = new GoodDao();
-  private final CodeConfirmationDao CODE_DAO = new CodeConfirmationDao();
+  private final GoodDao GOOD_DAO = new GoodDaoHibernateImpl();
+  private final CodeConfirmationDao CODE_DAO = new CodeConfirmationDaoHibernateImpl();
 
   @Before
   public void init() {
