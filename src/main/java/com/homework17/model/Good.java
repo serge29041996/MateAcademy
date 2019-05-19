@@ -1,13 +1,34 @@
 package com.homework17.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Class, which save information about goods.
  */
+@Entity
+@Table(name = "GOODS")
 public class Good {
+  @Id
+  @Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
+
+  @Column(name = "NAME")
   private String name;
+
+  @Column(name = "DESCRIPTION")
   private String description;
+
+  @Column(name = "PRICE")
   private double price;
+
+  protected Good() {
+  }
 
   /**
    * Constructor with name, description and price of good.

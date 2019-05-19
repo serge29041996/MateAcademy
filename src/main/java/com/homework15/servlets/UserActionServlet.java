@@ -3,8 +3,8 @@ package com.homework15.servlets;
 import com.homework13.dao.DuplicateUserException;
 import com.homework13.model.User;
 import com.homework13.service.CheckData;
-import com.homework14.dao.UserDao;
-import com.homework16.model.Role;
+import com.homework19.dao.UserDao;
+import com.homework19.dao.UserDaoHibernateImpl;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,15 +19,12 @@ import org.apache.log4j.Logger;
  */
 @WebServlet(value = "/admin_page/user_action")
 public class UserActionServlet extends HttpServlet {
-  private final UserDao userDao = new UserDao();
+  private final UserDao userDao = new UserDaoHibernateImpl();
   private static final Logger LOGGER = Logger.getLogger(UserActionServlet.class);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html");
-    response.setCharacterEncoding("UTF-8");
     CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "result");
     String action = (String) request.getSession().getAttribute("action");
     if (action.equals("add")) {
@@ -44,7 +41,7 @@ public class UserActionServlet extends HttpServlet {
       CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "password");
       CheckData.checkOnNullAndSetValueForAttribute(request, "mail", userForUpdate.getMail());
       CheckData.checkOnNullAndSetValueForAttribute(request, "role",
-          userForUpdate.getRole().getValue());
+          userForUpdate.getRole());
       request.getSession().setAttribute("id", userForUpdate.getId());
     }
     RequestDispatcher requestDispatcher = request.getRequestDispatcher("/user_form.jsp");
@@ -54,9 +51,6 @@ public class UserActionServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html");
-    response.setCharacterEncoding("UTF-8");
     String login = request.getParameter("login");
     String password = request.getParameter("password");
     String mail = request.getParameter("mail");
@@ -121,7 +115,7 @@ public class UserActionServlet extends HttpServlet {
       HttpServletRequest request) {
     User oldDataUser = (User) request.getSession().getAttribute("user");
     User newDataUser = new User((Long) request.getSession().getAttribute("id"), login, password,
-        Role.fromString(role), mail, oldDataUser.getSalt());
+        role, mail, oldDataUser.getSalt());
     if (oldDataUser.equals(newDataUser)) {
       LOGGER.debug("User with id " + request.getSession().getId()
           + " update information about user with login " + login + " without change");

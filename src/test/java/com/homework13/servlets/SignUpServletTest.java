@@ -1,7 +1,8 @@
 package com.homework13.servlets;
 
 import com.homework13.model.User;
-import com.homework14.dao.UserDao;
+import com.homework19.dao.UserDao;
+import com.homework19.dao.UserDaoHibernateImpl;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ import org.mockito.Mockito;
  */
 public class SignUpServletTest {
   private static final String TEST_VALUE = "test";
-  private final UserDao userDao = new UserDao();
+  private static final UserDao USER_DAO = new UserDaoHibernateImpl();
   private HttpServletRequest request;
   private HttpServletResponse response;
 
@@ -37,7 +38,7 @@ public class SignUpServletTest {
 
   @After
   public void clear() {
-    userDao.deleteAll();
+    USER_DAO.deleteAll();
   }
 
   @Test
@@ -52,7 +53,7 @@ public class SignUpServletTest {
 
   @Test
   public void doPostForExistUser() throws Exception {
-    userDao.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
+    USER_DAO.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
     new SignUpServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
@@ -65,7 +66,7 @@ public class SignUpServletTest {
   public void doPostUserWithInvalidData() throws Exception {
     Mockito.when(request.getParameter("login")).thenReturn("");
     Mockito.when(request.getParameter("password")).thenReturn("pass");
-    userDao.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
+    USER_DAO.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
     new SignUpServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
@@ -85,10 +86,10 @@ public class SignUpServletTest {
   @Test
   public void doPostUserWithExistenceMail() throws Exception {
     String testMail = "test@test.com";
-    Mockito.when(request.getParameter("login")).thenReturn("test");
+    Mockito.when(request.getParameter("login")).thenReturn("1");
     Mockito.when(request.getParameter("password")).thenReturn("pass");
     Mockito.when(request.getParameter("mail")).thenReturn(testMail);
-    userDao.saveUser(new User(TEST_VALUE, TEST_VALUE, testMail));
+    USER_DAO.saveUser(new User(TEST_VALUE, TEST_VALUE, testMail));
     new SignUpServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");

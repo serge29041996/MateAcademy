@@ -5,6 +5,7 @@ import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework16.model.Role;
 import com.homework18.utils.HashUtils;
+import com.homework19.dao.UserDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,16 +16,17 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 /**
- * Class for working with user from database.
+ * Realization dao for working with user in database using JDBC.
  */
-public class UserDao {
-  private static final Logger LOGGER = Logger.getLogger(UserDao.class);
+public class UserDaoJdbcImpl implements UserDao {
+  private static final Logger LOGGER = Logger.getLogger(UserDaoJdbcImpl.class);
 
   /**
    * Save user to database.
    * @param newUser information about user
    * @throws DuplicateUserException when user with login of new user is exist
    */
+  @Override
   public void saveUser(User newUser) throws DuplicateUserException {
     LOGGER.debug("Try save user with login " + newUser.getLogin());
     if (findUserByLogin(newUser.getLogin()).isPresent()) {
@@ -41,7 +43,7 @@ public class UserDao {
         String salt = HashUtils.generateSalt();
         statement.setString(1, newUser.getLogin());
         statement.setString(2, HashUtils.getSha512SecurePassword(newUser.getPassword(), salt));
-        statement.setString(3, newUser.getRole().getValue());
+        statement.setString(3, newUser.getRole());
         statement.setString(4, newUser.getMail());
         statement.setString(5, salt);
         statement.execute();
@@ -59,14 +61,15 @@ public class UserDao {
    * @return find user
    * @throws NoSuchUserException when user with login not found
    */
+  @Override
   public User getUser(String login) throws NoSuchUserException {
     Optional<User> findUser = findUserByLogin(login);
     LOGGER.debug("Get user with login " + login);
     if (!findUser.isPresent()) {
-      LOGGER.debug("Successful find user with login " + login);
+      LOGGER.debug("User with login " + login + " has not existed");
       throw new NoSuchUserException();
     } else {
-      LOGGER.debug("User with login " + login + " has not existed");
+      LOGGER.debug("Successful find user with login " + login);
       return findUser.get();
     }
   }
@@ -77,14 +80,15 @@ public class UserDao {
    * @return find user
    * @throws NoSuchUserException when user with id not found
    */
+  @Override
   public User getUser(long id) throws NoSuchUserException {
     Optional<User> findUser = findUserById(id);
     LOGGER.debug("Get user with id " + id);
     if (!findUser.isPresent()) {
-      LOGGER.debug("Successful find user with id " + id);
+      LOGGER.debug("User with id " + id + " has not existed");
       throw new NoSuchUserException();
     } else {
-      LOGGER.debug("User with id " + id + " has not existed");
+      LOGGER.debug("Successful find user with id " + id);
       return findUser.get();
     }
   }
@@ -93,7 +97,8 @@ public class UserDao {
    * Get number of users in database.
    * @return number of users
    */
-  public int count() {
+  @Override
+  public long count() {
     LOGGER.debug("Get number of users in website");
     String countRequest = "SELECT COUNT(*) FROM users;";
     try (Connection connection = DbConnector.getConnection();
@@ -101,7 +106,7 @@ public class UserDao {
       ResultSet resultSet = statement.executeQuery();
       resultSet.next();
       LOGGER.debug("Successfully get number of users in website");
-      return resultSet.getInt(1);
+      return resultSet.getLong(1);
     } catch (SQLException e) {
       LOGGER.error("Cannot execute select sql request ", e);
       return -1;
@@ -111,6 +116,7 @@ public class UserDao {
   /**
    * Clear database.
    */
+  @Override
   public void deleteAll() {
     LOGGER.debug("Delete all users with role user");
     String deleteRequest = "DELETE FROM users WHERE role=?";
@@ -128,6 +134,7 @@ public class UserDao {
    * Get all users from database.
    * @return ArrayList of all users
    */
+  @Override
   public List<User> getAllUsers() {
     LOGGER.debug("Get list of all users");
     String getAllRequest = "SELECT * FROM users;";
@@ -139,7 +146,7 @@ public class UserDao {
         long id = resultSet.getLong("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
-        Role role = Role.fromString(resultSet.getString("role"));
+        String role = resultSet.getString("role");
         String mail = resultSet.getString("mail");
         String salt = resultSet.getString("salt");
         User newUser = new User(id, login, password, role, mail, salt);
@@ -156,6 +163,7 @@ public class UserDao {
    * Delete user by id.
    * @param id id of user for deleting
    */
+  @Override
   public void deleteUser(long id) {
     LOGGER.debug("Delete user with id " + id);
     String deleteRequest = "DELETE FROM users WHERE id=?";
@@ -173,6 +181,7 @@ public class UserDao {
    * Update information about user.
    * @param newUser exist user with new information
    */
+  @Override
   public void updateUser(User newUser) throws DuplicateUserException {
     LOGGER.debug("Update user with id " + newUser.getId());
     Optional<User> findUserWithSameLogin = findUserByLogin(newUser.getLogin());
@@ -188,6 +197,7 @@ public class UserDao {
    * @param id id user for updating
    * @param newRole new role for user
    */
+  @Override
   public void updateUserRole(long id, String newRole) {
     LOGGER.debug("Update role to " + newRole + " of user with id " + id);
     String updateRoleRequest = "UPDATE users SET role=? WHERE id=?";
@@ -247,7 +257,7 @@ public class UserDao {
         long id = resultSet.getLong("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
-        Role role = Role.fromString(resultSet.getString("role"));
+        String role = resultSet.getString("role");
         String mail = resultSet.getString("mail");
         String salt = resultSet.getString("salt");
         User resultUser = new User(id, login, password, role, mail, salt);
@@ -271,7 +281,7 @@ public class UserDao {
       statement.setString(2,HashUtils.getSha512SecurePassword(newUser.getPassword(),
           newUser.getSalt()));
       statement.setString(3,newUser.getMail());
-      statement.setString(4,newUser.getRole().getValue());
+      statement.setString(4,newUser.getRole());
       statement.setLong(5,newUser.getId());
       statement.execute();
       LOGGER.debug("Successful update user with id " + newUser.getId());

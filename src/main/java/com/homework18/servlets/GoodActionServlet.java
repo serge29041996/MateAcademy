@@ -2,8 +2,9 @@ package com.homework18.servlets;
 
 import com.homework13.service.CheckData;
 import com.homework17.dao.DuplicateGoodException;
-import com.homework17.dao.GoodDao;
 import com.homework17.model.Good;
+import com.homework19.dao.GoodDao;
+import com.homework19.dao.GoodDaoHibernateImpl;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,15 +19,12 @@ import org.apache.log4j.Logger;
  */
 @WebServlet("/admin_page/good_action")
 public class GoodActionServlet extends HttpServlet {
-  private final GoodDao goodDao = new GoodDao();
+  private final GoodDao goodDao = new GoodDaoHibernateImpl();
   private static final Logger LOGGER = Logger.getLogger(GoodActionServlet.class);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html");
-    response.setCharacterEncoding("UTF-8");
     CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "result");
     String action = (String) request.getSession().getAttribute("action");
     if (action.equals("add")) {
@@ -52,9 +50,6 @@ public class GoodActionServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html");
-    response.setCharacterEncoding("UTF-8");
     String name = request.getParameter("name");
     String description = request.getParameter("description");
     String price = request.getParameter("price");

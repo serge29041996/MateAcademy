@@ -1,8 +1,9 @@
 package com.homework16.servlets;
 
 import com.homework17.dao.DuplicateGoodException;
-import com.homework17.dao.GoodDao;
 import com.homework17.model.Good;
+import com.homework19.dao.GoodDao;
+import com.homework19.dao.GoodDaoHibernateImpl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import org.mockito.Mockito;
  * Test for user page servlet.
  */
 public class UserPageServletTest {
-  private final GoodDao goodDao = new GoodDao();
+  private final GoodDao goodDao = new GoodDaoHibernateImpl();
   private HttpServletRequest request;
   private HttpServletResponse response;
 

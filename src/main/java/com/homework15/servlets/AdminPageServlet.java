@@ -2,8 +2,9 @@ package com.homework15.servlets;
 
 import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
-import com.homework14.dao.UserDao;
 import com.homework16.model.Role;
+import com.homework19.dao.UserDao;
+import com.homework19.dao.UserDaoHibernateImpl;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
  */
 @WebServlet(value = "/admin_page/users")
 public class AdminPageServlet extends HttpServlet {
-  private final UserDao userDao = new UserDao();
+  private final UserDao userDao = new UserDaoHibernateImpl();
   private static final Logger LOGGER = Logger.getLogger(AdminPageServlet.class);
 
   @Override

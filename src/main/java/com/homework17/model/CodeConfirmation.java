@@ -1,13 +1,34 @@
 package com.homework17.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Class for saving code for confirmation selling good to user.
  */
+@Entity
+@Table(name = "CODES")
 public class CodeConfirmation {
+  @Id
+  @Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
+
+  @Column(name = "USER_ID")
   private long idUser;
+
+  @Column(name = "GOOD_ID")
   private long idGood;
+
+  @Column(name = "CODE")
   private String code;
+
+  protected CodeConfirmation() {
+  }
 
   /**
    * Constructor with id user, id good and code for confirmation purchase.

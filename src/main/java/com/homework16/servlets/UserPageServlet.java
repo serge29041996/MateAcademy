@@ -1,7 +1,8 @@
 package com.homework16.servlets;
 
-import com.homework17.dao.GoodDao;
 import com.homework17.model.Good;
+import com.homework19.dao.GoodDao;
+import com.homework19.dao.GoodDaoHibernateImpl;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -17,7 +18,7 @@ import org.apache.log4j.Logger;
 @WebServlet(value = "/user_page")
 public class UserPageServlet extends HttpServlet {
   private static final Logger LOGGER = Logger.getLogger(UserPageServlet.class);
-  private final GoodDao goodDao = new GoodDao();
+  private final GoodDao goodDao = new GoodDaoHibernateImpl();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
