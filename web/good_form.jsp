@@ -28,6 +28,9 @@
     <label for="price">Цена:</label>
     <input type="text" name="price" id="price" value="<c:out value="${price}" />"/>
     <br>
+    <label for="price">Количество:</label>
+    <input type="text" name="count" id="count" value="<c:out value="${count}" />"/>
+    <br>
     <c:if test="${action == 'add'}">
         <button type="submit" name="option" value="add">Создать</button>
     </c:if>

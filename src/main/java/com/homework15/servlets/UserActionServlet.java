@@ -1,10 +1,10 @@
 package com.homework15.servlets;
 
-import com.homework13.dao.DuplicateUserException;
 import com.homework13.model.User;
 import com.homework13.service.CheckData;
 import com.homework19.dao.UserDao;
 import com.homework19.dao.UserDaoHibernateImpl;
+import com.homework20.service.CheckingUser;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -83,26 +83,18 @@ public class UserActionServlet extends HttpServlet {
       String role, HttpServletRequest request) {
     String result = CheckData.checkUserData(login, password, mail, role);
     if (result.equals("")) {
-      User newUser = new User(login, password, mail, role);
-      try {
-        userDao.saveUser(newUser);
+      User newUser = new User(login, password, role, mail);
+      String resultCheckingExistence = CheckingUser
+          .checkExistenceUserWithSameLoginAndMailForSave(userDao, newUser);
+      if (resultCheckingExistence.equals("")) {
+        userDao.save(newUser);
         LOGGER.debug("User with id " + request.getSession().getId()
             + " saved information about user with login " + login);
         request.setAttribute("result", "Информация про пользователя успешно добавлена.");
-      } catch (DuplicateUserException e) {
-        String message;
-        if (e.getMessage().contains("login")) {
-          LOGGER.debug("User with id " + request.getSession().getId()
-              + " cannot saved information about user with login " + login
-              + " because user with same login already exist");
-          message = "Пользователь с логином " + login + " уже существует.";
-        } else {
-          LOGGER.debug("User with id " + request.getSession().getId()
-              + " cannot saved information about user with mail " + mail
-              + " because user with same mail already exist");
-          message = "Пользователь с электронной почтой " + mail + " уже существует.";
-        }
-        request.setAttribute("result", message);
+      } else {
+        LOGGER.debug("User with id" + request.getSession().getId()
+            + " try create user with exist login or mail");
+        request.setAttribute("result", resultCheckingExistence);
       }
     } else {
       LOGGER.debug("User with id " + request.getSession().getId()
@@ -123,23 +115,17 @@ public class UserActionServlet extends HttpServlet {
     } else {
       String result = CheckData.checkUserData(login, password, mail, role);
       if (result.equals("")) {
-        try {
-          userDao.updateUser(newDataUser);
+        String resultCheckingExistence = CheckingUser
+            .checkExistenceUserWithSameLoginAndMailForUpdate(userDao, newDataUser);
+        if (resultCheckingExistence.equals("")) {
+          userDao.update(newDataUser);
           LOGGER.debug("User with id " + request.getSession().getId()
               + " update information about user with login " + login);
           request.setAttribute("result", "Данные про пользователя обновлены.");
-        } catch (DuplicateUserException e) {
-          String message;
-          if (e.getMessage().contains("login")) {
-            LOGGER.debug("User with id " + request.getSession().getId()
-                + " try update user with login " + login + " which already exist in database");
-            message = "Пользователь с логином " + login + " уже существует";
-          } else {
-            LOGGER.debug("User with id " + request.getSession().getId()
-                + " try update user with mail " + mail + " which already exist in database");
-            message = "Пользователь с электронной почтой " + mail + " уже существует";
-          }
-          request.setAttribute("result", message);
+        } else {
+          LOGGER.debug("User with id " + request.getSession().getId()
+              + " try update user with login or mail, which already exist in database");
+          request.setAttribute("result", resultCheckingExistence);
         }
       } else {
         request.setAttribute("result", result);

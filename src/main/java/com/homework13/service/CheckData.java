@@ -88,17 +88,12 @@ public class CheckData {
    * @param price price of good
    * @return empty string if entered valid information, otherwise error message
    */
-  public static String checkGoodData(String name, String description, String price) {
+  public static String checkGoodData(String name, String description, String price, String count) {
     StringBuilder stringBuilder = new StringBuilder();
     checkString(name, "название", stringBuilder);
     checkString(description, "описание", stringBuilder);
-    if (checkString(price, "цену", stringBuilder)) {
-      try {
-        Double.parseDouble(price);
-      } catch (NumberFormatException e) {
-        stringBuilder.append("Цена не является числом.");
-      }
-    }
+    checkNumber(price, "цену", stringBuilder);
+    checkNumber(count, "количество", stringBuilder);
     return stringBuilder.toString();
   }
 
@@ -111,6 +106,17 @@ public class CheckData {
       return false;
     } else {
       return true;
+    }
+  }
+
+  private static void checkNumber(String valueField, String nameField,
+      StringBuilder stringBuilder) {
+    if (checkString(valueField, nameField, stringBuilder)) {
+      try {
+        Double.parseDouble(valueField);
+      } catch (NumberFormatException e) {
+        stringBuilder.append("Вы ввели " + nameField + ", которое не является числом.");
+      }
     }
   }
 }

@@ -40,13 +40,13 @@ public class CheckDataTest {
 
   @Test
   public void checkGoodWithInvalidPrice() {
-    String result = CheckData.checkGoodData(TEST_VALUE, TEST_VALUE, "9,99");
-    Assert.assertEquals("Цена не является числом.", result);
+    String result = CheckData.checkGoodData(TEST_VALUE, TEST_VALUE, "9,99", "3");
+    Assert.assertEquals("Вы ввели цену, которое не является числом.", result);
   }
 
   @Test
   public void checkGoodWithValidData() {
-    String result = CheckData.checkGoodData(TEST_VALUE, TEST_VALUE, "9.99");
+    String result = CheckData.checkGoodData(TEST_VALUE, TEST_VALUE, "9.99", "3");
     Assert.assertEquals("", result);
   }
 }

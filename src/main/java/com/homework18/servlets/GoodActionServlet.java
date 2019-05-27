@@ -1,10 +1,10 @@
 package com.homework18.servlets;
 
 import com.homework13.service.CheckData;
-import com.homework17.dao.DuplicateGoodException;
 import com.homework17.model.Good;
 import com.homework19.dao.GoodDao;
 import com.homework19.dao.GoodDaoHibernateImpl;
+import com.homework20.service.CheckingGood;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -32,6 +32,7 @@ public class GoodActionServlet extends HttpServlet {
       CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "name");
       CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "description");
       CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "price");
+      CheckData.checkOnNullAndSetDefaultValueForAttribute(request, "count");
     } else {
       Good goodForUpdate = (Good) request.getSession().getAttribute("good");
       LOGGER.debug("User with id " + request.getSession().getId() + " come for update information "
@@ -41,6 +42,8 @@ public class GoodActionServlet extends HttpServlet {
           "description", goodForUpdate.getDescription());
       CheckData.checkOnNullAndSetValueForAttribute(request, "price",
           String.valueOf(goodForUpdate.getPrice()));
+      CheckData.checkOnNullAndSetValueForAttribute(request, "count",
+          String.valueOf(goodForUpdate.getCount()));
       request.getSession().setAttribute("id", goodForUpdate.getId());
     }
     RequestDispatcher requestDispatcher = request.getRequestDispatcher("/good_form.jsp");
@@ -53,44 +56,49 @@ public class GoodActionServlet extends HttpServlet {
     String name = request.getParameter("name");
     String description = request.getParameter("description");
     String price = request.getParameter("price");
+    String count = request.getParameter("count");
     String action = request.getParameter("option");
     if (action.equals("return")) {
       LOGGER.debug("User with id " + request.getSession().getId() + " return to admin goods page");
       response.sendRedirect("/admin_page/goods");
     } else {
-      actionWithFormData(action, name, description, price, request);
+      actionWithFormData(action, name, description, price, count, request);
       request.setAttribute("name", name);
       request.setAttribute("description", description);
       request.setAttribute("price", price);
+      request.setAttribute("count", count);
       RequestDispatcher requestDispatcher = request.getRequestDispatcher("/good_form.jsp");
       requestDispatcher.forward(request, response);
     }
   }
 
   private void actionWithFormData(String action, String name, String description,
-      String price, HttpServletRequest request) {
+      String price, String count, HttpServletRequest request) {
     if (action.equals("add")) {
-      actionForAddGood(name, description, price, request);
+      actionForAddGood(name, description, price, count, request);
     } else {
-      actionForUpdateGood(name, description, price, request);
+      actionForUpdateGood(name, description, price, count, request);
     }
   }
 
   private void actionForAddGood(String name, String description, String price,
-      HttpServletRequest request) {
-    String result = CheckData.checkGoodData(name, description, price);
+      String count, HttpServletRequest request) {
+    String result = CheckData.checkGoodData(name, description, price, count);
     if (result.equals("")) {
-      Good newGood = new Good(name, description, Double.parseDouble(price));
-      try {
-        goodDao.saveGood(newGood);
+      Good newGood = new Good(name, description, Double.parseDouble(price),
+          Integer.parseInt(count));
+      String resultFromCheckingExistence = CheckingGood
+          .checkExistenceGoodWithSameNameForSave(goodDao, newGood);
+      if (resultFromCheckingExistence.equals("")) {
+        goodDao.save(newGood);
         LOGGER.debug("User with id " + request.getSession().getId()
             + " saved information about good with name " + name);
         request.setAttribute("result", "Информация про товар успешно добавлена.");
-      } catch (DuplicateGoodException e) {
+      } else {
         LOGGER.debug("User with id " + request.getSession().getId()
             + " cannot saved information about good with name " + name
             + " because good with same name already exist");
-        request.setAttribute("result", "Товар с названием " + name + " уже существует.");
+        request.setAttribute("result", resultFromCheckingExistence);
       }
     } else {
       LOGGER.debug("User with id " + request.getSession().getId()
@@ -100,26 +108,28 @@ public class GoodActionServlet extends HttpServlet {
   }
 
   private void actionForUpdateGood(String name, String description, String price,
-      HttpServletRequest request) {
-    String result = CheckData.checkGoodData(name, description, price);
+      String count, HttpServletRequest request) {
+    String result = CheckData.checkGoodData(name, description, price, count);
     if (result.equals("")) {
       Good oldDataGood = (Good) request.getSession().getAttribute("good");
       Good newDataGood = new Good((Long) request.getSession().getAttribute("id"), name, description,
-          Double.parseDouble(price));
+          Double.parseDouble(price), Integer.parseInt(count));
       if (oldDataGood.equals(newDataGood)) {
         LOGGER.debug("User with id " + request.getSession().getId()
             + " update information about good with name " + name + " without change");
         request.setAttribute("result", "Данные про товар обновлены.");
       } else {
-        try {
-          goodDao.updateGood(newDataGood);
+        String resultFromCheckingExistence = CheckingGood
+            .checkExistenceGoodWithSameNameForUpdate(goodDao, newDataGood);
+        if (resultFromCheckingExistence.equals("")) {
+          goodDao.update(newDataGood);
           LOGGER.debug("User with id " + request.getSession().getId()
               + " update information about good with name " + name);
           request.setAttribute("result", "Данные про товар обновлены.");
-        } catch (DuplicateGoodException e) {
+        } else {
           LOGGER.debug("User with id " + request.getSession().getId()
               + " try update good with name " + name + " which already exist in database");
-          request.setAttribute("result", "Товар с названием " + name + " уже существует");
+          request.setAttribute("result", resultFromCheckingExistence);
         }
       }
     } else {

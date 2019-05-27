@@ -1,10 +1,10 @@
 package com.homework13.servlets;
 
-import com.homework13.dao.DuplicateUserException;
 import com.homework13.model.User;
 import com.homework13.service.CheckData;
 import com.homework19.dao.UserDao;
 import com.homework19.dao.UserDaoHibernateImpl;
+import com.homework20.service.CheckingUser;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -34,21 +34,17 @@ public class SignUpServlet extends HttpServlet {
     String result = CheckData.checkUserData(login, password, mail);
     if (result.equals("")) {
       User newUser = new User(login, password, mail);
-      try {
-        userDao.saveUser(newUser);
+      String resultCheckingExistence = CheckingUser.checkExistenceUserWithSameLoginAndMailForSave(userDao,
+          newUser);
+      if (resultCheckingExistence.equals("")) {
+        userDao.save(newUser);
         LOGGER.debug("User with id " + request.getSession().getId() + " successful sign up");
         request.setAttribute("result", "Вы успешно зарегистрировались. "
             + "Теперь Вы можете авторизироваться.");
-      } catch (DuplicateUserException e) {
-        String message;
-        if (e.getMessage().contains("login")) {
-          message = "Пользователь с логином " + login + " уже существует.";
-          LOGGER.debug("User with id" + request.getSession().getId() + " enter exist login");
-        } else {
-          message = "Пользователь с электронной почтой " + mail + " уже существует.";
-          LOGGER.debug("User with id" + request.getSession().getId() + " enter exist mail");
-        }
-        request.setAttribute("result", message);
+      } else {
+        LOGGER.debug("User with id" + request.getSession().getId()
+            + " enter exist login or mail");
+        request.setAttribute("result", resultCheckingExistence);
       }
     } else {
       LOGGER.debug("User with id " + request.getSession().getId()

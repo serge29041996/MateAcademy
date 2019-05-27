@@ -1,10 +1,15 @@
 package com.homework17.model;
 
+import com.homework20.model.BasketGood;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -27,6 +32,12 @@ public class Good {
   @Column(name = "PRICE")
   private double price;
 
+  @Column(name = "COUNT")
+  private int count;
+
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "good")
+  private List<BasketGood> basketGoods = new ArrayList<>();
+
   protected Good() {
   }
 
@@ -36,10 +47,11 @@ public class Good {
    * @param description description about good
    * @param price price of good
    */
-  public Good(String name, String description, double price) {
+  public Good(String name, String description, double price, int count) {
     this.name = name;
     this.description = description;
     this.price = price;
+    this.count = count;
   }
 
   /**
@@ -48,12 +60,14 @@ public class Good {
    * @param name name of good
    * @param description description about good
    * @param price price of good
+   * @param count number of goods
    */
-  public Good(long id, String name, String description, double price) {
+  public Good(long id, String name, String description, double price, int count) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.price = price;
+    this.count = count;
   }
 
   public long getId() {
@@ -88,6 +102,22 @@ public class Good {
     this.price = price;
   }
 
+  public int getCount() {
+    return count;
+  }
+
+  public void setCount(int count) {
+    this.count = count;
+  }
+
+  public List<BasketGood> getBasketGoods() {
+    return basketGoods;
+  }
+
+  public void setBasketGoods(List<BasketGood> basketGoods) {
+    this.basketGoods = basketGoods;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -100,6 +130,9 @@ public class Good {
     Good good = (Good) o;
 
     if (Double.compare(good.price, price) != 0) {
+      return false;
+    }
+    if (count != good.count) {
       return false;
     }
     if (!name.equals(good.name)) {
@@ -116,6 +149,16 @@ public class Good {
     result = 31 * result + description.hashCode();
     temp = Double.doubleToLongBits(price);
     result = 31 * result + (int) (temp ^ (temp >>> 32));
+    result = 31 * result + count;
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "Good{"
+        + "name='" + name + '\''
+        + ", description='" + description + '\''
+        + ", price=" + price
+        + ", count=" + count + '}';
   }
 }

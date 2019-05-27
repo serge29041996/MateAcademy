@@ -1,6 +1,5 @@
 package com.homework16.servlets;
 
-import com.homework17.dao.DuplicateGoodException;
 import com.homework17.model.Good;
 import com.homework19.dao.GoodDao;
 import com.homework19.dao.GoodDaoHibernateImpl;
@@ -50,14 +49,14 @@ public class UserPageServletTest {
   }
 
   @Test
-  public void testDoGetWithNonEmptyDatabase() throws ServletException, IOException, DuplicateGoodException {
+  public void testDoGetWithNonEmptyDatabase() throws ServletException, IOException {
     List<Good> goodList = new ArrayList<>();
-    Good newGood1 = new Good("1", "1", 100.0);
+    Good newGood1 = new Good("1", "1", 100.0, 0);
     goodList.add(newGood1);
-    goodDao.saveGood(newGood1);
-    Good newGood2 = new Good("2", "2", 200.0);
+    goodDao.save(newGood1);
+    Good newGood2 = new Good("2", "2", 200.0, 0);
     goodList.add(newGood2);
-    goodDao.saveGood(newGood2);
+    goodDao.save(newGood2);
     new UserPageServlet().doGet(request, response);
     Mockito.verify(request, Mockito.times(1)).setAttribute("goods", goodList);
     Mockito.verify(request, Mockito.times(1)).setAttribute("numberGoods",goodList.size());

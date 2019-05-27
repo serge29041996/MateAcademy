@@ -53,7 +53,7 @@ public class SignUpServletTest {
 
   @Test
   public void doPostForExistUser() throws Exception {
-    USER_DAO.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
+    USER_DAO.save(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
     new SignUpServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
@@ -66,7 +66,7 @@ public class SignUpServletTest {
   public void doPostUserWithInvalidData() throws Exception {
     Mockito.when(request.getParameter("login")).thenReturn("");
     Mockito.when(request.getParameter("password")).thenReturn("pass");
-    USER_DAO.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
+    USER_DAO.save(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
     new SignUpServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
@@ -89,7 +89,7 @@ public class SignUpServletTest {
     Mockito.when(request.getParameter("login")).thenReturn("1");
     Mockito.when(request.getParameter("password")).thenReturn("pass");
     Mockito.when(request.getParameter("mail")).thenReturn(testMail);
-    USER_DAO.saveUser(new User(TEST_VALUE, TEST_VALUE, testMail));
+    USER_DAO.save(new User(TEST_VALUE, TEST_VALUE, testMail));
     new SignUpServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");

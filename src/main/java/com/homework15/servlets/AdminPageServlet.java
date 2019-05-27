@@ -1,6 +1,5 @@
 package com.homework15.servlets;
 
-import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework16.model.Role;
 import com.homework19.dao.UserDao;
@@ -26,7 +25,7 @@ public class AdminPageServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    List<User> userList = userDao.getAllUsers();
+    List<User> userList = userDao.getAll();
     request.setAttribute("numberUsers", userList.size());
     request.setAttribute("users", userList);
     LOGGER.debug("User with id " + request.getSession().getId() + " come to admin users page");
@@ -44,21 +43,16 @@ public class AdminPageServlet extends HttpServlet {
       response.sendRedirect("/admin_page/user_action");
     } else if (result.contains("update")) {
       String idNeedUser = result.split("_")[1];
-      try {
-        User needUser = userDao.getUser(Long.parseLong(idNeedUser));
-        LOGGER.debug("User with id " + request.getSession().getId()
+      User needUser = userDao.get(Long.parseLong(idNeedUser)).get();
+      LOGGER.debug("User with id " + request.getSession().getId()
             + " go to update form about user with id " + needUser.getId());
-        request.getSession().setAttribute("user", needUser);
-        request.getSession().setAttribute("action", "update");
-      } catch (NoSuchUserException e) {
-        LOGGER.debug("User with id " + request.getSession().getId()
-            + " go to add user form, because user with id " + idNeedUser + " was not find");
-        request.getSession().setAttribute("action", "add");
-      }
+      request.getSession().setAttribute("user", needUser);
+      request.getSession().setAttribute("action", "update");
       response.sendRedirect("/admin_page/user_action");
     } else if (result.contains("delete")) {
       String idUserForDeleting = result.split("_")[1];
-      userDao.deleteUser(Long.parseLong(idUserForDeleting));
+      User userForDeleting = userDao.get(Long.parseLong(idUserForDeleting)).get();
+      userDao.delete(userForDeleting);
       LOGGER.debug("User with id " + request.getSession().getId()
           + " delete user with id " + idUserForDeleting);
       doGet(request, response);
