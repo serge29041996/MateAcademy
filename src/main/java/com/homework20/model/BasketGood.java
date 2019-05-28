@@ -34,7 +34,8 @@ public class BasketGood {
   @Column(name = "AMOUNT")
   private int amount;
 
-  protected BasketGood() {}
+  protected BasketGood() {
+  }
 
   public BasketGood(Good good, Basket basket, int amount) {
     this.good = good;

@@ -9,10 +9,12 @@ import java.util.Optional;
  */
 public class CheckingUser {
 
-  private CheckingUser() {}
+  private CheckingUser() {
+  }
 
   /**
    * Check existence user with same login and mail for saving.
+   *
    * @param userDao dao for working with database
    * @param userForChecking user for saving
    * @return result of checking
@@ -22,15 +24,18 @@ public class CheckingUser {
     StringBuilder resultChecking = new StringBuilder();
     Optional<User> gettingUserWithSameLogin = userDao.getUserByLogin(userForChecking.getLogin());
     gettingUserWithSameLogin
-        .ifPresent(user -> addMessageForExistLogin(resultChecking, userForChecking.getLogin()));
+        .ifPresent(user -> addMessageForExistField(resultChecking, "Пользователь с логином ",
+            userForChecking.getLogin()));
     Optional<User> gettingUserWithSameMail = userDao.getUserByMail(userForChecking.getMail());
     gettingUserWithSameMail
-        .ifPresent(user -> addMessageForExistMail(resultChecking, userForChecking.getMail()));
+        .ifPresent(user -> addMessageForExistField(resultChecking,
+            "Пользователь с электронной почтой ", userForChecking.getMail()));
     return resultChecking.toString();
   }
 
   /**
    * Check existence user with same login and mail for updating.
+   *
    * @param userDao dao for working with database
    * @param userForChecking user for saving
    * @return result of checking
@@ -42,28 +47,25 @@ public class CheckingUser {
     if (gettingUserWithSameLogin.isPresent()) {
       User userWithSameLogin = gettingUserWithSameLogin.get();
       if (userWithSameLogin.getId() != userForChecking.getId()) {
-        addMessageForExistLogin(resultChecking, userForChecking.getLogin());
+        addMessageForExistField(resultChecking, "Пользователь с логином ",
+            userForChecking.getLogin());
       }
     }
     Optional<User> gettingUserWithSameMail = userDao.getUserByMail(userForChecking.getMail());
     if (gettingUserWithSameMail.isPresent()) {
       User userWithSameMail = gettingUserWithSameMail.get();
       if (userWithSameMail.getId() != userForChecking.getId()) {
-        addMessageForExistMail(resultChecking, userForChecking.getMail());
+        addMessageForExistField(resultChecking, "Пользователь с электронной почтой ",
+            userForChecking.getMail());
       }
     }
     return resultChecking.toString();
   }
 
-  private static void addMessageForExistLogin(StringBuilder resultMessage, String login) {
-    resultMessage.append("Пользователь с логином ");
-    resultMessage.append(login);
-    resultMessage.append(" уже существует.");
-  }
-
-  private static void addMessageForExistMail(StringBuilder resultMessage, String mail) {
-    resultMessage.append("Пользователь с электронной почтой ");
-    resultMessage.append(mail);
+  private static void addMessageForExistField(StringBuilder resultMessage, String message,
+      String field) {
+    resultMessage.append(message);
+    resultMessage.append(field);
     resultMessage.append(" уже существует.");
   }
 }

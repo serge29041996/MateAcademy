@@ -44,7 +44,7 @@ public class UserPageServletTest {
   public void testDoGetWithEmptyDatabase() throws ServletException, IOException {
     new UserPageServlet().doGet(request, response);
     Mockito.verify(request, Mockito.times(1)).setAttribute("goods", new ArrayList<Good>());
-    Mockito.verify(request, Mockito.times(1)).setAttribute("numberGoods",0);
+    Mockito.verify(request, Mockito.times(1)).setAttribute("numberGoods", 0);
     Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/user_page.jsp");
   }
 
@@ -59,7 +59,7 @@ public class UserPageServletTest {
     goodDao.save(newGood2);
     new UserPageServlet().doGet(request, response);
     Mockito.verify(request, Mockito.times(1)).setAttribute("goods", goodList);
-    Mockito.verify(request, Mockito.times(1)).setAttribute("numberGoods",goodList.size());
+    Mockito.verify(request, Mockito.times(1)).setAttribute("numberGoods", goodList.size());
     Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/user_page.jsp");
   }
 }

@@ -39,10 +39,12 @@ public class User {
   @OneToOne(mappedBy = "user")
   private Basket basket;
 
-  protected User() {}
+  protected User() {
+  }
 
   /**
    * Constructor for login, password and mail.
+   *
    * @param login login of user
    * @param password password user
    * @param mail mail of user
@@ -57,6 +59,7 @@ public class User {
 
   /**
    * Constructor for login, password, mail and role.
+   *
    * @param login login of user
    * @param password password user
    * @param mail mail of user
@@ -69,6 +72,7 @@ public class User {
 
   /**
    * Constructor for id, login, password, role and mail parameters.
+   *
    * @param id id of user
    * @param login login of user
    * @param password password user

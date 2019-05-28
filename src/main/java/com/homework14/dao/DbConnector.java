@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
  * Class for connection with database.
  */
 public class DbConnector {
-  private static final String URL_TO_DATABASE = "jdbc:mysql://localhost:3306/website" 
+  private static final String URL_TO_DATABASE = "jdbc:mysql://localhost:3306/website"
       + "?serverTimezone=UTC";
   private static final String LOGIN = "Serge@localhost";
   private static final String PASSWORD = "root";
@@ -17,6 +17,7 @@ public class DbConnector {
 
   /**
    * Get connection for working with database.
+   *
    * @return connection to database
    */
   public static Connection getConnection() {

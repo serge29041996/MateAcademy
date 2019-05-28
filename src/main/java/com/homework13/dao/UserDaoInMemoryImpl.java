@@ -16,6 +16,7 @@ public class UserDaoInMemoryImpl implements UserDao {
 
   /**
    * Save user.
+   *
    * @param newUser information about new user
    */
   @Override
@@ -30,7 +31,7 @@ public class UserDaoInMemoryImpl implements UserDao {
   public Optional<User> get(long id) {
     logger.debug("Successful find user with id " + id);
     try {
-      return Optional.of(users.get((int)id));
+      return Optional.of(users.get((int) id));
     } catch (IndexOutOfBoundsException e) {
       return Optional.empty();
     }
@@ -38,6 +39,7 @@ public class UserDaoInMemoryImpl implements UserDao {
 
   /**
    * Get user from database.
+   *
    * @param login login of need user
    * @return find user
    */

@@ -34,8 +34,9 @@ public class SignUpServlet extends HttpServlet {
     String result = CheckData.checkUserData(login, password, mail);
     if (result.equals("")) {
       User newUser = new User(login, password, mail);
-      String resultCheckingExistence = CheckingUser.checkExistenceUserWithSameLoginAndMailForSave(userDao,
-          newUser);
+      String resultCheckingExistence = CheckingUser
+          .checkExistenceUserWithSameLoginAndMailForSave(userDao,
+              newUser);
       if (resultCheckingExistence.equals("")) {
         userDao.save(newUser);
         LOGGER.debug("User with id " + request.getSession().getId() + " successful sign up");

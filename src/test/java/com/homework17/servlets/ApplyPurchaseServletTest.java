@@ -4,7 +4,6 @@ import com.homework13.model.User;
 import com.homework14.dao.UserDaoJdbcImpl;
 import com.homework16.model.Role;
 import com.homework17.model.CodeConfirmation;
-import com.homework17.model.Good;
 import com.homework17.util.RandomCodeGenerator;
 import com.homework19.dao.CodeConfirmationDao;
 import com.homework19.dao.CodeConfirmationDaoHibernateImpl;
@@ -30,13 +29,12 @@ public class ApplyPurchaseServletTest {
   private static final String TEST_VALUE = "test";
   private User testUser;
   private final UserDaoJdbcImpl USER_DAO = new UserDaoJdbcImpl();
-  private Good testGood = new Good(TEST_VALUE, TEST_VALUE, 10.0, 2);
   private final BasketDao basketDao = new BasketDaoHibernateImpl();
   private final CodeConfirmationDao CODE_DAO = new CodeConfirmationDaoHibernateImpl();
 
   @Before
   public void init() {
-    testUser = new User(TEST_VALUE, TEST_VALUE, Role.USER.getValue(),"sergey290496@gmail.com");
+    testUser = new User(TEST_VALUE, TEST_VALUE, Role.USER.getValue(), "sergey290496@gmail.com");
     request = Mockito.mock(HttpServletRequest.class);
     response = Mockito.mock(HttpServletResponse.class);
     session = Mockito.mock(HttpSession.class);

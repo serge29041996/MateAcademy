@@ -23,6 +23,7 @@ public class MailConfirmation {
 
   /**
    * Send code to mail.
+   *
    * @param mail mail of destination
    * @param code code for confirmation of purchase
    * @return code for confirmation
@@ -72,6 +73,7 @@ public class MailConfirmation {
 
   /**
    * Generate code and send by mail.
+   *
    * @param mail mail of destination
    * @return generated code
    */

@@ -14,10 +14,12 @@ public class HibernateSessionFactoryUtil {
   private static SessionFactory sessionFactory;
   private static final Logger LOGGER = Logger.getLogger(HibernateSessionFactoryUtil.class);
 
-  private HibernateSessionFactoryUtil() {}
+  private HibernateSessionFactoryUtil() {
+  }
 
   /**
    * Get session factory.
+   *
    * @return session factory
    */
   public static SessionFactory getSessionFactory() {

@@ -66,7 +66,7 @@ public class SignInServletTest {
 
   @Test
   public void doPostForExistAdmin() throws Exception {
-    userDao.save(new User("Сергей", "12345","admin", "test@test.com"));
+    userDao.save(new User("Сергей", "12345", "admin", "test@test.com"));
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
     Mockito.when(request.getParameter("login")).thenReturn("Сергей");

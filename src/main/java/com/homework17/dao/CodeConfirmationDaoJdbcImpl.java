@@ -24,6 +24,7 @@ public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
 
   /**
    * Save information about code.
+   *
    * @param newCode new code
    */
   @Override
@@ -43,6 +44,7 @@ public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
 
   /**
    * Get code by id.
+   *
    * @param id id of need code
    * @return find code
    */
@@ -64,6 +66,7 @@ public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
 
   /**
    * Get code by basket.
+   *
    * @param basket basket with goods
    * @return find code
    */
@@ -85,6 +88,7 @@ public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
 
   /**
    * Update information about code.
+   *
    * @param updatedCode new information of code
    */
   @Override
@@ -93,8 +97,8 @@ public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
     String updateCode = "UPDATE codes SET code=? WHERE basket_id = ?";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(updateCode)) {
-      statement.setString(1,updatedCode.getCode());
-      statement.setLong(2,updatedCode.getBasket().getId());
+      statement.setString(1, updatedCode.getCode());
+      statement.setLong(2, updatedCode.getBasket().getId());
       statement.execute();
       logger.debug("Successful update code with id " + updatedCode.getId());
     } catch (SQLException e) {
@@ -104,6 +108,7 @@ public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
 
   /**
    * Delete code by id.
+   *
    * @param codeConfirmationForDeleting code for deleting
    */
   @Override
@@ -122,6 +127,7 @@ public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
 
   /**
    * Get number of codes.
+   *
    * @return number of codes
    */
   @Override

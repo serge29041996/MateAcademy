@@ -35,7 +35,8 @@ public class AdminPageServletTest {
     request = Mockito.mock(HttpServletRequest.class);
     response = Mockito.mock(HttpServletResponse.class);
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
-    Mockito.when(request.getRequestDispatcher("/admin_users_page.jsp")).thenReturn(requestDispatcher);
+    Mockito.when(request.getRequestDispatcher("/admin_users_page.jsp"))
+        .thenReturn(requestDispatcher);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
     Mockito.when(session.getId()).thenReturn("test");

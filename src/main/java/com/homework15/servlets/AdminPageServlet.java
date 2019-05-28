@@ -45,7 +45,7 @@ public class AdminPageServlet extends HttpServlet {
       String idNeedUser = result.split("_")[1];
       User needUser = userDao.get(Long.parseLong(idNeedUser)).get();
       LOGGER.debug("User with id " + request.getSession().getId()
-            + " go to update form about user with id " + needUser.getId());
+          + " go to update form about user with id " + needUser.getId());
       request.getSession().setAttribute("user", needUser);
       request.getSession().setAttribute("action", "update");
       response.sendRedirect("/admin_page/user_action");

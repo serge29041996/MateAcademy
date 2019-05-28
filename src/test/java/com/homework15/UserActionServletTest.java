@@ -211,7 +211,7 @@ public class UserActionServletTest {
     String testValue = "test";
     USER_DAO.save(testUser);
     User gettingUser = USER_DAO.getUserByLogin(testUser.getLogin()).get();
-    User newUser = new User(testValue, testValue,"user", "test@gmail.com");
+    User newUser = new User(testValue, testValue, "user", "test@gmail.com");
     USER_DAO.save(newUser);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("update");

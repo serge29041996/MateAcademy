@@ -8,6 +8,7 @@ import org.junit.Test;
  */
 public class CheckDataTest {
   private static final String TEST_VALUE = "test";
+
   @Test
   public void checkUserDataWithNullValues() {
     String result = CheckData.checkUserData(null, null);

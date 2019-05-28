@@ -19,6 +19,7 @@ public class UserDaoJdbcImpl implements UserDao {
 
   /**
    * Save user to database.
+   *
    * @param newUser information about user
    */
   @Override
@@ -43,6 +44,7 @@ public class UserDaoJdbcImpl implements UserDao {
 
   /**
    * Get user by login.
+   *
    * @param login login of need user
    * @return find user
    */
@@ -60,6 +62,7 @@ public class UserDaoJdbcImpl implements UserDao {
 
   /**
    * Get user by id.
+   *
    * @param id id of need user
    * @return find user
    */
@@ -71,6 +74,7 @@ public class UserDaoJdbcImpl implements UserDao {
 
   /**
    * Get number of users in database.
+   *
    * @return number of users
    */
   @Override
@@ -107,6 +111,7 @@ public class UserDaoJdbcImpl implements UserDao {
 
   /**
    * Get all users from database.
+   *
    * @return ArrayList of all users
    */
   @Override
@@ -130,7 +135,8 @@ public class UserDaoJdbcImpl implements UserDao {
 
   /**
    * Delete user by id.
-   * @param user  user for deleting
+   *
+   * @param user user for deleting
    */
   @Override
   public void delete(User user) {
@@ -148,6 +154,7 @@ public class UserDaoJdbcImpl implements UserDao {
 
   /**
    * Update information about user.
+   *
    * @param newUser exist user with new information
    */
   @Override
@@ -156,11 +163,11 @@ public class UserDaoJdbcImpl implements UserDao {
     String updateUser = "UPDATE users SET login=?, password=?, mail=?, role=? WHERE id=?";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(updateUser)) {
-      statement.setString(1,newUser.getLogin());
-      statement.setString(2,newUser.getPassword());
-      statement.setString(3,newUser.getMail());
-      statement.setString(4,newUser.getRole());
-      statement.setLong(5,newUser.getId());
+      statement.setString(1, newUser.getLogin());
+      statement.setString(2, newUser.getPassword());
+      statement.setString(3, newUser.getMail());
+      statement.setString(4, newUser.getRole());
+      statement.setLong(5, newUser.getId());
       statement.execute();
       LOGGER.debug("Successful update user with id " + newUser.getId());
     } catch (SQLException e) {
@@ -170,6 +177,7 @@ public class UserDaoJdbcImpl implements UserDao {
 
   /**
    * Update role of user.
+   *
    * @param id id user for updating
    * @param newRole new role for user
    */

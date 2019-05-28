@@ -109,8 +109,8 @@ public class BasketDaoJdbcImpl implements BasketDao {
     String updateBasket = "UPDATE baskets SET user_id=? WHERE id = ?";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(updateBasket)) {
-      statement.setLong(1,newObject.getUser().getId());
-      statement.setLong(2,newObject.getId());
+      statement.setLong(1, newObject.getUser().getId());
+      statement.setLong(2, newObject.getId());
       statement.execute();
       logger.debug("Successful update basket with id " + newObject.getId());
     } catch (SQLException e) {

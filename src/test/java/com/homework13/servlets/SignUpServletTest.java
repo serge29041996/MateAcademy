@@ -48,7 +48,8 @@ public class SignUpServletTest {
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
     Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/sign_up.jsp");
     Mockito.verify(request, Mockito.times(1))
-        .setAttribute("result", "Вы успешно зарегистрировались. Теперь Вы можете авторизироваться.");
+        .setAttribute("result",
+            "Вы успешно зарегистрировались. Теперь Вы можете авторизироваться.");
   }
 
   @Test
@@ -95,6 +96,7 @@ public class SignUpServletTest {
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
     Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/sign_up.jsp");
     Mockito.verify(request, Mockito.times(1))
-        .setAttribute("result", "Пользователь с электронной почтой " + testMail + " уже существует.");
+        .setAttribute("result",
+            "Пользователь с электронной почтой " + testMail + " уже существует.");
   }
 }

@@ -20,6 +20,7 @@ public class GoodDaoJdbcImpl implements GoodDao {
 
   /**
    * Save information about good.
+   *
    * @param newGood new good
    */
   @Override
@@ -39,6 +40,7 @@ public class GoodDaoJdbcImpl implements GoodDao {
 
   /**
    * Get good by id.
+   *
    * @param id id of need good
    * @return find good
    */
@@ -59,6 +61,7 @@ public class GoodDaoJdbcImpl implements GoodDao {
 
   /**
    * Get good by name.
+   *
    * @param name name of need good
    * @return find good
    */
@@ -80,6 +83,7 @@ public class GoodDaoJdbcImpl implements GoodDao {
 
   /**
    * Get count of good.
+   *
    * @return number of goods
    */
   @Override
@@ -116,6 +120,7 @@ public class GoodDaoJdbcImpl implements GoodDao {
 
   /**
    * Get all goods from database.
+   *
    * @return all goods
    */
   @Override
@@ -139,6 +144,7 @@ public class GoodDaoJdbcImpl implements GoodDao {
 
   /**
    * Delete good with specific id.
+   *
    * @param goodForDeleting good, which should delete from database
    */
   @Override
@@ -157,6 +163,7 @@ public class GoodDaoJdbcImpl implements GoodDao {
 
   /**
    * Update information about good.
+   *
    * @param newGood new good
    */
   @Override
@@ -191,7 +198,8 @@ public class GoodDaoJdbcImpl implements GoodDao {
     }
   }
 
-  private void setParametersForStatement(PreparedStatement statement, Good good) throws SQLException {
+  private void setParametersForStatement(PreparedStatement statement, Good good)
+      throws SQLException {
     statement.setString(1, good.getName());
     statement.setString(2, good.getDescription());
     statement.setDouble(3, good.getPrice());

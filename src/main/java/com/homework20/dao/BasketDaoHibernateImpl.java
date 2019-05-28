@@ -18,6 +18,7 @@ public class BasketDaoHibernateImpl extends GenericDaoImpl<Basket> implements Ba
 
   /**
    * Get basket by owner.
+   *
    * @param owner owner of the basket
    * @return basket of owner
    */

@@ -19,6 +19,7 @@ public enum Role {
 
   /**
    * Get role from string value.
+   *
    * @param value string presentation of role
    * @return role as enum
    * @throws IllegalArgumentException when no role for string presentation.

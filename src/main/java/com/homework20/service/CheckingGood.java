@@ -8,10 +8,12 @@ import java.util.Optional;
  * Service for checking existence good in database.
  */
 public class CheckingGood {
-  private CheckingGood() {}
+  private CheckingGood() {
+  }
 
   /**
    * Check exist good in database for saving.
+   *
    * @param goodDao dao for working with database
    * @param goodForChecking good for checking
    * @return result of checking
@@ -26,6 +28,7 @@ public class CheckingGood {
 
   /**
    * Check exist good in database for update.
+   *
    * @param goodDao dao for working with database
    * @param goodForChecking good for checking
    * @return result of checking

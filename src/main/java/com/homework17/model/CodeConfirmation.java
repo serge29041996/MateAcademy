@@ -33,6 +33,7 @@ public class CodeConfirmation {
 
   /**
    * Constructor with id user, id good and code for confirmation purchase.
+   *
    * @param basket basket with goods
    * @param code code for confirmation purchase
    */
@@ -43,6 +44,7 @@ public class CodeConfirmation {
 
   /**
    * Constructor for all parameters.
+   *
    * @param id id of code confirmation
    * @param basket basket with goods
    * @param code code for confirmation purchase

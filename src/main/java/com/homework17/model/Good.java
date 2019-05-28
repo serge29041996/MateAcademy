@@ -43,6 +43,7 @@ public class Good {
 
   /**
    * Constructor with name, description and price of good.
+   *
    * @param name name of good
    * @param description description about good
    * @param price price of good
@@ -56,6 +57,7 @@ public class Good {
 
   /**
    * Constructor with all parameters.
+   *
    * @param id id of good
    * @param name name of good
    * @param description description about good

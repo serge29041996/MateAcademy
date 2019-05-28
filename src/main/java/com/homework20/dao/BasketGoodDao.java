@@ -21,6 +21,7 @@ public class BasketGoodDao extends GenericDaoImpl<BasketGood> {
 
   /**
    * Get all goods from basket.
+   *
    * @param idBasket id of need basket
    * @return list of goods
    */
@@ -48,7 +49,8 @@ public class BasketGoodDao extends GenericDaoImpl<BasketGood> {
           + " and good_id = :good_id");
       query.setParameter("basket_id", basket.getId());
       query.setParameter("good_id", good.getId());
-      LOGGER.debug("Successful get good with id " + good.getId() + " from basket with id " + basket.getId());
+      LOGGER.debug(
+          "Successful get good with id " + good.getId() + " from basket with id " + basket.getId());
       List<BasketGood> basketGoods = query.getResultList();
       return Optional.of(basketGoods.get(0));
     } catch (Exception e) {
@@ -60,6 +62,7 @@ public class BasketGoodDao extends GenericDaoImpl<BasketGood> {
 
   /**
    * Delete all goods from basket.
+   *
    * @param idBasket id of need basket
    */
   public void deleteAllGoodsFromBasket(long idBasket) {
