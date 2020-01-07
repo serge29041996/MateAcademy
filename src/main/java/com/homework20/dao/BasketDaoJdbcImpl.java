@@ -12,13 +12,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Realization dao for working with basket in database using JDBC.
  */
 public class BasketDaoJdbcImpl implements BasketDao {
-  private static final Logger logger = Logger.getLogger(BasketDaoJdbcImpl.class);
+  private static final Logger logger = LogManager.getLogger(BasketDaoJdbcImpl.class);
   private static final UserDao userDao = new UserDaoJdbcImpl();
 
   @Override
