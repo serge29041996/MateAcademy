@@ -7,8 +7,8 @@ import com.homework20.model.BasketGood;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -17,7 +17,7 @@ import org.hibernate.query.Query;
  * Realization dao for working with goods and baskets in database using Hibernate.
  */
 public class BasketGoodDao extends GenericDaoImpl<BasketGood> {
-  private static final Logger LOGGER = Logger.getLogger(BasketGoodDao.class);
+  private static final Logger LOGGER = LogManager.getLogger(BasketGoodDao.class);
 
   /**
    * Get all goods from basket.
