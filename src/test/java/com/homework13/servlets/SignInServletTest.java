@@ -19,7 +19,7 @@ import org.mockito.Mockito;
  */
 public class SignInServletTest {
   private static final String TEST_VALUE = "test";
-  private static final UserDao USER_DAO = new UserDaoHibernateImpl();
+  private static final UserDao userDao = new UserDaoHibernateImpl();
   private HttpServletRequest request;
   private HttpServletResponse response;
 
@@ -38,7 +38,7 @@ public class SignInServletTest {
 
   @After
   public void clear() {
-    USER_DAO.deleteAll();
+    userDao.deleteAll();
   }
 
   @Test
@@ -55,7 +55,7 @@ public class SignInServletTest {
   public void doPostForExistUser() throws Exception {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
-    USER_DAO.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
+    userDao.save(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
     new SignInServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
@@ -66,6 +66,7 @@ public class SignInServletTest {
 
   @Test
   public void doPostForExistAdmin() throws Exception {
+    userDao.save(new User("Сергей", "12345", "admin", "test@test.com"));
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getSession()).thenReturn(session);
     Mockito.when(request.getParameter("login")).thenReturn("Сергей");
@@ -81,7 +82,7 @@ public class SignInServletTest {
   @Test
   public void doPostUserWithInvalidPassword() throws Exception {
     Mockito.when(request.getParameter("password")).thenReturn("pass");
-    USER_DAO.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
+    userDao.save(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
     new SignInServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");
@@ -94,7 +95,7 @@ public class SignInServletTest {
   public void doPostUserWithInvalidData() throws Exception {
     Mockito.when(request.getParameter("login")).thenReturn("");
     Mockito.when(request.getParameter("password")).thenReturn("pass");
-    USER_DAO.saveUser(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
+    userDao.save(new User(TEST_VALUE, TEST_VALUE, TEST_VALUE));
     new SignInServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1)).getParameter("login");
     Mockito.verify(request, Mockito.times(1)).getParameter("password");

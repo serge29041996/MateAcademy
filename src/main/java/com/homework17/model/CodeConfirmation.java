@@ -1,10 +1,13 @@
 package com.homework17.model;
 
+import com.homework20.model.Basket;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -18,11 +21,9 @@ public class CodeConfirmation {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(name = "USER_ID")
-  private long idUser;
-
-  @Column(name = "GOOD_ID")
-  private long idGood;
+  @OneToOne
+  @JoinColumn(name = "BASKET_ID")
+  private Basket basket;
 
   @Column(name = "CODE")
   private String code;
@@ -32,28 +33,25 @@ public class CodeConfirmation {
 
   /**
    * Constructor with id user, id good and code for confirmation purchase.
-   * @param idUser id of user, which want to buy a good
-   * @param idGood id of good, which user want to buy
+   *
+   * @param basket basket with goods
    * @param code code for confirmation purchase
    */
-  public CodeConfirmation(long idUser, long idGood, String code) {
-    this.idUser = idUser;
-    this.idGood = idGood;
+  public CodeConfirmation(Basket basket, String code) {
+    this.basket = basket;
     this.code = code;
   }
 
   /**
    * Constructor for all parameters.
+   *
    * @param id id of code confirmation
-   * @param idUser id of user, which want to buy a good
-   * @param idGood id of good, which user want to buy
+   * @param basket basket with goods
    * @param code code for confirmation purchase
    */
-  public CodeConfirmation(long id, long idUser, long idGood, String code) {
+  public CodeConfirmation(long id, Basket basket, String code) {
+    this(basket, code);
     this.id = id;
-    this.idUser = idUser;
-    this.idGood = idGood;
-    this.code = code;
   }
 
   public long getId() {
@@ -64,20 +62,12 @@ public class CodeConfirmation {
     this.id = id;
   }
 
-  public long getIdUser() {
-    return idUser;
+  public Basket getBasket() {
+    return basket;
   }
 
-  public void setIdUser(long idUser) {
-    this.idUser = idUser;
-  }
-
-  public long getIdGood() {
-    return idGood;
-  }
-
-  public void setIdGood(long idGood) {
-    this.idGood = idGood;
+  public void setBasket(Basket basket) {
+    this.basket = basket;
   }
 
   public String getCode() {
@@ -99,20 +89,11 @@ public class CodeConfirmation {
 
     CodeConfirmation that = (CodeConfirmation) o;
 
-    if (idUser != that.idUser) {
-      return false;
-    }
-    if (idGood != that.idGood) {
-      return false;
-    }
     return code.equals(that.code);
   }
 
   @Override
   public int hashCode() {
-    int result = (int) (idUser ^ (idUser >>> 32));
-    result = 31 * result + (int) (idGood ^ (idGood >>> 32));
-    result = 31 * result + code.hashCode();
-    return result;
+    return code.hashCode();
   }
 }

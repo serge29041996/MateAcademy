@@ -3,10 +3,15 @@ package com.homework17.dao;
 import com.homework14.dao.DbConnector;
 import com.homework17.model.CodeConfirmation;
 import com.homework19.dao.CodeConfirmationDao;
+import com.homework20.dao.BasketDao;
+import com.homework20.dao.BasketDaoJdbcImpl;
+import com.homework20.model.Basket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.apache.log4j.Logger;
 
@@ -14,94 +19,129 @@ import org.apache.log4j.Logger;
  * Realization dao for working with code in database using JDBC.
  */
 public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
-  private static final Logger LOGGER = Logger.getLogger(CodeConfirmationDaoJdbcImpl.class);
+  private static final Logger logger = Logger.getLogger(CodeConfirmationDaoJdbcImpl.class);
+  private static final BasketDao basketDao = new BasketDaoJdbcImpl();
 
   /**
    * Save information about code.
+   *
    * @param newCode new code
    */
   @Override
-  public void saveCode(CodeConfirmation newCode) {
-    LOGGER.debug("Try save code for user with id " + newCode.getIdUser() + " and good with id "
-        + newCode.getIdGood());
-    String insertRequest = "INSERT INTO codes(user_id, good_id, code) VALUES(?, ?, ?);";
+  public void save(CodeConfirmation newCode) {
+    logger.debug("Try save code for basket with id " + newCode.getBasket());
+    String insertRequest = "INSERT INTO codes(basket_id, code) VALUES(?, ?);";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(insertRequest)) {
-      statement.setLong(1, newCode.getIdUser());
-      statement.setLong(2, newCode.getIdGood());
-      statement.setString(3, newCode.getCode());
+      statement.setLong(1, newCode.getBasket().getId());
+      statement.setString(2, newCode.getCode());
       statement.execute();
-      LOGGER.debug("Successful save information about purchase of user with id "
-          + newCode.getIdUser()
-          + " of good " + newCode.getIdUser());
+      logger.debug("Successful save save code for basket with id " + newCode.getBasket());
     } catch (SQLException e) {
-      LOGGER.error("Cannot execute insert sql request about purchase ", e);
+      logger.error("Cannot execute insert sql request about purchase ", e);
     }
   }
 
   /**
-   * Get code with id of user and id good.
-   * @param idUser id user, which want buy good
-   * @param idGood id need good
+   * Get code by id.
+   *
+   * @param id id of need code
    * @return find code
    */
   @Override
-  public Optional<CodeConfirmation> getCode(long idUser, long idGood) {
-    Optional<CodeConfirmation> findCode = findCodeByUserIdAndGoodId(idUser, idGood);
-    LOGGER.debug("Get code with user id " + idUser + " and good id " + idGood);
-    if (!findCode.isPresent()) {
-      LOGGER.debug("Code with user id " + idUser + " and good id " + idGood + " has not existed");
-    } else {
-      LOGGER.debug("Successful find code with user id " + idUser + " and good id " + idGood);
+  public Optional<CodeConfirmation> get(long id) {
+    String selectRequest = "SELECT * FROM codes WHERE id=?;";
+    try (Connection connection = DbConnector.getConnection();
+        PreparedStatement statement = connection.prepareStatement(selectRequest)) {
+      statement.setLong(1, id);
+      ResultSet resultSet = statement.executeQuery();
+      logger.debug("Successful find code with id " + id);
+      return getCodeFromResultSet(resultSet);
+    } catch (SQLException e) {
+      logger.error("Cannot execute sql select for finding code with id "
+          + id, e);
+      return Optional.empty();
     }
-    return findCode;
+  }
+
+  /**
+   * Get code by basket.
+   *
+   * @param basket basket with goods
+   * @return find code
+   */
+  @Override
+  public Optional<CodeConfirmation> getCode(Basket basket) {
+    String selectRequest = "SELECT * FROM codes WHERE basket_id=?;";
+    try (Connection connection = DbConnector.getConnection();
+        PreparedStatement statement = connection.prepareStatement(selectRequest)) {
+      statement.setLong(1, basket.getId());
+      ResultSet resultSet = statement.executeQuery();
+      logger.debug("Successful find code for basket with id " + basket.getId());
+      return getCodeFromResultSet(resultSet);
+    } catch (SQLException e) {
+      logger.error("Cannot execute sql select for finding code of basket with id "
+          + basket.getId(), e);
+      return Optional.empty();
+    }
   }
 
   /**
    * Update information about code.
+   *
    * @param updatedCode new information of code
    */
   @Override
-  public void updateCode(CodeConfirmation updatedCode) {
-    LOGGER.debug("Update code with user id " + updatedCode.getIdUser()
-        + " and good id " + updatedCode.getIdGood());
-    updateInformationAboutCode(updatedCode);
+  public void update(CodeConfirmation updatedCode) {
+    logger.debug("Update code for basket with id " + updatedCode.getBasket().getId());
+    String updateCode = "UPDATE codes SET code=? WHERE basket_id = ?";
+    try (Connection connection = DbConnector.getConnection();
+        PreparedStatement statement = connection.prepareStatement(updateCode)) {
+      statement.setString(1, updatedCode.getCode());
+      statement.setLong(2, updatedCode.getBasket().getId());
+      statement.execute();
+      logger.debug("Successful update code with id " + updatedCode.getId());
+    } catch (SQLException e) {
+      logger.debug("Cannot execute update request code with id " + updatedCode.getId(), e);
+    }
   }
 
   /**
    * Delete code by id.
-   * @param id id code for deleting
+   *
+   * @param codeConfirmationForDeleting code for deleting
    */
   @Override
-  public void deleteCode(long id) {
-    LOGGER.debug("Delete code with id " + id);
+  public void delete(CodeConfirmation codeConfirmationForDeleting) {
+    logger.debug("Delete code with id " + codeConfirmationForDeleting.getId());
     String deleteRequest = "DELETE FROM codes WHERE id=?";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(deleteRequest)) {
-      statement.setLong(1, id);
+      statement.setLong(1, codeConfirmationForDeleting.getId());
       statement.execute();
-      LOGGER.debug("Successful delete code with id " + id);
+      logger.debug("Successful delete code with id " + codeConfirmationForDeleting.getId());
     } catch (SQLException e) {
-      LOGGER.error("Cannot execute delete sql request ", e);
+      logger.error("Cannot execute delete sql request ", e);
     }
   }
 
   /**
    * Get number of codes.
+   *
    * @return number of codes
    */
   @Override
   public long count() {
-    LOGGER.debug("Get number of codes in website");
+    logger.debug("Get number of codes in website");
     String countRequest = "SELECT COUNT(*) FROM codes;";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(countRequest)) {
       ResultSet resultSet = statement.executeQuery();
       resultSet.next();
-      LOGGER.debug("Successfully get number of codes in website");
+      logger.debug("Successfully get number of codes in website");
       return resultSet.getLong(1);
     } catch (SQLException e) {
-      LOGGER.error("Cannot execute select sql request ", e);
+      logger.error("Cannot execute select sql request ", e);
       return -1;
     }
   }
@@ -111,63 +151,55 @@ public class CodeConfirmationDaoJdbcImpl implements CodeConfirmationDao {
    */
   @Override
   public void deleteAll() {
-    LOGGER.debug("Delete all codes");
-    String deleteRequest = "TRUNCATE codes";
+    logger.debug("Delete all codes");
+    String deleteRequest = "DELETE FROM codes";
     try (Connection connection = DbConnector.getConnection();
         PreparedStatement statement = connection.prepareStatement(deleteRequest)) {
       statement.execute();
-      LOGGER.debug("Successfully delete all codes");
+      logger.debug("Successfully delete all codes");
     } catch (SQLException e) {
-      LOGGER.error("Cannot execute delete all codes sql request ", e);
+      logger.error("Cannot execute delete all codes sql request ", e);
     }
   }
 
-  private Optional<CodeConfirmation> findCodeByUserIdAndGoodId(long userId, long goodId) {
-    String selectRequest = "SELECT * FROM codes WHERE user_id=? AND good_id=?;";
+  @Override
+  public List<CodeConfirmation> getAll() {
+    logger.debug("Get all codes");
+    String getAllRequest = "SELECT * FROM codes;";
+    List<CodeConfirmation> codes = new ArrayList<>();
     try (Connection connection = DbConnector.getConnection();
-        PreparedStatement statement = connection.prepareStatement(selectRequest)) {
-      statement.setLong(1, userId);
-      statement.setLong(2, goodId);
+        PreparedStatement statement = connection.prepareStatement(getAllRequest)) {
       ResultSet resultSet = statement.executeQuery();
-      return getCodeFromResultSet(resultSet);
+      while (resultSet.next()) {
+        CodeConfirmation newCodeConfirmation = readCodeFromResultSet(resultSet);
+        codes.add(newCodeConfirmation);
+      }
+      logger.debug("Successfully get list with all users");
     } catch (SQLException e) {
-      LOGGER.error("Cannot execute sql select for finding code with user id " + userId
-          + " and good id " + goodId, e);
-      return Optional.empty();
+      logger.error("Cannot execute sql request " + getAllRequest, e);
     }
+    return codes;
   }
 
   private Optional<CodeConfirmation> getCodeFromResultSet(ResultSet resultSet) {
     try {
       if (resultSet.next()) {
-        long id = resultSet.getLong("id");
-        long idUser = resultSet.getLong("user_id");
-        long idGood = resultSet.getLong("good_id");
-        String code = resultSet.getString("code");
-        CodeConfirmation resultCode = new CodeConfirmation(id, idUser, idGood, code);
+        CodeConfirmation resultCode = readCodeFromResultSet(resultSet);
         return Optional.of(resultCode);
       } else {
         return Optional.empty();
       }
     } catch (SQLException e) {
-      LOGGER.error("Cannot read information about code ", e);
+      logger.error("Cannot read information about code ", e);
       return Optional.empty();
     }
   }
 
-  private void updateInformationAboutCode(CodeConfirmation newCode) {
-    LOGGER.debug("Code with user id " + newCode.getIdGood() + " and good id"
-        + newCode.getIdGood() + " have not existed. Can update information");
-    String updateUser = "UPDATE codes SET code=? WHERE user_id=? AND good_id=?";
-    try (Connection connection = DbConnector.getConnection();
-        PreparedStatement statement = connection.prepareStatement(updateUser)) {
-      statement.setString(1,newCode.getCode());
-      statement.setLong(2,newCode.getIdUser());
-      statement.setLong(3,newCode.getIdGood());
-      statement.execute();
-      LOGGER.debug("Successful update code with id " + newCode.getId());
-    } catch (SQLException e) {
-      LOGGER.debug("Cannot execute update request code with id " + newCode.getId(), e);
-    }
+  private CodeConfirmation readCodeFromResultSet(ResultSet resultSet) throws SQLException {
+    long id = resultSet.getLong("id");
+    long idBasket = resultSet.getLong("basket_id");
+    Basket basket = basketDao.get(idBasket).get();
+    String code = resultSet.getString("code");
+    return new CodeConfirmation(id, basket, code);
   }
 }

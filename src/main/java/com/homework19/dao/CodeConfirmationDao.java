@@ -1,21 +1,15 @@
 package com.homework19.dao;
 
 import com.homework17.model.CodeConfirmation;
+import com.homework20.dao.GenericDao;
+import com.homework20.model.Basket;
 import java.util.Optional;
 
 /**
  * Interface for working with code confirmation in database.
  */
-public interface CodeConfirmationDao {
-  void saveCode(CodeConfirmation newCodeConfirmation);
+public interface CodeConfirmationDao extends GenericDao<CodeConfirmation> {
 
-  Optional<CodeConfirmation> getCode(long idUser, long idGood);
+  Optional<CodeConfirmation> getCode(Basket basket);
 
-  void updateCode(CodeConfirmation newCodeConfirmation);
-
-  void deleteCode(long id);
-
-  long count();
-
-  void deleteAll();
 }

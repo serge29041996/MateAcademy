@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 public class CheckData {
   /**
    * Check login and password.
+   *
    * @param login login
    * @param password password
    * @return empty string, if login and password have not empty, otherwise message about error.
@@ -23,10 +24,11 @@ public class CheckData {
 
   /**
    * Check login, password and mail.
+   *
    * @param login login
    * @param password password
    * @param mail mail
-   * @return  empty string, if login,password and mail are valid; otherwise message about error.
+   * @return empty string, if login, password and mail are valid; otherwise message about error.
    */
   public static String checkUserData(String login, String password, String mail) {
     StringBuilder stringBuilder = new StringBuilder(checkUserData(login, password));
@@ -43,11 +45,12 @@ public class CheckData {
 
   /**
    * Check login, password and mail.
+   *
    * @param login login
    * @param password password
    * @param mail mail
    * @param role role of user
-   * @return  empty string, if login,password and mail are valid; otherwise message about error.
+   * @return empty string, if login, password and mail are valid; otherwise message about error.
    */
   public static String checkUserData(String login, String password, String mail, String role) {
     StringBuilder stringBuilder = new StringBuilder(checkUserData(login, password, mail));
@@ -57,6 +60,7 @@ public class CheckData {
 
   /**
    * Check on null attribute and set default value.
+   *
    * @param request request, where need attribute located
    * @param nameAttribute name of need attribute
    */
@@ -64,12 +68,13 @@ public class CheckData {
       String nameAttribute) {
     Object resultMessage = request.getAttribute(nameAttribute);
     if (resultMessage == null) {
-      request.setAttribute(nameAttribute,"");
+      request.setAttribute(nameAttribute, "");
     }
   }
 
   /**
    * Check on null attribute and set need value.
+   *
    * @param request request, where need attribute located
    * @param value value for need attribute
    * @param nameAttribute name of need attribute
@@ -83,22 +88,18 @@ public class CheckData {
 
   /**
    * Check data about good.
+   *
    * @param name name of good
    * @param description description of good
    * @param price price of good
    * @return empty string if entered valid information, otherwise error message
    */
-  public static String checkGoodData(String name, String description, String price) {
+  public static String checkGoodData(String name, String description, String price, String count) {
     StringBuilder stringBuilder = new StringBuilder();
     checkString(name, "название", stringBuilder);
     checkString(description, "описание", stringBuilder);
-    if (checkString(price, "цену", stringBuilder)) {
-      try {
-        Double.parseDouble(price);
-      } catch (NumberFormatException e) {
-        stringBuilder.append("Цена не является числом.");
-      }
-    }
+    checkNumber(price, "цену", stringBuilder);
+    checkNumber(count, "количество", stringBuilder);
     return stringBuilder.toString();
   }
 
@@ -111,6 +112,17 @@ public class CheckData {
       return false;
     } else {
       return true;
+    }
+  }
+
+  private static void checkNumber(String valueField, String nameField,
+      StringBuilder stringBuilder) {
+    if (checkString(valueField, nameField, stringBuilder)) {
+      try {
+        Double.parseDouble(valueField);
+      } catch (NumberFormatException e) {
+        stringBuilder.append("Вы ввели " + nameField + ", которое не является числом.");
+      }
     }
   }
 }

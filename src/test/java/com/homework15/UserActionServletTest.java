@@ -1,7 +1,5 @@
 package com.homework15;
 
-import com.homework13.dao.DuplicateUserException;
-import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework15.servlets.UserActionServlet;
 import com.homework16.model.Role;
@@ -35,7 +33,7 @@ public class UserActionServletTest {
     response = Mockito.mock(HttpServletResponse.class);
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(request.getRequestDispatcher("/user_form.jsp")).thenReturn(requestDispatcher);
-    testUser = new User(TEST_VALUE, TEST_VALUE, "test@test.com", "user");
+    testUser = new User(TEST_VALUE, TEST_VALUE, "user", "test@test.com");
   }
 
   @After
@@ -63,7 +61,7 @@ public class UserActionServletTest {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(session.getAttribute("action")).thenReturn("update");
     Mockito.when(request.getSession()).thenReturn(session);
-    User newUser = new User(1, TEST_VALUE, TEST_VALUE, Role.USER.getValue(), TEST_VALUE);
+    User newUser = new User(TEST_VALUE, TEST_VALUE, Role.USER.getValue(), TEST_VALUE);
     Mockito.when(session.getAttribute("user")).thenReturn(newUser);
     Mockito.when(request.getAttribute("login")).thenReturn(null);
     Mockito.when(request.getAttribute("password")).thenReturn(null);
@@ -116,8 +114,8 @@ public class UserActionServletTest {
   }
 
   @Test
-  public void testDoPostForAddExistUser() throws ServletException, IOException, DuplicateUserException {
-    USER_DAO.saveUser(testUser);
+  public void testDoPostForAddExistUser() throws ServletException, IOException {
+    USER_DAO.save(testUser);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("add");
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
@@ -133,8 +131,7 @@ public class UserActionServletTest {
   }
 
   @Test
-  public void testDoPostForAddUserWithoutPassword() throws ServletException, IOException,
-      DuplicateUserException {
+  public void testDoPostForAddUserWithoutPassword() throws ServletException, IOException {
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("add");
     Mockito.when(request.getParameter("login")).thenReturn(TEST_VALUE);
@@ -150,10 +147,9 @@ public class UserActionServletTest {
   }
 
   @Test
-  public void testDoPostForUpdateUserWithoutChange() throws ServletException, IOException,
-      DuplicateUserException, NoSuchUserException {
-    USER_DAO.saveUser(testUser);
-    User gettingUser = USER_DAO.getUser(TEST_VALUE);
+  public void testDoPostForUpdateUserWithoutChange() throws ServletException, IOException {
+    USER_DAO.save(testUser);
+    User gettingUser = USER_DAO.getUserByLogin(TEST_VALUE).get();
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("update");
     Mockito.when(session.getAttribute("id")).thenReturn(gettingUser.getId());
@@ -171,10 +167,9 @@ public class UserActionServletTest {
   }
 
   @Test
-  public void testDoPostForUpdateUserWithoutPassword() throws ServletException, IOException,
-      DuplicateUserException, NoSuchUserException {
-    USER_DAO.saveUser(testUser);
-    User gettingUser = USER_DAO.getUser(TEST_VALUE);
+  public void testDoPostForUpdateUserWithoutPassword() throws ServletException, IOException {
+    USER_DAO.save(testUser);
+    User gettingUser = USER_DAO.getUserByLogin(TEST_VALUE).get();
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("update");
     Mockito.when(session.getAttribute("id")).thenReturn(gettingUser.getId());
@@ -192,10 +187,9 @@ public class UserActionServletTest {
   }
 
   @Test
-  public void testDoPostForUpdateUserWithNewValues() throws ServletException, IOException,
-      DuplicateUserException, NoSuchUserException {
-    USER_DAO.saveUser(testUser);
-    User gettingUser = USER_DAO.getUser(TEST_VALUE);
+  public void testDoPostForUpdateUserWithNewValues() throws ServletException, IOException {
+    USER_DAO.save(testUser);
+    User gettingUser = USER_DAO.getUserByLogin(TEST_VALUE).get();
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("update");
     Mockito.when(session.getAttribute("id")).thenReturn(gettingUser.getId());
@@ -213,13 +207,12 @@ public class UserActionServletTest {
   }
 
   @Test
-  public void testDoPostForUpdateUserWithExistLogin() throws ServletException, IOException,
-      DuplicateUserException, NoSuchUserException {
+  public void testDoPostForUpdateUserWithExistLogin() throws ServletException, IOException {
     String testValue = "test";
-    USER_DAO.saveUser(testUser);
-    User gettingUser = USER_DAO.getUser(testUser.getLogin());
-    User newUser = new User(testValue, testValue, "test@gmail.com", "user");
-    USER_DAO.saveUser(newUser);
+    USER_DAO.save(testUser);
+    User gettingUser = USER_DAO.getUserByLogin(testUser.getLogin()).get();
+    User newUser = new User(testValue, testValue, "user", "test@gmail.com");
+    USER_DAO.save(newUser);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("update");
     Mockito.when(session.getAttribute("id")).thenReturn(gettingUser.getId());
@@ -231,19 +224,18 @@ public class UserActionServletTest {
     Mockito.when(request.getParameter("role")).thenReturn("user");
     new UserActionServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1))
-        .setAttribute("result", "Пользователь с логином " + testValue + " уже существует");
+        .setAttribute("result", "Пользователь с логином " + testValue + " уже существует.");
     Mockito.verify(request, Mockito.times(1))
         .getRequestDispatcher("/user_form.jsp");
   }
 
   @Test
-  public void testDoPostForUpdateUserWithExistMail() throws ServletException, IOException,
-      DuplicateUserException, NoSuchUserException {
+  public void testDoPostForUpdateUserWithExistMail() throws ServletException, IOException {
     String testMail = "test@gmail.com";
-    USER_DAO.saveUser(testUser);
-    User gettingUser = USER_DAO.getUser(testUser.getLogin());
-    User newUser = new User("test", "test", testMail, "user");
-    USER_DAO.saveUser(newUser);
+    USER_DAO.save(testUser);
+    User gettingUser = USER_DAO.getUserByLogin(testUser.getLogin()).get();
+    User newUser = new User("test", "test", "user", testMail);
+    USER_DAO.save(newUser);
     HttpSession session = Mockito.mock(HttpSession.class);
     Mockito.when(request.getParameter("option")).thenReturn("update");
     Mockito.when(session.getAttribute("id")).thenReturn(gettingUser.getId());
@@ -255,7 +247,8 @@ public class UserActionServletTest {
     Mockito.when(request.getParameter("role")).thenReturn("user");
     new UserActionServlet().doPost(request, response);
     Mockito.verify(request, Mockito.times(1))
-        .setAttribute("result", "Пользователь с электронной почтой " + testMail + " уже существует");
+        .setAttribute("result", "Пользователь с электронной почтой " + testMail
+            + " уже существует.");
     Mockito.verify(request, Mockito.times(1))
         .getRequestDispatcher("/user_form.jsp");
   }

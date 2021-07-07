@@ -5,6 +5,7 @@
     <title>Goods</title>
 </head>
 <body>
+<a href="user_page/apply_purchase">Оплатить товары в корзине</a>
 <c:if test="${numberGoods > 0}">
     <table>
         <td>
@@ -18,7 +19,7 @@
             <th>${good.name}</th>
             <th>${good.description}</th>
             <th>${good.price}</th>
-            <th><a href="user_page/apply_purchase?id=<c:out value="${good.id}"/>">Купить</a></th>
+            <th><a href="user_page/add_to_basket?id=<c:out value="${good.id}"/>">Добавить в корзину</a></th>
             </td>
         </c:forEach>
     </table>

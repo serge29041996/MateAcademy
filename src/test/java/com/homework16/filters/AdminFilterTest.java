@@ -26,7 +26,8 @@ public class AdminFilterTest {
     session = Mockito.mock(HttpSession.class);
     servletRequest = Mockito.mock(HttpServletRequest.class);
     RequestDispatcher requestDispatcher = Mockito.mock(RequestDispatcher.class);
-    Mockito.when(servletRequest.getRequestDispatcher("/access_denied.jsp")).thenReturn(requestDispatcher);
+    Mockito.when(servletRequest.getRequestDispatcher("/access_denied.jsp"))
+        .thenReturn(requestDispatcher);
     Mockito.when(servletRequest.getSession()).thenReturn(session);
     servletResponse = Mockito.mock(ServletResponse.class);
     filterChain = Mockito.mock(FilterChain.class);

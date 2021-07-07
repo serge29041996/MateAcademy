@@ -1,6 +1,5 @@
 package com.homework13.servlets;
 
-import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
 import com.homework13.service.CheckData;
 import com.homework16.model.Role;
@@ -8,6 +7,7 @@ import com.homework18.utils.HashUtils;
 import com.homework19.dao.UserDao;
 import com.homework19.dao.UserDaoHibernateImpl;
 import java.io.IOException;
+import java.util.Optional;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,8 +34,9 @@ public class SignInServlet extends HttpServlet {
         + " and password " + password);
     String result = CheckData.checkUserData(login, password);
     if (result.equals("")) {
-      try {
-        User user = userDao.getUser(login);
+      Optional<User> gettingUserFromDb = userDao.getUserByLogin(login);
+      if (gettingUserFromDb.isPresent()) {
+        User user = gettingUserFromDb.get();
         if (user.getPassword().equals(HashUtils
             .getSha512SecurePassword(password, user.getSalt()))) {
           request.getSession().setAttribute("auth_user", user);
@@ -54,7 +55,7 @@ public class SignInServlet extends HttpServlet {
           request.setAttribute("result", "неверный логин/пасс");
           setAttributeAndReturnToCurrentPage(request, response, login, password);
         }
-      } catch (NoSuchUserException e) {
+      } else {
         LOGGER.debug("User with id " + request.getSession().getId()
             + " enter wrong login and password");
         request.setAttribute("result", "неверный логин/пасс");
