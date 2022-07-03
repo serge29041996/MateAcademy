@@ -1,6 +1,5 @@
 package com.homework18.servlets;
 
-import com.homework17.dao.NoSuchGoodException;
 import com.homework17.model.Good;
 import com.homework19.dao.GoodDao;
 import com.homework19.dao.GoodDaoHibernateImpl;
@@ -25,7 +24,7 @@ public class AdminGoodPageServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    List<Good> goodList = goodDao.getAllGoods();
+    List<Good> goodList = goodDao.getAll();
     request.setAttribute("numberGoods", goodList.size());
     request.setAttribute("goods", goodList);
     LOGGER.debug("User with id " + request.getSession().getId() + " come to admin goods page");
@@ -43,21 +42,16 @@ public class AdminGoodPageServlet extends HttpServlet {
       response.sendRedirect("/admin_page/good_action");
     } else if (result.contains("update")) {
       String idNeedGood = result.split("_")[1];
-      try {
-        Good needGood = goodDao.getGood(Long.parseLong(idNeedGood));
-        LOGGER.debug("User with id " + request.getSession().getId()
-            + " go to update form about good with id " + needGood.getId());
-        request.getSession().setAttribute("good", needGood);
-        request.getSession().setAttribute("action", "update");
-      } catch (NoSuchGoodException e) {
-        LOGGER.debug("User with id " + request.getSession().getId()
-            + " go to add good form, because good with id " + idNeedGood + " was not find");
-        request.getSession().setAttribute("action", "add");
-      }
+      Good needGood = goodDao.get(Long.parseLong(idNeedGood)).get();
+      LOGGER.debug("User with id " + request.getSession().getId()
+          + " go to update form about good with id " + needGood.getId());
+      request.getSession().setAttribute("good", needGood);
+      request.getSession().setAttribute("action", "update");
       response.sendRedirect("/admin_page/good_action");
     } else if (result.contains("delete")) {
       String idGoodForDeleting = result.split("_")[1];
-      goodDao.deleteGood(Long.parseLong(idGoodForDeleting));
+      Good goodForDeleting = goodDao.get(Long.valueOf(idGoodForDeleting)).get();
+      goodDao.delete(goodForDeleting);
       LOGGER.debug("User with id " + request.getSession().getId()
           + " delete good with id " + idGoodForDeleting);
       doGet(request, response);

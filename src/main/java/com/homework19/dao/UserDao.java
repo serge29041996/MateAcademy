@@ -1,29 +1,17 @@
 package com.homework19.dao;
 
-import com.homework13.dao.DuplicateUserException;
-import com.homework13.dao.NoSuchUserException;
 import com.homework13.model.User;
-import java.util.List;
+import com.homework20.dao.GenericDao;
+import java.util.Optional;
 
 /**
  * Interface for working with users in database.
  */
-public interface UserDao {
-  void saveUser(User newUser) throws DuplicateUserException;
+public interface UserDao extends GenericDao<User> {
 
-  User getUser(long id) throws NoSuchUserException;
+  Optional<User> getUserByLogin(String login);
 
-  User getUser(String login) throws NoSuchUserException;
-
-  long count();
-
-  void deleteAll();
-
-  List<User> getAllUsers();
-
-  void deleteUser(long id);
-
-  void updateUser(User newUser) throws DuplicateUserException;
+  Optional<User> getUserByMail(String mail);
 
   void updateUserRole(long id, String role);
 }

@@ -1,11 +1,14 @@
 package com.homework13.model;
 
 import com.homework16.model.Role;
+import com.homework18.utils.HashUtils;
+import com.homework20.model.Basket;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -17,79 +20,59 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
+
   @Column(name = "LOGIN")
   private String login;
+
   @Column(name = "PASSWORD")
   private String password;
+
   @Column(name = "ROLE")
   private String role;
+
   @Column(name = "MAIL")
   private String mail;
+
   @Column(name = "SALT")
   private String salt;
 
-  protected User() {}
+  @OneToOne(mappedBy = "user")
+  private Basket basket;
+
+  protected User() {
+  }
 
   /**
    * Constructor for login, password and mail.
+   *
    * @param login login of user
    * @param password password user
    * @param mail mail of user
    */
   public User(String login, String password, String mail) {
     this.login = login;
-    this.password = password;
+    this.salt = HashUtils.generateSalt();
+    this.password = HashUtils.getSha512SecurePassword(password, salt);
     this.mail = mail;
     this.role = Role.USER.getValue();
   }
 
   /**
    * Constructor for login, password, mail and role.
+   *
    * @param login login of user
    * @param password password user
    * @param mail mail of user
    * @param role role of user
    */
-  public User(String login, String password, String mail, String role) {
-    this.login = login;
-    this.password = password;
-    this.mail = mail;
+  public User(String login, String password, String role, String mail) {
+    this(login, password, mail);
     this.role = role;
-  }
-
-  /**
-   * Constructor for login, password, mail, role and salt.
-   * @param login login of user
-   * @param password password user
-   * @param mail mail of user
-   * @param role role of user
-   */
-  public User(String login, String password, String role, String mail, String salt) {
-    this.login = login;
-    this.password = password;
-    this.role = role;
-    this.mail = mail;
-    this.salt = salt;
   }
 
   /**
    * Constructor for id, login, password, role and mail parameters.
-   * @param id id of user
-   * @param login login of user
-   * @param password password user
-   * @param role role of user
-   * @param mail mail of user
-   */
-  public User(long id, String login, String password, String role, String mail) {
-    this.id = id;
-    this.login = login;
-    this.password = password;
-    this.role = role;
-    this.mail = mail;
-  }
-
-  /**
-   * Constructor for id, login, password, role and mail parameters.
+   *
    * @param id id of user
    * @param login login of user
    * @param password password user
@@ -118,7 +101,7 @@ public class User {
   }
 
   public void setPassword(String password) {
-    this.password = password;
+    this.password = HashUtils.getSha512SecurePassword(password, salt);
   }
 
   public long getId() {
@@ -151,6 +134,14 @@ public class User {
 
   public void setSalt(String salt) {
     this.salt = salt;
+  }
+
+  public Basket getBasket() {
+    return basket;
+  }
+
+  public void setBasket(Basket basket) {
+    this.basket = basket;
   }
 
   @Override
